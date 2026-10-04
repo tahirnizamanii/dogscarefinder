@@ -1,0 +1,553 @@
+---
+// src/pages/blog/[slug].astro
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import {
+  fetchBlogPosts,
+  fetchAllRecords,
+  toUrlSegment,
+  slugify,
+  truncate,
+} from "../../lib/database.js";
+import {
+  breadcrumbSchema,
+  articleSchema,
+  webPageSchema,
+  faqSchema,
+} from "../../lib/schemas.js";
+
+export async function getStaticPaths() {
+  const posts = await fetchBlogPosts();
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const allPosts = await fetchBlogPosts();
+const allListings = await fetchAllRecords();
+
+// ── FAQs ────────────────────────────────────────────────────────────────
+function parseFaqs(faqField, post) {
+  if (faqField) {
+    try {
+      const parsed = typeof faqField === "string" ? JSON.parse(faqField) : faqField;
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    } catch (e) {}
+  }
+  return [
+    {
+      question: `What should I know before reading "${post.title}"?`,
+      answer: `This guide covers the essentials of ${post.category.toLowerCase()} — practical, no-fluff advice written for dog owners. Bookmark it and refer back anytime you're making a decision.`,
+    },
+    {
+      question: `Who is this ${post.category.toLowerCase()} guide for?`,
+      answer: `It's written for dog owners researching ${post.category.toLowerCase()} services and best practices. Whether you're a first-time owner or experienced, you'll find actionable takeaways.`,
+    },
+    {
+      question: `How often should I review this ${post.category.toLowerCase()} advice?`,
+      answer: `We update our guides regularly to reflect current best practices. Check back every 6–12 months, especially if your dog's needs change or you're moving to a new area.`,
+    },
+  ];
+}
+
+const faqs = parseFaqs(post.faq, post);
+
+// ── Internal linking: auto-link state/city/category names in content ────
+function addInternalLinks(html, allListings) {
+  const states = [...new Set(allListings.map((l) => l.state))].filter(Boolean);
+  const categories = [...new Set(allListings.map((l) => l.category))].filter(Boolean);
+
+  const linked = new Set();
+  let result = html;
+
+  for (const cat of categories) {
+    const term = cat;
+    const slug = slugify(cat);
+    const regex = new RegExp(`\\b(${term})\\b(?![^<]*</a>)`, "i");
+    if (!linked.has(slug) && regex.test(result)) {
+      linked.add(slug);
+      const sample = allListings.find((l) => l.category === cat);
+      if (sample) {
+        const url = `/${toUrlSegment(sample.state)}/${toUrlSegment(sample.city)}/${slug}/`;
+        result = result.replace(regex, (match) => `<a href="${url}" class="text-forest-600 underline hover:text-forest-700">${match}</a>`);
+      }
+    }
+  }
+
+  return result;
+}
+
+// ── Strip first paragraph to avoid duplicating excerpt ──────────────────
+function stripFirstParagraph(html) {
+  return html.replace(/^\s*<p[^>]*>[\s\S]*?<\/p>\s*/i, "");
+}
+
+const contentWithoutFirstP = stripFirstParagraph(post.content);
+const contentWithLinks = addInternalLinks(contentWithoutFirstP, allListings);
+
+// ── SEO ─────────────────────────────────────────────────────────────────
+const title = `${post.title} | DogCareFinder`;
+const description = post.metaDescription || truncate(post.excerpt || post.title, 158);
+const canonical = `https://dogcarefinder.com/blog/${post.slug}/`;
+const heroImage = post.featuredImage || "https://dogcarefinder.com/og-default.jpg";
+
+const schemas = [
+  webPageSchema(title, description, canonical),
+  breadcrumbSchema([
+    { name: "Home", url: "https://dogcarefinder.com/" },
+    { name: "Resources Hub", url: "https://dogcarefinder.com/blog/" },
+    { name: post.title, url: canonical },
+  ]),
+  articleSchema(post, canonical),
+  faqSchema(faqs),
+];
+
+// ── Sidebar data ────────────────────────────────────────────────────────
+const recentPosts = allPosts.filter((p) => p.slug !== post.slug).slice(0, 4);
+
+const categoryCounts = new Map();
+for (const p of allPosts) {
+  const cat = p.category || "General";
+  categoryCounts.set(cat, (categoryCounts.get(cat) || 0) + 1);
+}
+const categories = Array.from(categoryCounts.entries())
+  .map(([name, count]) => ({ name, count, slug: slugify(name) }))
+  .sort((a, b) => b.count - a.count);
+
+const relatedGuides = allPosts
+  .filter((p) => p.slug !== post.slug && p.category === post.category)
+  .slice(0, 3);
+
+const finalRelated = relatedGuides.length > 0
+  ? relatedGuides
+  : allPosts.filter((p) => p.slug !== post.slug).slice(0, 3);
+
+const publishDate = new Date(post.publishDate).toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+
+const readTime = post.readTime || 5;
+---
+
+<BaseLayout title={title} description={description} canonical={canonical} schemas={schemas}>
+
+  <!-- Reading progress bar -->
+  <div id="reading-progress" class="fixed top-16 lg:top-20 left-0 h-0.5 bg-forest-600 z-40 transition-all duration-150" style="width: 0%"></div>
+
+  <!-- Breadcrumb -->
+  <div class="bg-cream-100 border-b border-black/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <nav class="text-xs sm:text-sm text-slate-600 flex items-center flex-wrap gap-1.5">
+        <a href="/" class="hover:text-forest-600 transition">
+          <i class="fa-solid fa-home text-[10px]"></i> Home
+        </a>
+        <i class="fa-solid fa-chevron-right text-[9px] text-slate-400"></i>
+        <a href="/blog/" class="hover:text-forest-600 transition">Resources Hub</a>
+        <i class="fa-solid fa-chevron-right text-[9px] text-slate-400"></i>
+        <span class="text-navy-900 font-semibold">{post.title}</span>
+      </nav>
+    </div>
+  </div>
+
+  <!-- ═══ MAIN LAYOUT ═══ -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+      <!-- ═══ ARTICLE ═══ -->
+      <article class="lg:col-span-8">
+
+        <!-- Meta -->
+        <div class="flex flex-wrap items-center gap-3 mb-4 text-xs">
+          <span class="inline-flex items-center gap-1.5 bg-forest-50 text-forest-700 font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+            <i class="fa-solid fa-bookmark text-[10px]"></i>
+            {post.category}
+          </span>
+          <span class="text-slate-500 flex items-center gap-1.5">
+            <i class="fa-solid fa-clock text-[10px]"></i>
+            {readTime} min read
+          </span>
+          <span class="text-slate-500 flex items-center gap-1.5">
+            <i class="fa-regular fa-calendar text-[10px]"></i>
+            {publishDate}
+          </span>
+        </div>
+
+        <!-- H1 -->
+        <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-navy-900 leading-tight mb-6">
+          {post.title}
+        </h1>
+
+        <!-- Featured image (hero) -->
+        {post.featuredImage && (
+          <figure class="rounded-2xl overflow-hidden mb-8 shadow-lg">
+            <img
+              src={post.featuredImage}
+              alt={`${post.title} — featured image`}
+              class="w-full h-auto"
+              loading="eager"
+              width="1200"
+              height="800"
+            />
+          </figure>
+        )}
+
+        <!-- ARTICLE BODY — with first-paragraph lede styling -->
+        <div
+          class="article-content prose prose-slate max-w-none"
+          set:html={contentWithLinks}
+        />
+
+        <!-- Disclaimer -->
+        <div class="mt-10 pt-6 border-t border-slate-200">
+          <p class="text-xs text-slate-500 leading-relaxed">
+            <strong class="text-slate-600">General information only.</strong>
+            DogCareFinder provides practical, educational guides for dog owners.
+            This content is not a substitute for professional veterinary, medical,
+            legal, or other qualified advice. Always consult with a licensed
+            veterinarian for your specific situation.
+          </p>
+        </div>
+
+        <!-- FAQ -->
+        {faqs.length > 0 && (
+          <section class="mt-12 pt-10 border-t border-slate-200">
+            <h2 class="font-serif text-2xl sm:text-3xl font-bold text-navy-900 mb-2">
+              Frequently asked questions
+            </h2>
+            <p class="text-sm text-slate-500 mb-6">
+              Common questions about {post.category.toLowerCase()}.
+            </p>
+
+            <div class="space-y-3">
+              {faqs.map((faq) => (
+                <details class="group bg-white border border-slate-200 rounded-xl overflow-hidden">
+                  <summary class="cursor-pointer flex items-center justify-between gap-4 p-5 hover:bg-cream-50 transition">
+                    <span class="font-semibold text-navy-900 text-base pr-4">
+                      {faq.question}
+                    </span>
+                    <i class="fa-solid fa-chevron-down text-slate-400 text-sm shrink-0 group-open:rotate-180 transition-transform"></i>
+                  </summary>
+                  <div class="px-5 pb-5 text-slate-700 leading-relaxed text-sm">
+                    {faq.answer}
+                  </div>
+                </details>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <!-- Related Guides -->
+        {finalRelated.length > 0 && (
+          <section class="mt-14 pt-10 border-t border-slate-200">
+            <h2 class="font-serif text-2xl font-bold text-navy-900 mb-2 flex items-center gap-2">
+              <i class="fa-solid fa-book-open text-forest-600 text-lg"></i>
+              Related Guides
+            </h2>
+            <p class="text-sm text-slate-500 mb-6">
+              More articles on {post.category.toLowerCase()} and dog care.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {finalRelated.map((rp) => (
+                <a
+                  href={`/blog/${rp.slug}/`}
+                  class="group bg-white border border-slate-200 rounded-xl overflow-hidden hover:border-forest-400 hover:shadow-md transition-all"
+                >
+                  <div class="h-32 bg-gradient-to-br from-forest-500 to-navy-700 flex items-center justify-center overflow-hidden">
+                    {rp.featuredImage ? (
+                      <img
+                        src={rp.featuredImage}
+                        alt={rp.title}
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <i class="fa-solid fa-newspaper text-3xl text-white/30"></i>
+                    )}
+                  </div>
+                  <div class="p-4">
+                    <div class="text-[10px] font-bold uppercase tracking-wider text-forest-600 mb-1.5">
+                      {rp.category}
+                    </div>
+                    <h3 class="font-semibold text-navy-900 text-sm leading-snug group-hover:text-forest-600 transition line-clamp-2">
+                      {rp.title}
+                    </h3>
+                    <span class="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold text-forest-600 uppercase tracking-wider">
+                      Read More
+                      <i class="fa-solid fa-arrow-right text-[9px]"></i>
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
+
+            <div class="mt-6 text-center">
+              <a
+                href="/blog/"
+                class="inline-flex items-center gap-2 text-sm font-semibold text-forest-600 hover:text-forest-700 transition"
+              >
+                <i class="fa-solid fa-arrow-left text-xs"></i>
+                Back to Resources Hub
+              </a>
+            </div>
+          </section>
+        )}
+
+        <!-- Find providers CTA -->
+        <div class="mt-12 bg-cream-50 border-2 border-forest-500/20 rounded-2xl p-6 sm:p-8 text-center">
+          <div class="inline-flex items-center gap-2 text-forest-700 text-xs font-bold uppercase tracking-wider mb-3">
+            <i class="fa-solid fa-location-dot"></i>
+            Find dog professionals near you
+          </div>
+          <h3 class="font-serif text-xl sm:text-2xl font-bold text-navy-900 mb-2">
+            Browse our nationwide directory
+          </h3>
+          <p class="text-sm text-slate-600 max-w-lg mx-auto mb-5">
+            Verified {post.category.toLowerCase()} providers across the US — free to browse, no referral fees.
+          </p>
+          <a
+            href="/#services"
+            class="inline-flex items-center gap-2 bg-forest-600 hover:bg-forest-700 text-white font-semibold px-6 py-3 rounded-lg transition shadow-sm"
+          >
+            <i class="fa-solid fa-search"></i>
+            Browse Directory
+          </a>
+        </div>
+      </article>
+
+      <!-- ═══ SIDEBAR ═══ -->
+      <aside class="lg:col-span-4 space-y-6">
+
+        <div class="bg-white border border-slate-200 rounded-xl p-5">
+          <div class="flex items-center gap-2 text-navy-900 font-semibold text-sm mb-3">
+            <i class="fa-solid fa-search text-forest-600"></i>
+            Search Guides
+          </div>
+          <div class="relative">
+            <input type="text" placeholder="Search resources..."
+              class="w-full border border-slate-200 rounded-lg pl-3 pr-10 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent" />
+            <button class="absolute right-1.5 top-1/2 -translate-y-1/2 bg-forest-600 hover:bg-forest-700 text-white w-8 h-8 rounded-md flex items-center justify-center transition">
+              <i class="fa-solid fa-arrow-right text-xs"></i>
+            </button>
+          </div>
+        </div>
+
+        {categories.length > 0 && (
+          <div class="bg-white border border-slate-200 rounded-xl p-5">
+            <div class="flex items-center gap-2 text-navy-900 font-semibold text-sm mb-4">
+              <i class="fa-solid fa-folder-tree text-forest-600"></i>
+              Guide Categories
+            </div>
+            <ul class="space-y-1">
+              {categories.map((cat) => (
+                <li>
+                  <a href={`/blog/?category=${cat.slug}`}
+                    class="flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-sm text-slate-700 hover:bg-forest-50 hover:text-forest-700 transition group">
+                    <span class="flex items-center gap-2">
+                      <i class="fa-solid fa-file-lines text-[11px] text-slate-400 group-hover:text-forest-600"></i>
+                      {cat.name}
+                    </span>
+                    <span class="text-[10px] font-bold bg-slate-100 group-hover:bg-forest-100 text-slate-600 group-hover:text-forest-700 rounded-full px-2 py-0.5">
+                      {cat.count}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {recentPosts.length > 0 && (
+          <div class="bg-white border border-slate-200 rounded-xl p-5">
+            <div class="flex items-center gap-2 text-navy-900 font-semibold text-sm mb-4">
+              <i class="fa-solid fa-clock-rotate-left text-forest-600"></i>
+              Recent Guides
+            </div>
+            <ul class="space-y-4">
+              {recentPosts.map((rp) => (
+                <li>
+                  <a href={`/blog/${rp.slug}/`} class="group flex gap-3 items-start">
+                    <div class="w-16 h-16 rounded-lg shrink-0 overflow-hidden bg-gradient-to-br from-forest-500 to-navy-700 flex items-center justify-center">
+                      {rp.featuredImage ? (
+                        <img src={rp.featuredImage} alt={rp.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform" loading="lazy" />
+                      ) : (
+                        <i class="fa-solid fa-newspaper text-white/40"></i>
+                      )}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <h4 class="font-semibold text-navy-900 text-xs leading-snug group-hover:text-forest-600 transition line-clamp-2">
+                        {rp.title}
+                      </h4>
+                      <div class="mt-1.5 flex items-center gap-2 text-[10px] text-slate-500">
+                        <i class="fa-regular fa-calendar"></i>
+                        <span>{new Date(rp.publishDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div class="bg-white border border-slate-200 rounded-xl p-5">
+          <div class="flex items-center gap-2 text-navy-900 font-semibold text-sm mb-4">
+            <i class="fa-solid fa-bolt text-forest-600"></i>
+            Quick Links
+          </div>
+          <ul class="space-y-1">
+            <li>
+              <a href="/list-your-business/" class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-700 hover:bg-forest-50 hover:text-forest-700 transition">
+                <i class="fa-solid fa-store text-xs text-slate-400"></i>
+                List Your Business
+              </a>
+            </li>
+            <li>
+              <a href="/#services" class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-700 hover:bg-forest-50 hover:text-forest-700 transition">
+                <i class="fa-solid fa-th-large text-xs text-slate-400"></i>
+                Browse Directory
+              </a>
+            </li>
+            <li>
+              <a href="/" class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-700 hover:bg-forest-50 hover:text-forest-700 transition">
+                <i class="fa-solid fa-headset text-xs text-slate-400"></i>
+                Contact Support
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-navy-900 rounded-xl p-6 text-white relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-forest-500/20 rounded-full blur-2xl"></div>
+          <div class="relative">
+            <div class="flex items-center gap-2 text-gold-400 text-[10px] font-bold uppercase tracking-wider mb-3">
+              <i class="fa-solid fa-store"></i>
+              List Your Business
+            </div>
+            <h3 class="font-serif text-lg font-bold leading-tight mb-2">
+              Join The Largest Directory Of Dog Professionals.
+            </h3>
+            <p class="text-xs text-white/70 mb-4 leading-relaxed">
+              Get found by dog owners searching in your city and state.
+            </p>
+            <a href="/list-your-business/" class="inline-flex items-center gap-2 bg-gold-400 hover:bg-gold-500 text-navy-900 font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-lg transition">
+              <i class="fa-solid fa-arrow-right"></i>
+              Get Started
+            </a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Reading progress script -->
+  <script is:inline>
+    document.addEventListener("DOMContentLoaded", () => {
+      const bar = document.getElementById("reading-progress");
+      const article = document.querySelector(".article-content");
+      if (!bar || !article) return;
+
+      const updateProgress = () => {
+        const rect = article.getBoundingClientRect();
+        const total = rect.height - window.innerHeight;
+        const scrolled = Math.max(0, -rect.top);
+        const pct = total > 0 ? Math.min(100, (scrolled / total) * 100) : 0;
+        bar.style.width = pct + "%";
+      };
+
+      window.addEventListener("scroll", updateProgress, { passive: true });
+      updateProgress();
+    });
+  </script>
+
+  <!-- Article content styles -->
+  <style is:inline>
+    .article-content h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #002955;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #5E7741;
+    }
+    .article-content h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #002955;
+      margin-top: 1.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .article-content > p:first-of-type {
+      font-size: 1.1875rem;
+      line-height: 1.65;
+      color: #1e293b;
+      font-weight: 500;
+      border-left: 4px solid #5E7741;
+      padding-left: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .article-content p {
+      color: #334155;
+      font-size: 1.0625rem;
+      line-height: 1.75;
+      margin-bottom: 1.25rem;
+    }
+    .article-content ul {
+      list-style: disc;
+      padding-left: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .article-content ul li {
+      color: #334155;
+      font-size: 1.0625rem;
+      line-height: 1.75;
+      margin-bottom: 0.5rem;
+    }
+    .article-content strong {
+      color: #002955;
+      font-weight: 600;
+    }
+    .article-content em {
+      font-style: italic;
+      color: #4A5E32;
+    }
+    .article-content a {
+      color: #5E7741;
+      text-decoration: underline;
+      text-decoration-color: rgba(94, 119, 65, 0.3);
+      text-underline-offset: 3px;
+      transition: all 0.15s;
+    }
+    .article-content a:hover {
+      color: #4A5E32;
+      text-decoration-color: #5E7741;
+    }
+    .article-content figure.article-image {
+      margin: 2rem 0;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      background: #F7F4EC;
+    }
+    .article-content figure.article-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 0.75rem;
+    }
+    .article-content figure.article-image figcaption {
+      font-size: 0.8125rem;
+      color: #64748b;
+      text-align: center;
+      padding: 0.75rem 1rem;
+      font-style: italic;
+      background: white;
+    }
+  </style>
+</BaseLayout>

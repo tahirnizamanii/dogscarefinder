@@ -1,0 +1,247 @@
+---
+// src/pages/blog/index.astro
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { fetchBlogPosts, slugify } from "../../lib/database.js";
+import {
+  breadcrumbSchema,
+  webPageSchema,
+  itemListSchema,
+} from "../../lib/schemas.js";
+
+const posts = await fetchBlogPosts();
+
+const title = `Dog Care Resources Hub — Expert Guides, Tips & How-Tos | DogCareFinder`;
+const description = `Free practical guides on dog grooming, training, boarding, health, and choosing providers. Written for dog owners, not marketers.`;
+const canonical = "https://dogcarefinder.com/blog/";
+
+const schemas = [
+  webPageSchema(title, description, canonical),
+  breadcrumbSchema([
+    { name: "Home", url: "https://dogcarefinder.com/" },
+    { name: "Resources Hub", url: canonical },
+  ]),
+  itemListSchema(
+    "Dog Care Resources Hub",
+    description,
+    canonical,
+    posts.map((p) => ({ name: p.title, url: `https://dogcarefinder.com/blog/${p.slug}/` })),
+    null
+  ),
+];
+
+const featuredPost = posts.find((p) => p.featured) || posts[0];
+const otherPosts = posts.filter((p) => p.slug !== featuredPost?.slug);
+
+const categoryCounts = new Map();
+for (const p of posts) {
+  const cat = p.category || "General";
+  categoryCounts.set(cat, (categoryCounts.get(cat) || 0) + 1);
+}
+const categories = Array.from(categoryCounts.entries())
+  .map(([name, count]) => ({ name, count, slug: slugify(name) }))
+  .sort((a, b) => b.count - a.count);
+
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString("en-US", {
+    year: "numeric", month: "short", day: "numeric",
+  });
+}
+---
+
+<BaseLayout title={title} description={description} canonical={canonical} schemas={schemas}>
+
+  <!-- HERO -->
+  <section class="bg-navy-900 text-white relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-forest-500/15 via-transparent to-transparent"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+      <nav class="text-xs text-white/70 flex items-center gap-2 mb-4">
+        <a href="/" class="hover:text-white transition">
+          <i class="fa-solid fa-home text-[10px]"></i> Home
+        </a>
+        <i class="fa-solid fa-chevron-right text-[9px]"></i>
+        <span class="text-white font-semibold">Resources Hub</span>
+      </nav>
+      <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-white/90 mb-4">
+        <i class="fa-solid fa-bookmark text-gold-400"></i>
+        Educational Resources
+      </div>
+      <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">Resources</h1>
+      <p class="mt-4 text-base lg:text-lg text-white/80 max-w-2xl">
+        Practical guides on dog care, cost, training, health, and choosing the right provider — written for dog owners, not marketers.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-white/70">
+        <div class="flex items-center gap-2"><i class="fa-solid fa-file-lines text-gold-400"></i><span>{posts.length}+ guides</span></div>
+        <div class="flex items-center gap-2"><i class="fa-solid fa-folder-tree text-gold-400"></i><span>{categories.length} categories</span></div>
+        <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-gold-400"></i><span>Updated regularly</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED POST -->
+  {featuredPost && (
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 lg:-mt-12 relative z-10">
+      <a href={`/blog/${featuredPost.slug}/`} class="group block bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300">
+        <div class="grid grid-cols-1 md:grid-cols-2">
+          <div class="h-64 md:h-auto md:min-h-[320px] bg-gradient-to-br from-forest-500 to-navy-700 overflow-hidden">
+            {featuredPost.featuredImage ? (
+              <img src={featuredPost.featuredImage} alt={featuredPost.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+            ) : (
+              <div class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-newspaper text-6xl text-white/20"></i></div>
+            )}
+          </div>
+          <div class="p-6 sm:p-8 lg:p-10 flex flex-col justify-center">
+            <div class="flex items-center gap-3 mb-4 text-xs">
+              <span class="inline-flex items-center gap-1.5 bg-gold-400 text-navy-900 font-bold uppercase tracking-wider px-2.5 py-1 rounded-full text-[10px]">
+                <i class="fa-solid fa-star text-[9px]"></i> Featured
+              </span>
+              <span class="text-forest-700 font-semibold uppercase tracking-wider text-[11px]">{featuredPost.category}</span>
+            </div>
+            <h2 class="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-navy-900 leading-tight group-hover:text-forest-600 transition-colors">
+              {featuredPost.title}
+            </h2>
+            <p class="mt-4 text-slate-600 leading-relaxed">{featuredPost.excerpt}</p>
+            <div class="mt-6 flex items-center gap-4 text-xs text-slate-500">
+              <span class="flex items-center gap-1.5"><i class="fa-regular fa-calendar"></i> {formatDate(featuredPost.publishDate)}</span>
+              <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock"></i> {featuredPost.readTime} min read</span>
+            </div>
+            <div class="mt-6 inline-flex items-center gap-2 text-forest-600 font-semibold text-sm group-hover:gap-3 transition-all">
+              Read guide <i class="fa-solid fa-arrow-right text-xs"></i>
+            </div>
+          </div>
+        </div>
+      </a>
+    </section>
+  )}
+
+  <!-- LATEST GUIDES -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
+    <div class="flex items-center gap-2 mb-2">
+      <i class="fa-solid fa-bolt text-forest-600 text-sm"></i>
+      <span class="text-xs font-bold uppercase tracking-widest text-forest-700">Fresh Content</span>
+    </div>
+    <h2 class="font-serif text-3xl sm:text-4xl font-bold text-navy-900 mb-6">Latest Guides</h2>
+
+    {categories.length > 0 && (
+      <div class="flex flex-wrap items-center gap-2 mb-8 pb-6 border-b border-slate-200">
+        <a href="/blog/" class="inline-flex items-center gap-2 bg-forest-600 text-white text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-full transition">
+          <i class="fa-solid fa-layer-group text-[10px]"></i>
+          All ({posts.length})
+        </a>
+        {categories.map((cat) => (
+          <a href={`/blog/category/${cat.slug}/`} class="inline-flex items-center gap-2 bg-white border border-slate-200 text-slate-700 hover:border-forest-400 hover:text-forest-700 text-xs font-semibold uppercase tracking-wider px-4 py-2 rounded-full transition">
+            {cat.name}
+            <span class="text-[10px] text-slate-400">({cat.count})</span>
+          </a>
+        ))}
+      </div>
+    )}
+
+    {otherPosts.length === 0 ? (
+      <div class="bg-white rounded-2xl border border-slate-200 p-16 text-center">
+        <i class="fa-solid fa-newspaper text-5xl text-slate-300 mb-4"></i>
+        <h3 class="text-lg font-semibold text-navy-900">No guides yet</h3>
+      </div>
+    ) : (
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {otherPosts.map((post) => (
+          <article class="group bg-white rounded-xl border border-slate-200 overflow-hidden hover:border-forest-400 hover:shadow-lg transition-all duration-200 flex flex-col">
+            <a href={`/blog/${post.slug}/`} class="block overflow-hidden">
+              <div class="h-48 bg-gradient-to-br from-forest-500 to-navy-700 relative overflow-hidden">
+                {post.featuredImage ? (
+                  <img src={post.featuredImage} alt={post.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                ) : (
+                  <div class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-newspaper text-4xl text-white/20"></i></div>
+                )}
+                <span class="absolute top-3 left-3 bg-white/95 backdrop-blur text-navy-900 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md">
+                  {post.category}
+                </span>
+              </div>
+            </a>
+            <div class="p-5 flex-1 flex flex-col">
+              <h3 class="font-serif text-lg font-bold text-navy-900 leading-snug mb-2">
+                <a href={`/blog/${post.slug}/`} class="hover:text-forest-600 transition">{post.title}</a>
+              </h3>
+              <p class="text-sm text-slate-600 leading-relaxed flex-1 line-clamp-3">{post.excerpt}</p>
+              <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+                <div class="flex items-center gap-3">
+                  <span class="flex items-center gap-1"><i class="fa-regular fa-calendar"></i> {formatDate(post.publishDate)}</span>
+                  <span class="flex items-center gap-1"><i class="fa-solid fa-clock"></i> {post.readTime} min</span>
+                </div>
+                <i class="fa-solid fa-arrow-right text-forest-600 group-hover:translate-x-1 transition-transform"></i>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    )}
+  </section>
+
+  <!-- BROWSE BY TOPIC -->
+  {categories.length > 0 && (
+    <section class="bg-white border-y border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-16">
+        <div class="text-center mb-10">
+          <div class="inline-flex items-center gap-2 text-forest-600 text-xs font-bold uppercase tracking-widest mb-3">
+            <span class="w-8 h-px bg-forest-600"></span>
+            Browse by Topic
+            <span class="w-8 h-px bg-forest-600"></span>
+          </div>
+          <h2 class="font-serif text-3xl font-bold text-navy-900">Explore all guide categories</h2>
+          <p class="mt-3 text-slate-600 max-w-2xl mx-auto">Filter our library by topic to find exactly what you need.</p>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {categories.map((cat) => (
+            <a href={`/blog/category/${cat.slug}/`} class="group bg-cream-50 border border-slate-200 rounded-xl p-5 text-center hover:border-forest-500 hover:shadow-md transition-all duration-200">
+              <div class="w-12 h-12 mx-auto bg-forest-50 group-hover:bg-forest-100 rounded-full flex items-center justify-center text-forest-600 mb-3 transition">
+                <i class="fa-solid fa-folder-open"></i>
+              </div>
+              <h3 class="font-semibold text-navy-900 text-sm group-hover:text-forest-600 transition">{cat.name}</h3>
+              <p class="mt-1 text-xs text-slate-500">{cat.count} {cat.count === 1 ? "guide" : "guides"}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- CTA -->
+  <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+    <div class="bg-white border-2 border-forest-500/20 rounded-2xl p-8 lg:p-12 text-center relative overflow-hidden">
+      <div class="absolute -top-16 -right-16 w-48 h-48 bg-forest-500/5 rounded-full blur-2xl"></div>
+      <div class="relative">
+        <div class="inline-flex items-center gap-2 text-forest-700 text-[10px] font-bold uppercase tracking-widest mb-4">
+          <i class="fa-solid fa-location-dot"></i> Ready to Book?
+        </div>
+        <h2 class="font-serif text-3xl lg:text-4xl font-bold text-navy-900 leading-tight">Find a Verified Dog Professional Near You</h2>
+        <p class="mt-4 text-slate-600 max-w-xl mx-auto">Browse our nationwide directory of trusted groomers, trainers, boarding facilities, vets, and therapy dogs.</p>
+        <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+          <a href="/#services" class="inline-flex items-center justify-center gap-2 bg-forest-600 hover:bg-forest-700 text-white font-semibold px-8 py-3.5 rounded-lg transition shadow-md">
+            <i class="fa-solid fa-search"></i> Browse Directory
+          </a>
+          <a href="/list-your-business/" class="inline-flex items-center justify-center gap-2 bg-white border border-slate-300 hover:border-slate-400 text-navy-900 font-semibold px-8 py-3.5 rounded-lg transition">
+            <i class="fa-solid fa-plus-circle"></i> List Your Business
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUGGEST TOPIC -->
+  <section class="bg-navy-900">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-16 text-center relative overflow-hidden">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-forest-500/20 via-transparent to-transparent"></div>
+      <div class="relative">
+        <div class="inline-flex items-center gap-2 text-gold-400 text-[10px] font-bold uppercase tracking-widest mb-4">
+          <i class="fa-solid fa-lightbulb"></i> Missing Something?
+        </div>
+        <h2 class="font-serif text-3xl lg:text-4xl font-bold text-white leading-tight">Have a Topic You'd Like Us to Cover?</h2>
+        <p class="mt-4 text-white/70 max-w-xl mx-auto">Tell us what you want to read about. We write what dog owners actually need — no fluff.</p>
+        <div class="mt-8">
+          <a href="/contact/" class="inline-flex items-center gap-2 bg-gold-400 hover:bg-gold-500 text-navy-900 font-bold uppercase tracking-wider text-xs px-8 py-4 rounded-lg transition shadow-lg">
+            <i class="fa-solid fa-paper-plane"></i> Suggest a Topic
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

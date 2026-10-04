@@ -1,0 +1,60 @@
+---
+// src/pages/partnerships.astro
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { breadcrumbSchema, webPageSchema } from "../lib/schemas.js";
+
+const title = "Partnerships | DogCareFinder";
+const description = "Media, sponsorship, and partnership opportunities with DogCareFinder.";
+const canonical = "https://dogcarefinder.com/partnerships/";
+
+const schemas = [
+  webPageSchema(title, description, canonical),
+  breadcrumbSchema([
+    { name: "Home", url: "https://dogcarefinder.com/" },
+    { name: "Partnerships", url: canonical },
+  ]),
+];
+---
+
+<BaseLayout title={title} description={description} canonical={canonical} schemas={schemas}>
+  <section class="bg-navy-900 text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+      <nav class="text-xs text-white/70 flex justify-center gap-2 mb-4">
+        <a href="/" class="hover:text-white">Home</a>
+        <i class="fa-solid fa-chevron-right text-[9px] self-center"></i>
+        <span class="text-white font-semibold">Partnerships</span>
+      </nav>
+      <h1 class="font-serif text-4xl md:text-5xl font-bold">Work With Us</h1>
+      <p class="mt-4 text-white/80 max-w-2xl mx-auto">
+        Media, sponsorship, and collaboration opportunities — every request is read by a person, not a bot.
+      </p>
+    </div>
+  </section>
+
+  <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-14 prose prose-slate max-w-none">
+    <h2 class="font-serif text-2xl font-bold text-navy-900 mb-4">What we're open to</h2>
+    <div class="grid sm:grid-cols-2 gap-4 not-prose">
+      <div class="bg-white border border-slate-200 rounded-xl p-5">
+        <h3 class="font-bold text-navy-900 mb-1">Media & press</h3>
+        <p class="text-sm text-slate-600">Expert commentary, data, or quotes on the dog care market.</p>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-xl p-5">
+        <h3 class="font-bold text-navy-900 mb-1">Sponsorship</h3>
+        <p class="text-sm text-slate-600">Sponsoring a guide, tool, or directory section.</p>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-xl p-5">
+        <h3 class="font-bold text-navy-900 mb-1">Content collaboration</h3>
+        <p class="text-sm text-slate-600">Co-authored guides and expert reviews with credit.</p>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-xl p-5">
+        <h3 class="font-bold text-navy-900 mb-1">Affiliate & referral</h3>
+        <p class="text-sm text-slate-600">Arrangements where the product genuinely helps dog owners.</p>
+      </div>
+    </div>
+
+    <h2 class="font-serif text-2xl font-bold text-navy-900 mt-10 mb-3">Get in touch</h2>
+    <p class="text-slate-700">
+      Send a brief proposal to <a href="mailto:info@dogcarefinder.com" class="text-forest-600 underline font-semibold">info@dogcarefinder.com</a>. Tell us who you are, what you'd like to do, and what success looks like.
+    </p>
+  </section>
+</BaseLayout>

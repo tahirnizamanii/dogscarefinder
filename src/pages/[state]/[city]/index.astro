@@ -1,0 +1,261 @@
+---
+// src/pages/[state]/[city]/index.astro
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { fetchAllRecords, toUrlSegment, slugify } from "../../../lib/database.js";
+import {
+  breadcrumbSchema,
+  webPageSchema,
+  itemListSchema,
+  faqSchema,
+} from "../../../lib/schemas.js";
+import { generateCityFaqs } from "../../../lib/faqs.js";
+
+export async function getStaticPaths() {
+  const allListings = await fetchAllRecords();
+  const comboMap = new Map();
+
+  for (const listing of allListings) {
+    if (!listing.state || !listing.city) continue;
+    const stateSlug = toUrlSegment(listing.state);
+    const citySlug = toUrlSegment(listing.city);
+    const key = `${stateSlug}/${citySlug}`;
+
+    if (!comboMap.has(key)) {
+      comboMap.set(key, {
+        state: stateSlug,
+        city: citySlug,
+        stateDisplay: listing.state,
+        cityDisplay: listing.city,
+      });
+    }
+  }
+
+  return Array.from(comboMap.values()).map((combo) => ({
+    params: { state: combo.state, city: combo.city },
+    props: {
+      stateDisplay: combo.stateDisplay,
+      cityDisplay: combo.cityDisplay,
+    },
+  }));
+}
+
+const { state: stateSlug, city: citySlug } = Astro.params;
+const { stateDisplay, cityDisplay } = Astro.props;
+
+const allListings = await fetchAllRecords();
+
+const cityListings = allListings.filter(
+  (l) =>
+    toUrlSegment(l.state) === stateSlug &&
+    toUrlSegment(l.city) === citySlug
+);
+
+// Aggregate categories
+const categoryMap = new Map();
+for (const listing of cityListings) {
+  if (!listing.category) continue;
+  const cat = listing.category;
+  if (!categoryMap.has(cat)) {
+    categoryMap.set(cat, { name: cat, slug: slugify(cat), count: 0 });
+  }
+  categoryMap.get(cat).count += 1;
+}
+
+const categories = Array.from(categoryMap.values()).sort((a, b) =>
+  a.name.localeCompare(b.name)
+);
+
+const totalInCity = cityListings.length;
+const categoryCount = categories.length;
+
+// ── SEO ─────────────────────────────────────────────────────────────────
+const title = `Dog Care in ${cityDisplay}, ${stateDisplay} — ${totalInCity} Providers | DogCareFinder`;
+const description = `Find ${totalInCity} verified dog care providers in ${cityDisplay}, ${stateDisplay}. Browse ${categoryCount} categories including groomers, trainers, boarding & vets. Free to browse.`;
+const canonical = `https://dogcarefinder.com/${stateSlug}/${citySlug}/`;
+
+// ── FAQs ────────────────────────────────────────────────────────────────
+const faqs = generateCityFaqs(
+  cityDisplay,
+  stateDisplay,
+  totalInCity,
+  categories
+);
+
+// ── Schemas (array) ─────────────────────────────────────────────────────
+const schemas = [
+  webPageSchema(title, description, canonical),
+  breadcrumbSchema([
+    { name: "Home", url: "https://dogcarefinder.com/" },
+    { name: stateDisplay, url: `https://dogcarefinder.com/${stateSlug}/` },
+    { name: cityDisplay, url: canonical },
+  ]),
+  itemListSchema(
+    `Dog Care Providers in ${cityDisplay}, ${stateDisplay}`,
+    description,
+    canonical,
+    categories.map((c) => ({
+      businessName: `${c.name} in ${cityDisplay}`,
+      city: cityDisplay,
+      state: stateDisplay,
+      category: c.name,
+      phone: "",
+      website: `https://dogcarefinder.com/${stateSlug}/${citySlug}/${c.slug}/`,
+      streetAddress: "",
+      zipCode: "",
+      rating: null,
+      reviewCount: 0,
+    })),
+    "Directory"
+  ),
+  faqSchema(faqs),
+];
+
+// Other cities in same state (for silo interlinking)
+const siblingCities = Array.from(new Set(
+  allListings
+    .filter((l) => toUrlSegment(l.state) === stateSlug && toUrlSegment(l.city) !== citySlug)
+    .map((l) => l.city)
+)).slice(0, 6);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  schemas={schemas}
+>
+  <!-- Breadcrumb -->
+  <div class="bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+      <nav class="text-sm text-slate-500">
+        <a href="/" class="hover:text-forest-600 transition">Home</a>
+        <span class="mx-2">›</span>
+        <a href={`/${stateSlug}/`} class="hover:text-forest-600 transition">
+          {stateDisplay}
+        </a>
+        <span class="mx-2">›</span>
+        <span class="text-navy-900 font-medium">{cityDisplay}</span>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <section class="bg-navy-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h1 class="text-3xl md:text-4xl font-serif font-bold text-white">
+        Dog Care in {cityDisplay}, {stateDisplay}
+      </h1>
+      <p class="mt-3 text-slate-300 max-w-2xl">
+        Browse {totalInCity} verified dog care providers in {cityDisplay}. Select
+        a category below to see full listings.
+      </p>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h2 class="text-2xl font-bold text-navy-900 mb-6">
+      Browse by Category in {cityDisplay}
+    </h2>
+
+    {categories.length === 0 ? (
+      <div class="bg-white rounded-xl border border-slate-200 p-8 text-center">
+        <p class="text-slate-500">
+          No listings available in {cityDisplay} yet. Check back soon.
+        </p>
+      </div>
+    ) : (
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {categories.map((cat) => (
+          <a
+            href={`/${stateSlug}/${citySlug}/${cat.slug}/`}
+            class="group bg-white rounded-xl border border-slate-200 p-6 hover:border-forest-400 hover:shadow-lg transition-all duration-200"
+          >
+            <div class="flex items-start justify-between">
+              <div class="w-12 h-12 bg-forest-50 text-forest-600 rounded-xl flex items-center justify-center text-xl">
+                {cat.name === "Groomers" && <i class="fa-solid fa-scissors"></i>}
+                {cat.name === "Trainers" && <i class="fa-solid fa-bullseye"></i>}
+                {cat.name === "Boarding" && <i class="fa-solid fa-house"></i>}
+                {cat.name === "Vets" && <i class="fa-solid fa-stethoscope"></i>}
+                {cat.name === "Therapy" && <i class="fa-solid fa-paw"></i>}
+                {!["Groomers", "Trainers", "Boarding", "Vets", "Therapy"].includes(cat.name) && (
+                  <i class="fa-solid fa-dog"></i>
+                )}
+              </div>
+              <span class="text-xs bg-slate-100 text-slate-500 rounded-full px-2.5 py-1 font-medium">
+                {cat.count}
+              </span>
+            </div>
+            <h3 class="mt-4 font-semibold text-lg text-navy-900 group-hover:text-forest-600 transition">
+              {cat.name}
+            </h3>
+            <p class="mt-1 text-sm text-slate-500">
+              {cat.count} {cat.count === 1 ? "provider" : "providers"} in{" "}
+              {cityDisplay}, {stateDisplay}
+            </p>
+            <span class="mt-4 inline-flex items-center text-sm font-medium text-forest-600 group-hover:text-forest-700">
+              View listings <i class="fa-solid fa-arrow-right text-xs ml-2"></i>
+            </span>
+          </a>
+        ))}
+      </div>
+    )}
+  </section>
+
+  <!-- FAQ -->
+  {faqs.length > 0 && (
+    <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-14">
+      <h2 class="text-2xl font-serif font-bold text-navy-900 mb-6">
+        Frequently Asked Questions
+      </h2>
+      <div class="space-y-4">
+        {faqs.map((faq) => (
+          <details class="bg-white border border-slate-200 rounded-xl p-5 group">
+            <summary class="font-semibold text-navy-900 cursor-pointer flex justify-between items-center">
+              {faq.question}
+              <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
+            </summary>
+            <p class="mt-3 text-slate-600 text-sm leading-relaxed">{faq.answer}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Silo: Nearby cities -->
+  {siblingCities.length > 0 && (
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+      <div class="bg-white rounded-xl border border-slate-200 p-6">
+        <h3 class="font-semibold text-navy-900 mb-3">
+          Other cities in {stateDisplay}
+        </h3>
+        <div class="flex flex-wrap gap-2">
+          {siblingCities.map((city) => (
+            <a
+              href={`/${stateSlug}/${slugify(city)}/`}
+              class="inline-block bg-slate-50 border border-slate-200 rounded-full px-4 py-2 text-sm font-medium text-slate-600 hover:border-forest-400 hover:text-forest-600 transition"
+            >
+              {city}
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Back -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 flex gap-4">
+    <a
+      href={`/${stateSlug}/`}
+      class="inline-flex items-center gap-2 text-forest-600 font-medium hover:text-forest-700 transition"
+    >
+      ← Back to {stateDisplay}
+    </a>
+    <a
+      href="/"
+      class="inline-flex items-center gap-2 text-slate-500 font-medium hover:text-slate-700 transition"
+    >
+      All States
+    </a>
+  </div>
+</BaseLayout>

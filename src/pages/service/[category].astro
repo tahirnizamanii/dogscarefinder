@@ -1,0 +1,602 @@
+---
+// src/pages/service/[category].astro
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import {
+  fetchAllRecords, toUrlSegment, slugify, renderStars,
+} from "../../lib/database.js";
+import {
+  breadcrumbSchema, webPageSchema, itemListSchema, faqSchema, serviceSchema,
+} from "../../lib/schemas.js";
+
+export async function getStaticPaths() {
+  const listings = await fetchAllRecords();
+  const categoryMap = new Map();
+  for (const l of listings) {
+    if (!l.category) continue;
+    const slug = slugify(l.category);
+    if (!categoryMap.has(slug)) categoryMap.set(slug, l.category);
+  }
+  return Array.from(categoryMap.entries()).map(([slug, display]) => ({
+    params: { category: slug },
+    props: { categoryDisplay: display },
+  }));
+}
+
+const { category } = Astro.params;
+const { categoryDisplay } = Astro.props;
+
+const allListings = await fetchAllRecords();
+const providers = allListings
+  .filter((l) => slugify(l.category) === category)
+  .sort((a, b) => {
+    const r = (b.rating ?? 0) - (a.rating ?? 0);
+    return r !== 0 ? r : (b.reviewCount ?? 0) - (a.reviewCount ?? 0);
+  });
+
+const providerCount = providers.length;
+
+// Aggregate states / cities for filter dropdowns
+const stateSet = new Set();
+const citySet = new Set();
+for (const p of providers) {
+  if (p.state) stateSet.add(p.state);
+  if (p.city) citySet.add(p.city);
+}
+const states = Array.from(stateSet).sort();
+const cities = Array.from(citySet).sort();
+
+// Category icons
+const CATEGORY_ICONS = {
+  Groomers: "fa-scissors",
+  Trainers: "fa-bullseye",
+  Boarding: "fa-house",
+  Vets: "fa-stethoscope",
+  Therapy: "fa-paw",
+};
+
+// Cover images per category (rotated for variety)
+const PROVIDER_IMAGES = {
+  Groomers: [
+    "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?w=800&q=80&auto=format&fit=crop",
+  ],
+  Trainers: [
+    "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1568572933382-74d440642117?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=800&q=80&auto=format&fit=crop",
+  ],
+  Boarding: [
+    "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1560807707-8cc77767d783?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1552053831-71594a27632d?w=800&q=80&auto=format&fit=crop",
+  ],
+  Vets: [
+    "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&q=80&auto=format&fit=crop",
+  ],
+  Therapy: [
+    "https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1568572933382-74d440642117?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=800&q=80&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=800&q=80&auto=format&fit=crop",
+  ],
+};
+
+function getProviderImage(categoryName, idx) {
+  const pool = PROVIDER_IMAGES[categoryName] || PROVIDER_IMAGES.Groomers;
+  return pool[idx % pool.length];
+}
+
+const title = `Best Dog ${categoryDisplay} in the US — ${providerCount} Verified ${providerCount === 1 ? "Provider" : "Providers"} | DogCareFinder`;
+const description = `Browse ${providerCount} verified dog ${categoryDisplay.toLowerCase()} across the US. Filter by state, city, and service attributes. Free directory.`;
+const canonical = `https://dogcarefinder.com/service/${category}/`;
+
+const faqs = [
+  {
+    question: `How many dog ${categoryDisplay.toLowerCase()} are listed in the US?`,
+    answer: `We currently list ${providerCount} verified dog ${categoryDisplay.toLowerCase()} across ${states.length} ${states.length === 1 ? "state" : "states"}. Every listing includes contact details and, where available, customer ratings.`,
+  },
+  {
+    question: `How do I find dog ${categoryDisplay.toLowerCase()} near me?`,
+    answer: `Use the state and city filters on the left to narrow the list. All listings include phone numbers so you can call directly.`,
+  },
+  {
+    question: `Are these dog ${categoryDisplay.toLowerCase()} verified?`,
+    answer: `Yes — all listed providers are cross-checked against public records and Google Business listings. Paid tiers receive additional verification.`,
+  },
+  {
+    question: `Is browsing free?`,
+    answer: `Yes — 100% free. No referral fees, no booking commissions, no account needed.`,
+  },
+];
+
+const schemas = [
+  webPageSchema(title, description, canonical),
+  breadcrumbSchema([
+    { name: "Home", url: "https://dogcarefinder.com/" },
+    { name: "Services", url: "https://dogcarefinder.com/service/" },
+    { name: categoryDisplay, url: canonical },
+  ]),
+  serviceSchema(
+    `Dog ${categoryDisplay}`,
+    `Directory of dog ${categoryDisplay.toLowerCase()} services`,
+    canonical,
+    { "@type": "Country", name: "United States" }
+  ),
+  itemListSchema(
+    `Best Dog ${categoryDisplay} in the US`,
+    description,
+    canonical,
+    providers.slice(0, 50),
+    categoryDisplay
+  ),
+  faqSchema(faqs),
+];
+---
+
+<BaseLayout title={title} description={description} canonical={canonical} schemas={schemas}>
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <section class="bg-navy-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
+      <nav class="text-xs text-white/70 flex items-center gap-2 mb-4">
+        <a href="/" class="hover:text-white transition">Home</a>
+        <i class="fa-solid fa-chevron-right text-[9px]"></i>
+        <a href="/service/" class="hover:text-white transition">Services</a>
+        <i class="fa-solid fa-chevron-right text-[9px]"></i>
+        <span class="text-white font-semibold">{categoryDisplay}</span>
+      </nav>
+      <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-white/90 mb-5">
+        <i class={`fa-solid ${CATEGORY_ICONS[categoryDisplay] || "fa-paw"} text-gold-400`}></i>
+        All {categoryDisplay}
+      </div>
+      <h1 class="font-serif text-4xl lg:text-5xl font-bold leading-tight">
+        Browse All Dog {categoryDisplay}
+      </h1>
+      <p class="mt-4 text-white/80 max-w-2xl text-base">
+        Explore dog {categoryDisplay.toLowerCase()} across {states.length} {states.length === 1 ? "state" : "states"} and growing. Use the filters to narrow by state, city, or specialty.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════ RESULT COUNT BAR ═══════════ -->
+  <section class="bg-cream-100 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between flex-wrap gap-3">
+      <div class="flex items-center gap-2 text-sm text-slate-700">
+        <i class="fa-solid fa-dog text-forest-600"></i>
+        <span class="font-bold">All Providers</span>
+        <span class="text-slate-400">·</span>
+        <span class="font-semibold text-navy-900">
+          {providerCount} {providerCount === 1 ? "provider" : "providers"} found
+        </span>
+      </div>
+      <button id="clear-filters" class="text-xs font-bold uppercase tracking-widest text-slate-600 hover:text-forest-600 transition flex items-center gap-2">
+        <i class="fa-solid fa-rotate-left"></i> Clear All Filters
+      </button>
+    </div>
+  </section>
+
+  <!-- ═══════════ MAIN LAYOUT — Sidebar + Results ═══════════ -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+      <!-- ═══ SIDEBAR ═══ -->
+      <aside class="lg:col-span-3">
+        <div class="bg-white border border-slate-200 rounded-xl p-5 lg:sticky lg:top-24">
+
+          <div class="flex items-center justify-between mb-5">
+            <h2 class="font-bold text-navy-900 text-sm uppercase tracking-wider flex items-center gap-2">
+              <i class="fa-solid fa-sliders text-forest-600"></i>
+              Filters
+            </h2>
+            <button id="clear-filters-2" class="text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-forest-600 transition">
+              Clear
+            </button>
+          </div>
+
+          <!-- Keyword Search -->
+          <div class="mb-5">
+            <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+              <i class="fa-solid fa-magnifying-glass mr-1"></i>
+              Keyword Search
+            </label>
+            <input id="filter-keyword" type="text" placeholder="Name, city, or keyword..."
+              class="w-full px-3 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
+          </div>
+
+          <!-- State -->
+          <div class="mb-5">
+            <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+              <i class="fa-solid fa-map-location-dot mr-1"></i>
+              State
+            </label>
+            <select id="filter-state" class="w-full px-3 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm">
+              <option value="">All States</option>
+              {states.map((s) => <option value={s}>{s}</option>)}
+            </select>
+          </div>
+
+          <!-- City -->
+          <div class="mb-5">
+            <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+              <i class="fa-solid fa-city mr-1"></i>
+              City
+            </label>
+            <select id="filter-city" class="w-full px-3 py-2.5 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm">
+              <option value="">All Cities</option>
+              {cities.map((c) => <option value={c}>{c}</option>)}
+            </select>
+          </div>
+
+          <!-- Service Attributes -->
+          <div class="mb-5 pt-5 border-t border-slate-200">
+            <label class="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+              <i class="fa-solid fa-list-check mr-1"></i>
+              Service Attributes
+            </label>
+            <div class="space-y-2">
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                <input type="checkbox" id="filter-featured" class="rounded border-slate-300 text-forest-600 focus:ring-forest-500" />
+                <i class="fa-solid fa-star text-gold-400 text-xs"></i>
+                <span>Featured Listings</span>
+              </label>
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                <input type="checkbox" id="filter-mobile" class="rounded border-slate-300 text-forest-600 focus:ring-forest-500" />
+                <i class="fa-solid fa-mobile-screen text-xs text-slate-400"></i>
+                <span>Mobile/Ambulatory</span>
+              </label>
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                <input type="checkbox" id="filter-emergency" class="rounded border-slate-300 text-forest-600 focus:ring-forest-500" />
+                <i class="fa-solid fa-truck-medical text-xs text-red-500"></i>
+                <span>Emergency On-Call</span>
+              </label>
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                <input type="checkbox" id="filter-phone" class="rounded border-slate-300 text-forest-600 focus:ring-forest-500" />
+                <i class="fa-solid fa-phone text-xs text-slate-400"></i>
+                <span>Has Phone</span>
+              </label>
+              <label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                <input type="checkbox" id="filter-website" class="rounded border-slate-300 text-forest-600 focus:ring-forest-500" />
+                <i class="fa-solid fa-globe text-xs text-slate-400"></i>
+                <span>Has Website</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Apply button -->
+          <button id="apply-filters" class="w-full bg-forest-600 hover:bg-forest-700 text-white font-bold py-3 rounded-lg transition text-sm flex items-center justify-center gap-2">
+            <i class="fa-solid fa-filter"></i> Apply Filters
+          </button>
+        </div>
+      </aside>
+
+      <!-- ═══ RESULTS ═══ -->
+      <main class="lg:col-span-9">
+
+        <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+          <p id="result-count" class="text-sm text-slate-600">
+            Showing <span class="font-semibold text-navy-900">{providerCount}</span> of <span class="font-semibold text-navy-900">{providerCount}</span> {providerCount === 1 ? "provider" : "providers"}
+          </p>
+          <select id="sort-by" class="px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm">
+            <option value="rating">Sort: Highest Rated</option>
+            <option value="reviews">Sort: Most Reviewed</option>
+            <option value="name">Sort: A-Z</option>
+          </select>
+        </div>
+
+        <!-- Provider Grid -->
+        <div id="provider-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {providers.map((p, idx) => (
+            <article
+              class="provider-card bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-xl hover:border-forest-300 transition-all duration-200 flex flex-col"
+              data-name={p.businessName.toLowerCase()}
+              data-state={p.state}
+              data-city={p.city}
+              data-rating={p.rating ?? 0}
+              data-reviews={p.reviewCount ?? 0}
+              data-featured={p.featured ? "1" : "0"}
+              data-phone={p.phone ? "1" : "0"}
+              data-website={p.website ? "1" : "0"}
+            >
+              <!-- Cover Image -->
+              <div class="relative h-48 overflow-hidden bg-gradient-to-br from-forest-500 to-navy-700">
+                <img
+                  src={getProviderImage(p.category, idx)}
+                  alt={`${p.businessName} — ${p.category} in ${p.city}, ${p.state}`}
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                  loading="lazy"
+                  width="800"
+                  height="500"
+                />
+
+                {p.featured && (
+                  <span class="absolute top-3 left-3 bg-gold-400 text-navy-900 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded shadow-md">
+                    ★ Featured
+                  </span>
+                )}
+
+                <div class="absolute bottom-3 left-3 bg-white/95 backdrop-blur rounded-full px-3 py-1 text-[10px] font-semibold text-slate-700 shadow-sm flex items-center gap-1.5">
+                  <i class="fa-solid fa-star text-gold-400 text-[9px]"></i>
+                  {p.reviewCount > 0 ? `${p.reviewCount} reviews` : "No reviews yet"}
+                </div>
+              </div>
+
+              <!-- Content -->
+              <div class="p-5 flex-1 flex flex-col">
+
+                <!-- Badges -->
+                <div class="flex flex-wrap items-center gap-1.5 mb-2">
+                  <span class="inline-flex items-center gap-1 bg-forest-50 text-forest-700 text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded">
+                    <i class={`fa-solid ${CATEGORY_ICONS[p.category] || "fa-paw"} text-[8px]`}></i>
+                    {p.category}
+                  </span>
+                  <span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded">
+                    <i class="fa-solid fa-user-check text-[8px]"></i>
+                    Accepting
+                  </span>
+                </div>
+
+                <!-- Business Name -->
+                <h3 class="font-serif text-lg font-bold text-navy-900 leading-snug">
+                  <a href={`/provider/${p.slug}/`} class="hover:text-forest-600 transition">
+                    {p.businessName}
+                  </a>
+                </h3>
+
+                <!-- Location + Rating -->
+                <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500">
+                  <span class="flex items-center gap-1">
+                    <i class="fa-solid fa-map-pin text-forest-600"></i>
+                    {p.city}, {p.state}
+                  </span>
+                  {p.rating !== null && (
+                    <span class="flex items-center gap-1">
+                      <i class="fa-solid fa-star text-gold-500"></i>
+                      <span class="font-semibold text-navy-900">{p.rating.toFixed(1)}</span>
+                    </span>
+                  )}
+                </div>
+
+                <!-- Description -->
+                <p class="mt-3 text-sm text-slate-600 leading-relaxed line-clamp-2 flex-1">
+                  {p.description
+                    ? p.description.replace(/<[^>]+>/g, " ").substring(0, 140) + "..."
+                    : `${p.businessName} is a trusted ${p.category.toLowerCase()} serving ${p.city}, ${p.state} and surrounding areas. Contact directly for pricing and availability.`}
+                </p>
+
+                <!-- Phone + tags -->
+                <div class="mt-3 flex flex-wrap items-center gap-2 text-[11px]">
+                  {p.phone && (
+                    <a href={`tel:${p.phone}`} class="flex items-center gap-1.5 text-slate-600 hover:text-forest-600 transition">
+                      <i class="fa-solid fa-phone text-forest-600"></i>
+                      {p.phone}
+                    </a>
+                  )}
+                  <span class="inline-flex items-center gap-1 bg-slate-100 text-slate-600 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
+                    <i class="fa-solid fa-mobile-screen text-[8px]"></i> Mobile
+                  </span>
+                  <span class="inline-flex items-center gap-1 bg-red-50 text-red-600 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
+                    <i class="fa-solid fa-truck-medical text-[8px]"></i> Emergency
+                  </span>
+                </div>
+
+                <!-- Buttons -->
+                <div class="mt-4 flex gap-2">
+                  <a href={`/provider/${p.slug}/`} class="flex-1 bg-navy-900 hover:bg-navy-800 text-white text-xs font-bold uppercase tracking-widest text-center py-2.5 rounded-lg transition flex items-center justify-center gap-2">
+                    Open Profile
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                  </a>
+                  {p.website && (
+                    <a href={p.website} target="_blank" rel="noopener noreferrer" class="bg-slate-100 hover:bg-slate-200 text-navy-900 text-xs font-bold text-center py-2.5 px-3 rounded-lg transition" title="Visit website">
+                      <i class="fa-solid fa-globe"></i>
+                    </a>
+                  )}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <!-- Empty state -->
+        <div id="no-results" class="hidden bg-white border border-slate-200 rounded-xl p-12 text-center mt-5">
+          <i class="fa-solid fa-magnifying-glass text-4xl text-slate-300 mb-4"></i>
+          <h3 class="text-lg font-semibold text-navy-900 mb-1">No providers match your filters</h3>
+          <p class="text-sm text-slate-500 mb-4">Try clearing filters or searching different keywords.</p>
+          <button id="reset-empty" class="bg-forest-600 hover:bg-forest-700 text-white font-bold text-xs uppercase tracking-widest px-6 py-2.5 rounded-lg transition">
+            Clear All Filters
+          </button>
+        </div>
+
+        <!-- Pagination -->
+        <div id="pagination" class="mt-10 flex items-center justify-center gap-2"></div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ═══════════ FAQ ═══════════ -->
+  <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-14">
+    <h2 class="font-serif text-2xl font-bold text-navy-900 text-center mb-8">Frequently Asked Questions</h2>
+    <div class="space-y-3">
+      {faqs.map((faq) => (
+        <details class="group bg-white border border-slate-200 rounded-xl">
+          <summary class="cursor-pointer flex items-center justify-between gap-4 p-5 font-semibold text-navy-900">
+            {faq.question}
+            <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="px-5 pb-5 text-sm text-slate-600 leading-relaxed">{faq.answer}</div>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 flex gap-4">
+    <a href="/service/" class="inline-flex items-center gap-2 text-forest-600 font-medium hover:text-forest-700 transition">
+      ← All Services
+    </a>
+    <a href="/" class="inline-flex items-center gap-2 text-slate-500 font-medium hover:text-slate-700 transition">
+      Home
+    </a>
+  </div>
+
+  <!-- ═══════════ FILTERING + PAGINATION SCRIPT ═══════════ -->
+  <script is:inline>
+    (function () {
+      var PAGE_SIZE = 12;
+      var currentPage = 1;
+      var cards = Array.prototype.slice.call(document.querySelectorAll(".provider-card"));
+      var grid = document.getElementById("provider-grid");
+      var noResults = document.getElementById("no-results");
+      var resultCount = document.getElementById("result-count");
+      var pagination = document.getElementById("pagination");
+
+      var inputKeyword = document.getElementById("filter-keyword");
+      var selectState = document.getElementById("filter-state");
+      var selectCity = document.getElementById("filter-city");
+      var checkFeatured = document.getElementById("filter-featured");
+      var checkMobile = document.getElementById("filter-mobile");
+      var checkEmergency = document.getElementById("filter-emergency");
+      var checkPhone = document.getElementById("filter-phone");
+      var checkWebsite = document.getElementById("filter-website");
+      var sortBy = document.getElementById("sort-by");
+
+      function matches(card) {
+        var kw = inputKeyword.value.toLowerCase().trim();
+        var st = selectState.value;
+        var ct = selectCity.value;
+
+        if (kw) {
+          var hay = (card.getAttribute("data-name") || "") + " " + (card.getAttribute("data-city") || "") + " " + (card.getAttribute("data-state") || "");
+          if (hay.indexOf(kw) === -1) return false;
+        }
+        if (st && card.getAttribute("data-state") !== st) return false;
+        if (ct && card.getAttribute("data-city") !== ct) return false;
+        if (checkFeatured.checked && card.getAttribute("data-featured") !== "1") return false;
+        if (checkPhone.checked && card.getAttribute("data-phone") !== "1") return false;
+        if (checkWebsite.checked && card.getAttribute("data-website") !== "1") return false;
+        return true;
+      }
+
+      function sortCards(list) {
+        var mode = sortBy.value;
+        return list.sort(function (a, b) {
+          if (mode === "rating") {
+            return parseFloat(b.getAttribute("data-rating")) - parseFloat(a.getAttribute("data-rating"));
+          }
+          if (mode === "reviews") {
+            return parseInt(b.getAttribute("data-reviews")) - parseInt(a.getAttribute("data-reviews"));
+          }
+          if (mode === "name") {
+            return (a.getAttribute("data-name") || "").localeCompare(b.getAttribute("data-name") || "");
+          }
+          return 0;
+        });
+      }
+
+      function render() {
+        var visible = sortCards(cards.filter(matches));
+
+        cards.forEach(function (c) { c.style.display = "none"; });
+
+        var total = visible.length;
+        var totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+        if (currentPage > totalPages) currentPage = 1;
+
+        var start = (currentPage - 1) * PAGE_SIZE;
+        var end = start + PAGE_SIZE;
+        visible.slice(start, end).forEach(function (c) { c.style.display = ""; });
+
+        var label = total === 1 ? "provider" : "providers";
+        resultCount.innerHTML = "Showing <span class='font-semibold text-navy-900'>" + total + "</span> of <span class='font-semibold text-navy-900'>" + cards.length + "</span> " + label;
+
+        if (total === 0) {
+          noResults.classList.remove("hidden");
+        } else {
+          noResults.classList.add("hidden");
+        }
+
+        pagination.innerHTML = "";
+        if (totalPages > 1) {
+          var prev = document.createElement("button");
+          prev.textContent = "‹ Prev";
+          prev.className = "px-3 py-2 rounded-lg text-sm font-semibold border border-slate-200 text-slate-600 hover:border-forest-400 hover:text-forest-600 transition " + (currentPage === 1 ? "opacity-40 cursor-not-allowed" : "");
+          prev.disabled = currentPage === 1;
+          prev.onclick = function () { if (currentPage > 1) { currentPage--; render(); window.scrollTo({ top: 0, behavior: "smooth" }); } };
+          pagination.appendChild(prev);
+
+          for (var i = 1; i <= totalPages; i++) {
+            (function (n) {
+              var b = document.createElement("button");
+              b.textContent = n;
+              b.className = n === currentPage
+                ? "px-3.5 py-2 rounded-lg text-sm font-bold bg-forest-600 text-white shadow-sm"
+                : "px-3.5 py-2 rounded-lg text-sm font-semibold border border-slate-200 text-slate-600 hover:border-forest-400 hover:text-forest-600 transition";
+              b.onclick = function () { currentPage = n; render(); window.scrollTo({ top: 0, behavior: "smooth" }); };
+              pagination.appendChild(b);
+            })(i);
+          }
+
+          var next = document.createElement("button");
+          next.textContent = "Next ›";
+          next.className = "px-3 py-2 rounded-lg text-sm font-semibold border border-slate-200 text-slate-600 hover:border-forest-400 hover:text-forest-600 transition " + (currentPage === totalPages ? "opacity-40 cursor-not-allowed" : "");
+          next.disabled = currentPage === totalPages;
+          next.onclick = function () { if (currentPage < totalPages) { currentPage++; render(); window.scrollTo({ top: 0, behavior: "smooth" }); } };
+          pagination.appendChild(next);
+        }
+      }
+
+      function clearAll() {
+        inputKeyword.value = "";
+        selectState.value = "";
+        selectCity.value = "";
+        checkFeatured.checked = false;
+        checkMobile.checked = false;
+        checkEmergency.checked = false;
+        checkPhone.checked = false;
+        checkWebsite.checked = false;
+        sortBy.value = "rating";
+        currentPage = 1;
+        render();
+      }
+
+      inputKeyword.addEventListener("input", function () { currentPage = 1; render(); });
+      selectState.addEventListener("change", function () { currentPage = 1; render(); });
+      selectCity.addEventListener("change", function () { currentPage = 1; render(); });
+      checkFeatured.addEventListener("change", function () { currentPage = 1; render(); });
+      checkPhone.addEventListener("change", function () { currentPage = 1; render(); });
+      checkWebsite.addEventListener("change", function () { currentPage = 1; render(); });
+      sortBy.addEventListener("change", function () { currentPage = 1; render(); });
+
+      var clearBtn1 = document.getElementById("clear-filters");
+      var clearBtn2 = document.getElementById("clear-filters-2");
+      var resetEmpty = document.getElementById("reset-empty");
+      var applyBtn = document.getElementById("apply-filters");
+      clearBtn1.addEventListener("click", clearAll);
+      clearBtn2.addEventListener("click", clearAll);
+      resetEmpty.addEventListener("click", clearAll);
+      applyBtn.addEventListener("click", function () { currentPage = 1; render(); });
+
+      render();
+    })();
+  </script>
+
+  <style is:inline>
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  </style>
+</BaseLayout>

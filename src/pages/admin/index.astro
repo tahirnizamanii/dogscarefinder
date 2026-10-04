@@ -1,0 +1,120 @@
+---
+// src/pages/admin/index.astro
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { breadcrumbSchema, webPageSchema } from "../../lib/schemas.js";
+
+const title = "Admin Panel | DogCareFinder";
+const description = "Administrative tools for managing DogCareFinder listings and blog posts.";
+const canonical = "https://dogcarefinder.com/admin/";
+
+const schemas = [
+  webPageSchema(title, description, canonical),
+  breadcrumbSchema([
+    { name: "Home", url: "https://dogcarefinder.com/" },
+    { name: "Admin", url: canonical },
+  ]),
+];
+
+const tools = [
+  {
+    icon: "fa-store",
+    title: "Manage Listings",
+    description: "View, approve, edit, and publish business listings in Airtable.",
+    url: "https://airtable.com/",
+    label: "Open Airtable",
+  },
+  {
+    icon: "fa-newspaper",
+    title: "Manage Blog Posts",
+    description: "Write, edit, and schedule blog posts in the Blog Posts table.",
+    url: "https://airtable.com/",
+    label: "Open Airtable",
+  },
+  {
+    icon: "fa-file-csv",
+    title: "Bulk CSV Import",
+    description: "Upload hundreds of listings at once via CSV import to Airtable.",
+    url: "https://airtable.com/",
+    label: "Open Airtable",
+  },
+  {
+    icon: "fa-cloud-arrow-up",
+    title: "Trigger Rebuild",
+    description: "Rebuild the site on Cloudflare Pages to publish Airtable changes.",
+    url: "https://dash.cloudflare.com/",
+    label: "Open Cloudflare",
+  },
+  {
+    icon: "fa-window-maximize",
+    title: "Airtable Interface Designer",
+    description: "Build a custom admin UI without any code.",
+    url: "https://airtable.com/",
+    label: "Design Interface",
+  },
+  {
+    icon: "fa-chart-line",
+    title: "Analytics",
+    description: "Track traffic, top pages, and search performance.",
+    url: "https://analytics.google.com/",
+    label: "Open GA4",
+  },
+];
+---
+
+<BaseLayout title={title} description={description} canonical={canonical} schemas={schemas}>
+  <section class="bg-navy-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <nav class="text-xs text-white/70 flex gap-2 mb-3">
+        <a href="/" class="hover:text-white">Home</a>
+        <i class="fa-solid fa-chevron-right text-[9px] self-center"></i>
+        <span class="text-white font-semibold">Admin</span>
+      </nav>
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 bg-gold-400 rounded-lg flex items-center justify-center text-navy-900 text-xl">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div>
+          <h1 class="font-serif text-3xl font-bold">Admin Panel</h1>
+          <p class="text-white/70 text-sm mt-1">
+            All admin tools in one place. Data lives in Airtable — the source of truth.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {tools.map((tool) => (
+        <a
+          href={tool.url}
+          target="_blank"
+          rel="noopener"
+          class="group bg-white border border-slate-200 rounded-2xl p-6 hover:border-forest-400 hover:shadow-lg transition-all"
+        >
+          <div class="w-12 h-12 bg-forest-50 group-hover:bg-forest-100 rounded-lg flex items-center justify-center text-forest-600 text-lg mb-4 transition">
+            <i class={`fa-solid ${tool.icon}`}></i>
+          </div>
+          <h3 class="font-bold text-navy-900 text-lg mb-1">{tool.title}</h3>
+          <p class="text-sm text-slate-600 leading-relaxed mb-4">{tool.description}</p>
+          <div class="inline-flex items-center gap-2 text-forest-600 font-semibold text-sm group-hover:gap-3 transition-all">
+            {tool.label}
+            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <div class="mt-10 bg-gold-400/15 border border-gold-400/40 rounded-2xl p-6">
+      <div class="flex items-start gap-3">
+        <i class="fa-solid fa-lightbulb text-gold-500 text-xl mt-0.5"></i>
+        <div>
+          <h3 class="font-bold text-navy-900 mb-2">The workflow in one sentence</h3>
+          <p class="text-sm text-slate-700 leading-relaxed">
+            Edit data in Airtable → click <strong>Retry deployment</strong> in Cloudflare Pages → new pages go live in about 60 seconds. That's it.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

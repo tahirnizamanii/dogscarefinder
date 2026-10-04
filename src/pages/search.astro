@@ -1,0 +1,171 @@
+---
+// src/pages/search.astro
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { fetchAllRecords, toUrlSegment, slugify, renderStars } from "../lib/database.js";
+import { breadcrumbSchema, webPageSchema } from "../lib/schemas.js";
+
+const listings = await fetchAllRecords();
+
+// Aggregate filter options
+const states = [...new Set(listings.map((l) => l.state))].sort();
+const cities = [...new Set(listings.map((l) => l.city))].sort();
+const categories = [...new Set(listings.map((l) => l.category))].sort();
+
+const title = "Search Dog Care Providers — Groomers, Trainers, Vets, Boarding | DogCareFinder";
+const description = `Search ${listings.length}+ verified dog care providers by keyword, state, city, or category. Free to browse.`;
+const canonical = "https://dogcarefinder.com/search/";
+
+const schemas = [
+  webPageSchema(title, description, canonical),
+  breadcrumbSchema([
+    { name: "Home", url: "https://dogcarefinder.com/" },
+    { name: "Search", url: canonical },
+  ]),
+];
+---
+
+<BaseLayout title={title} description={description} canonical={canonical} schemas={schemas}>
+  <section class="bg-navy-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <nav class="text-xs text-white/70 flex gap-2 mb-4">
+        <a href="/" class="hover:text-white">Home</a>
+        <i class="fa-solid fa-chevron-right text-[9px] self-center"></i>
+        <span class="text-white font-semibold">Search</span>
+      </nav>
+      <h1 class="font-serif text-4xl md:text-5xl font-bold">Search Directory</h1>
+      <p class="mt-3 text-white/80">Find any dog care provider in the country.</p>
+    </div>
+  </section>
+
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <!-- Search bar -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-6 mb-8">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+        <div class="md:col-span-4 relative">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+            <i class="fa-solid fa-magnifying-glass text-sm"></i>
+          </span>
+          <input id="search-input" type="text" placeholder="Business name, city, or keyword..." class="w-full pl-10 pr-3 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
+        </div>
+        <select id="filter-state" class="md:col-span-2 px-3 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm">
+          <option value="">All states</option>
+          {states.map((s) => <option value={s}>{s}</option>)}
+        </select>
+        <select id="filter-city" class="md:col-span-2 px-3 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm">
+          <option value="">All cities</option>
+          {cities.map((c) => <option value={c}>{c}</option>)}
+        </select>
+        <select id="filter-category" class="md:col-span-2 px-3 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm">
+          <option value="">All categories</option>
+          {categories.map((c) => <option value={c}>{c}</option>)}
+        </select>
+        <button id="clear-filters" class="md:col-span-2 bg-slate-100 hover:bg-slate-200 text-navy-900 font-semibold py-3 px-4 rounded-lg transition text-sm">
+          <i class="fa-solid fa-rotate-left"></i> Clear
+        </button>
+      </div>
+      <p id="result-count" class="mt-3 text-sm text-slate-500"></p>
+    </div>
+
+    <!-- Results -->
+    <div id="search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+    <div id="no-results" class="hidden text-center py-16">
+      <i class="fa-solid fa-magnifying-glass text-4xl text-slate-300 mb-4"></i>
+      <h3 class="text-lg font-semibold text-navy-900">No providers found</h3>
+      <p class="text-slate-500 mt-2 text-sm">Try different keywords or clear filters.</p>
+    </div>
+  </section>
+
+  <script is:inline define:vars={{
+    listings: listings.map((l) => ({
+      name: l.businessName,
+      category: l.category,
+      state: l.state,
+      city: l.city,
+      address: l.streetAddress,
+      zip: l.zipCode,
+      phone: l.phone,
+      website: l.website,
+      rating: l.rating,
+      reviewCount: l.reviewCount,
+      slug: l.slug,
+      catSlug: l.category.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+      stateSlug: l.state.toLowerCase(),
+      citySlug: l.city.toLowerCase().replace(/\s+/g, "-"),
+    }))
+  }}>
+    const input = document.getElementById("search-input");
+    const stateSel = document.getElementById("filter-state");
+    const citySel = document.getElementById("filter-city");
+    const catSel = document.getElementById("filter-category");
+    const clearBtn = document.getElementById("clear-filters");
+    const results = document.getElementById("search-results");
+    const noResults = document.getElementById("no-results");
+    const resultCount = document.getElementById("result-count");
+
+    function esc(s) {
+      return String(s || "").replace(/[&<>"']/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+      });
+    }
+
+    function render() {
+      const q = input.value.toLowerCase().trim();
+      const st = stateSel.value;
+      const ct = citySel.value;
+      const cat = catSel.value;
+
+      const filtered = listings.filter(function (l) {
+        if (st && l.state !== st) return false;
+        if (ct && l.city !== ct) return false;
+        if (cat && l.category !== cat) return false;
+        if (q) {
+          const hay = (l.name + " " + l.city + " " + l.state + " " + l.category + " " + l.address).toLowerCase();
+          if (hay.indexOf(q) === -1) return false;
+        }
+        return true;
+      });
+
+      resultCount.textContent = "Showing " + filtered.length + " of " + listings.length + " providers";
+
+      if (filtered.length === 0) {
+        results.innerHTML = "";
+        noResults.classList.remove("hidden");
+        return;
+      }
+
+      noResults.classList.add("hidden");
+      results.innerHTML = filtered.slice(0, 100).map(function (l) {
+        var url = "/provider/" + l.slug + "/";
+        var rating = l.rating !== null
+          ? '<div class="flex items-center gap-1 shrink-0 bg-amber-50 rounded-lg px-2 py-1"><span class="text-amber-500 text-sm">★</span><span class="text-sm font-bold text-amber-700">' + l.rating.toFixed(1) + "</span></div>"
+          : "";
+        var phone = l.phone ? '<div class="flex items-center gap-2 text-sm text-slate-600 mt-1"><i class="fa-solid fa-phone text-slate-400"></i><a href="tel:' + esc(l.phone) + '" class="hover:text-forest-600">' + esc(l.phone) + "</a></div>" : "";
+        var addr = esc(l.address) ? esc(l.address) + ", " : "";
+        return '<article class="bg-white rounded-xl border border-slate-200 p-5 hover:border-forest-400 hover:shadow-lg transition flex flex-col">'
+          + '<div class="flex items-start justify-between gap-3 mb-2">'
+          + '<h3 class="font-bold text-navy-900 text-base leading-snug"><a href="' + url + '" class="hover:text-forest-600">' + esc(l.name) + "</a></h3>"
+          + rating + "</div>"
+          + '<span class="inline-block self-start bg-forest-50 text-forest-700 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded mb-3">' + esc(l.category) + "</span>"
+          + '<div class="flex items-start gap-2 text-sm text-slate-600 mb-1"><i class="fa-solid fa-location-dot text-slate-400 mt-0.5"></i><span>' + addr + esc(l.city) + ", " + esc(l.state) + " " + esc(l.zip) + "</span></div>"
+          + phone
+          + '<a href="' + url + '" class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-forest-600 hover:text-forest-700">View details <i class="fa-solid fa-arrow-right text-xs"></i></a>'
+          + "</article>";
+      }).join("");
+    }
+
+    input.addEventListener("input", render);
+    stateSel.addEventListener("change", render);
+    citySel.addEventListener("change", render);
+    catSel.addEventListener("change", render);
+    clearBtn.addEventListener("click", function () {
+      input.value = "";
+      stateSel.value = "";
+      citySel.value = "";
+      catSel.value = "";
+      render();
+    });
+
+    render();
+  </script>
+</BaseLayout>

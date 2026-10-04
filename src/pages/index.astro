@@ -1,0 +1,547 @@
+---
+// src/pages/index.astro
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { fetchAllRecords, toUrlSegment, slugify } from "../lib/database.js";
+
+const allListings = await fetchAllRecords();
+
+// ── States ────────────────────────────────────────────────────────────
+const stateMap = new Map();
+for (const listing of allListings) {
+  if (!listing.state) continue;
+  const stateSlug = toUrlSegment(listing.state);
+  if (!stateMap.has(stateSlug)) stateMap.set(stateSlug, { display: listing.state, count: 0 });
+  stateMap.get(stateSlug).count += 1;
+}
+const states = Array.from(stateMap.entries())
+  .map(([slug, data]) => ({ slug, ...data }))
+  .sort((a, b) => a.display.localeCompare(b.display));
+
+// ── Cities count ──────────────────────────────────────────────────────
+const citySet = new Set();
+for (const l of allListings) {
+  if (l.city && l.state) citySet.add(`${l.state}::${l.city}`);
+}
+
+// ── Categories ────────────────────────────────────────────────────────
+const CATEGORY_ORDER = ["Groomers", "Trainers", "Boarding", "Vets", "Therapy"];
+
+const CATEGORY_ICONS = {
+  Groomers: "fa-scissors",
+  Trainers: "fa-bullseye",
+  Boarding: "fa-house",
+  Vets: "fa-stethoscope",
+  Therapy: "fa-paw",
+};
+
+const CATEGORY_DESCRIPTIONS = {
+  Groomers: "Bathing, trimming, styling",
+  Trainers: "Obedience, behavior, puppy",
+  Boarding: "Kennels, daycare, overnight",
+  Vets: "Wellness, surgery, emergency",
+  Therapy: "Emotional support, visits",
+};
+
+// Category images from Unsplash (curated for each category)
+const CATEGORY_IMAGES = {
+  Groomers: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&q=80&auto=format&fit=crop",
+  Trainers: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=800&q=80&auto=format&fit=crop",
+  Boarding: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=800&q=80&auto=format&fit=crop",
+  Vets: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&q=80&auto=format&fit=crop",
+  Therapy: "https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=800&q=80&auto=format&fit=crop",
+};
+
+const categoryMap = new Map();
+for (const listing of allListings) {
+  if (!listing.category) continue;
+  const cat = listing.category;
+  if (!categoryMap.has(cat)) categoryMap.set(cat, { name: cat, slug: slugify(cat), count: 0 });
+  categoryMap.get(cat).count += 1;
+}
+const categories = CATEGORY_ORDER.map((name) => {
+  const existing = categoryMap.get(name);
+  return existing || { name, slug: slugify(name), count: 0 };
+}).filter((c) => c.count > 0);
+
+// ── Featured providers ────────────────────────────────────────────────
+const featuredProviders = [...allListings]
+  .filter((l) => l.rating !== null && l.rating >= 4.5)
+  .sort((a, b) => {
+    const r = (b.rating ?? 0) - (a.rating ?? 0);
+    return r !== 0 ? r : (b.reviewCount ?? 0) - (a.reviewCount ?? 0);
+  })
+  .slice(0, 3);
+
+// ── Stats ─────────────────────────────────────────────────────────────
+const totalListings = allListings.length;
+const totalStates = states.length;
+const totalCities = citySet.size;
+
+// ── SEO ───────────────────────────────────────────────────────────────
+const title = `DogCareFinder — Find the Best Dog Groomers, Trainers, Vets & Boarding Near You`;
+const description = `Browse ${totalListings} verified dog care providers across ${totalStates} states and ${totalCities} cities. Find top-rated groomers, trainers, boarding, vets & therapy dogs near you.`;
+const canonical = "https://dogcarefinder.com/";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "DogCareFinder",
+  url: canonical,
+  description: description,
+};
+---
+
+<BaseLayout title={title} description={description} canonical={canonical} schemas={[schema]}>
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <section class="bg-navy-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+      <div class="grid lg:grid-cols-2 gap-10 items-center">
+        <div>
+          <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur rounded-full px-4 py-1.5 text-xs font-medium text-white/90 mb-6">
+            <span class="w-1.5 h-1.5 bg-gold-400 rounded-full"></span>
+            Your complete dog care services directory
+          </div>
+
+          <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
+            Find every dog care service
+            <span class="text-gold-400 italic">near you</span>
+          </h1>
+
+          <p class="mt-6 text-base lg:text-lg text-white/80 max-w-xl">
+            Vets, groomers, boarding, trainers and more categories — nationwide by state, city and county.
+          </p>
+
+          <div class="mt-8 flex flex-col sm:flex-row gap-3 max-w-xl">
+            <div class="flex-1 relative">
+              <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </span>
+              <input type="text" placeholder="Search by business name, city, state..."
+                class="w-full pl-12 pr-4 py-3.5 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-forest-500 bg-white" />
+            </div>
+            <a href="/search/" class="bg-gold-400 hover:bg-gold-500 text-navy-900 font-semibold px-6 py-3.5 rounded-lg transition whitespace-nowrap text-center">
+              Search Directory
+            </a>
+          </div>
+
+          <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-white/70">
+            <div class="flex items-center gap-2"><i class="fa-solid fa-list text-gold-400"></i><span>{totalListings}+ listings</span></div>
+            <div class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-gold-400"></i><span>{totalStates} states</span></div>
+            <div class="flex items-center gap-2"><i class="fa-solid fa-dog text-gold-400"></i><span>Free to browse</span></div>
+          </div>
+        </div>
+
+        <!-- Map card -->
+        <div class="relative">
+          <a href="/search/" class="block bg-navy-800 rounded-2xl p-6 border border-white/10 shadow-2xl hover:border-white/20 transition">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-semibold text-white flex items-center gap-2">
+                <i class="fa-solid fa-map-location-dot text-gold-400"></i>
+                Interactive Regional Map
+              </h3>
+              <span class="text-xs bg-white/10 px-3 py-1 rounded-full text-white/70">
+                {totalStates} states live
+              </span>
+            </div>
+            <div class="aspect-[4/3] bg-navy-700 rounded-lg flex items-center justify-center relative overflow-hidden">
+              <div class="text-center z-10">
+                <i class="fa-solid fa-map-location-dot text-5xl text-white/30 mb-3"></i>
+                <p class="text-white/70 text-sm">Explore providers by region</p>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ HERO PHOTO BANNER — Real image ═══════════ -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <a href="/service/" class="block rounded-2xl overflow-hidden shadow-xl h-[240px] lg:h-[420px] relative mt-2 group">
+      <img
+        src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=1600&q=80&auto=format&fit=crop"
+        alt="A happy dog running outdoors with its owner at sunset — DogCareFinder directory"
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+        loading="eager"
+        width="1600"
+        height="900"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+      <div class="absolute bottom-8 left-8 right-8 text-white flex items-end justify-between gap-4">
+        <div>
+          <p class="text-2xl lg:text-4xl font-serif font-bold drop-shadow-lg">
+            Caring for every dog
+          </p>
+          <p class="text-white/90 text-sm lg:text-base mt-2 drop-shadow">
+            Nationwide directory of trusted providers
+          </p>
+        </div>
+        <div class="hidden sm:flex items-center gap-2 bg-white/15 backdrop-blur border border-white/25 rounded-lg px-4 py-2.5 text-sm font-semibold group-hover:bg-white/25 transition whitespace-nowrap">
+          Browse Services
+          <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+        </div>
+      </div>
+    </a>
+  </section>
+
+  <!-- ═══════════ STATS BAR ═══════════ -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+    <div class="bg-forest-600 rounded-2xl py-8 px-6 grid grid-cols-2 lg:grid-cols-4 gap-6 text-white">
+      <div class="text-center lg:border-r border-white/20">
+        <div class="flex items-center justify-center gap-3 text-3xl lg:text-4xl font-bold">
+          <i class="fa-solid fa-dog"></i>
+          <span>{totalListings}</span>
+        </div>
+        <div class="mt-2 text-xs lg:text-sm uppercase tracking-wider text-white/80">Providers</div>
+      </div>
+      <div class="text-center lg:border-r border-white/20">
+        <div class="flex items-center justify-center gap-3 text-3xl lg:text-4xl font-bold">
+          <i class="fa-solid fa-map-location-dot"></i>
+          <span>{totalStates}</span>
+        </div>
+        <div class="mt-2 text-xs lg:text-sm uppercase tracking-wider text-white/80">States</div>
+      </div>
+      <div class="text-center lg:border-r border-white/20">
+        <div class="flex items-center justify-center gap-3 text-3xl lg:text-4xl font-bold">
+          <i class="fa-solid fa-location-dot"></i>
+          <span>{totalCities}</span>
+        </div>
+        <div class="mt-2 text-xs lg:text-sm uppercase tracking-wider text-white/80">Cities</div>
+      </div>
+      <div class="text-center">
+        <div class="flex items-center justify-center gap-3 text-3xl lg:text-4xl font-bold">
+          <i class="fa-solid fa-layer-group"></i>
+          <span>{categories.length}</span>
+        </div>
+        <div class="mt-2 text-xs lg:text-sm uppercase tracking-wider text-white/80">Categories</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ BROWSE BY SERVICE — with images ═══════════ -->
+  <section id="services" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+    <div class="text-center mb-12">
+      <div class="inline-flex items-center gap-2 text-forest-600 text-xs font-bold uppercase tracking-widest">
+        <span class="w-8 h-px bg-forest-600"></span>
+        Browse by Service
+        <span class="w-8 h-px bg-forest-600"></span>
+      </div>
+      <h2 class="mt-4 font-serif text-3xl lg:text-4xl font-bold text-navy-900">
+        Find the dog care you need.
+      </h2>
+      <p class="mt-3 text-slate-600 max-w-2xl mx-auto">
+        From emergency vet care to routine grooming — find the right provider for every aspect of dog care.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {categories.map((cat) => (
+        <a
+          href={`/service/${cat.slug}/`}
+          class="group bg-white border border-slate-200 rounded-2xl overflow-hidden hover:border-forest-500 hover:shadow-xl transition-all duration-300"
+        >
+          <!-- Image -->
+          <div class="h-48 overflow-hidden relative">
+            <img
+              src={CATEGORY_IMAGES[cat.name] || "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=800&q=80&auto=format&fit=crop"}
+              alt={`Dog ${cat.name.toLowerCase()} — ${CATEGORY_DESCRIPTIONS[cat.name] || "dog care services"}`}
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+              loading="lazy"
+              width="800"
+              height="500"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-navy-900/80 via-transparent to-transparent"></div>
+            <div class="absolute top-3 left-3 w-11 h-11 bg-white rounded-lg flex items-center justify-center text-forest-600 text-lg shadow-md">
+              <i class={`fa-solid ${CATEGORY_ICONS[cat.name] || "fa-paw"}`}></i>
+            </div>
+            <div class="absolute bottom-3 left-4 text-white">
+              <h3 class="font-serif text-xl font-bold">Dog {cat.name}</h3>
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div class="p-5">
+            <p class="text-sm text-slate-600">
+              {CATEGORY_DESCRIPTIONS[cat.name] || "Dog care services"}
+            </p>
+            <div class="mt-4 flex items-center justify-between">
+              <span class="inline-flex items-center gap-1.5 text-xs text-slate-500">
+                <span class="w-1.5 h-1.5 bg-forest-500 rounded-full"></span>
+                {cat.count} {cat.count === 1 ? "provider" : "providers"}
+              </span>
+              <span class="text-forest-600 group-hover:translate-x-1 transition-transform">
+                <i class="fa-solid fa-arrow-right text-sm"></i>
+              </span>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ═══════════ BROWSE BY LOCATION ═══════════ -->
+  <section id="states" class="bg-white py-16 lg:py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <div class="inline-flex items-center gap-2 text-forest-600 text-xs font-bold uppercase tracking-widest">
+          <span class="w-8 h-px bg-forest-600"></span>
+          Browse by Location
+          <span class="w-8 h-px bg-forest-600"></span>
+        </div>
+        <h2 class="mt-4 font-serif text-3xl lg:text-4xl font-bold text-navy-900">
+          Find dog care near you
+        </h2>
+        <p class="mt-3 text-slate-600">Select your state to find service providers in your area.</p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {states.slice(0, 12).map((state) => (
+          <a
+            href={`/${state.slug}/`}
+            class="group bg-cream-50 border border-slate-200 rounded-xl p-5 text-center hover:border-forest-500 hover:shadow-md transition-all duration-200"
+          >
+            <div class="text-3xl font-bold text-navy-900 group-hover:text-forest-600 transition">
+              {state.display}
+            </div>
+            <div class="mt-1 text-xs text-slate-500">
+              {state.count} {state.count === 1 ? "provider" : "providers"}
+            </div>
+          </a>
+        ))}
+      </div>
+
+      {states.length > 12 && (
+        <div class="mt-8 text-center">
+          <a href="#all-states" class="inline-flex items-center gap-2 text-forest-600 font-medium hover:text-forest-700 transition">
+            View all states
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </a>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- ═══════════ FEATURED PROVIDERS — with real images ═══════════ -->
+  {featuredProviders.length > 0 && (
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+      <div class="text-center mb-12">
+        <div class="inline-flex items-center gap-2 text-forest-600 text-xs font-bold uppercase tracking-widest">
+          <span class="w-8 h-px bg-forest-600"></span>
+          Featured Providers
+          <span class="w-8 h-px bg-forest-600"></span>
+        </div>
+        <h2 class="mt-4 font-serif text-3xl lg:text-4xl font-bold text-navy-900">
+          Top-Rated Dog Care Providers
+        </h2>
+        <p class="mt-3 text-slate-600">
+          Featured listings from expert service providers across our directory.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {featuredProviders.map((provider, idx) => {
+          // Rotate through curated images for variety
+          const providerImages = [
+            "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=800&q=80&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?w=800&q=80&auto=format&fit=crop",
+            "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&q=80&auto=format&fit=crop",
+          ];
+          const imageUrl = providerImages[idx % providerImages.length];
+          return (
+            <article class="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl transition-shadow duration-200">
+              <a href={`/provider/${provider.slug}/`} class="block">
+                <div class="h-52 relative overflow-hidden">
+                  <img
+                    src={imageUrl}
+                    alt={`${provider.businessName} — ${provider.category} in ${provider.city}, ${provider.state}`}
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                    loading="lazy"
+                    width="800"
+                    height="520"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                  <span class="absolute top-3 left-3 bg-gold-400 text-navy-900 text-xs font-bold px-2.5 py-1 rounded uppercase tracking-wide shadow-md">
+                    Featured
+                  </span>
+                </div>
+              </a>
+              <div class="p-6">
+                <div class="flex items-center gap-2 text-xs text-forest-600 font-medium mb-2">
+                  <i class={`fa-solid ${CATEGORY_ICONS[provider.category] || "fa-paw"} text-xs`}></i>
+                  <a href={`/service/${slugify(provider.category)}/`} class="hover:text-forest-700 hover:underline">{provider.category}</a>
+                  <span class="text-slate-300">•</span>
+                  <span>{provider.city}, {provider.state}</span>
+                </div>
+                <h3 class="font-bold text-lg text-navy-900 leading-snug">
+                  <a href={`/provider/${provider.slug}/`} class="hover:text-forest-600 transition">{provider.businessName}</a>
+                </h3>
+
+                {provider.rating !== null && (
+                  <div class="mt-2 flex items-center gap-2 text-sm">
+                    <span class="text-amber-500 text-xs tracking-tight">
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                    </span>
+                    <span class="font-semibold text-navy-900">{provider.rating.toFixed(1)}</span>
+                    <span class="text-slate-500">({provider.reviewCount} reviews)</span>
+                  </div>
+                )}
+
+                <p class="mt-3 text-sm text-slate-600 line-clamp-2">
+                  Trusted {provider.category.toLowerCase()} serving {provider.city}, {provider.state}.
+                </p>
+
+                <div class="mt-4 flex items-center gap-3">
+                  {provider.phone && (
+                    <a href={`tel:${provider.phone}`} class="flex-1 bg-forest-600 hover:bg-forest-700 text-white text-sm font-semibold text-center py-2.5 rounded-lg transition">
+                      <i class="fa-solid fa-phone text-xs mr-1.5"></i> Call
+                    </a>
+                  )}
+                  <a href={`/provider/${provider.slug}/`} class="flex-1 bg-slate-100 hover:bg-slate-200 text-navy-900 text-sm font-semibold text-center py-2.5 rounded-lg transition">
+                    View Profile
+                  </a>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  )}
+
+  <!-- ═══════════ MID-PAGE PHOTO BANNER ═══════════ -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="rounded-2xl overflow-hidden shadow-xl h-[260px] lg:h-[380px] relative">
+      <img
+        src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=1600&q=80&auto=format&fit=crop"
+        alt="A dog being groomed and cared for by a professional — trusted dog care providers"
+        class="w-full h-full object-cover"
+        loading="lazy"
+        width="1600"
+        height="900"
+      />
+      <div class="absolute inset-0 bg-gradient-to-r from-navy-900/80 via-navy-900/40 to-transparent"></div>
+      <div class="absolute inset-0 flex items-center">
+        <div class="max-w-xl px-8 lg:px-12 text-white">
+          <h3 class="font-serif text-2xl lg:text-4xl font-bold leading-tight mb-4">
+            Trusted care for your best friend
+          </h3>
+          <p class="text-white/80 text-sm lg:text-base mb-6 max-w-md">
+            Every provider in our directory is verified and reviewed by real dog owners. Find yours today.
+          </p>
+          <a href="/search/" class="inline-flex items-center gap-2 bg-gold-400 hover:bg-gold-500 text-navy-900 font-semibold px-6 py-3 rounded-lg transition">
+            <i class="fa-solid fa-search text-xs"></i>
+            Find a Provider
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ HOW IT WORKS ═══════════ -->
+  <section id="how-it-works" class="bg-navy-900 py-16 lg:py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <div class="inline-flex items-center gap-2 text-gold-400 text-xs font-bold uppercase tracking-widest">
+          <span class="w-8 h-px bg-gold-400"></span>
+          How It Works
+          <span class="w-8 h-px bg-gold-400"></span>
+        </div>
+        <h2 class="mt-4 font-serif text-3xl lg:text-4xl font-bold text-white">
+          One directory. Every dog care service.
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-navy-800 border border-white/10 rounded-xl p-8">
+          <div class="w-14 h-14 bg-forest-600 rounded-lg flex items-center justify-center text-white text-xl mb-6">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+          <h3 class="font-bold text-lg text-white mb-3">Search by location</h3>
+          <p class="text-sm text-white/70 leading-relaxed">
+            Enter your city, county, or state. Filter by service type — vet, trainer, boarding, and more.
+          </p>
+        </div>
+        <div class="bg-navy-800 border border-white/10 rounded-xl p-8">
+          <div class="w-14 h-14 bg-forest-600 rounded-lg flex items-center justify-center text-white text-xl mb-6">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+          <h3 class="font-bold text-lg text-white mb-3">Compare providers</h3>
+          <p class="text-sm text-white/70 leading-relaxed">
+            Each listing shows specialties, service areas, pricing, phone numbers, and direct contact info.
+          </p>
+        </div>
+        <div class="bg-navy-800 border border-white/10 rounded-xl p-8">
+          <div class="w-14 h-14 bg-forest-600 rounded-lg flex items-center justify-center text-white text-xl mb-6">
+            <i class="fa-solid fa-phone"></i>
+          </div>
+          <h3 class="font-bold text-lg text-white mb-3">Contact directly</h3>
+          <p class="text-sm text-white/70 leading-relaxed">
+            Contact any provider directly from their listing. No referral fees, no booking commissions.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ OWN A BUSINESS ═══════════ -->
+  <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+    <div class="bg-white border-2 border-slate-200 rounded-2xl p-8 lg:p-12 text-center">
+      <div class="inline-flex items-center gap-2 text-gold-500 text-xs font-bold uppercase tracking-widest">
+        <i class="fa-solid fa-star"></i>
+        Show Your Business
+      </div>
+      <h2 class="mt-4 font-serif text-3xl lg:text-4xl font-bold text-navy-900">
+        Own a dog care business?
+      </h2>
+      <p class="mt-4 text-slate-600 max-w-2xl mx-auto">
+        List your service and get found by dog owners searching your state and county. Free to start.
+      </p>
+      <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="/submit-listing/" class="bg-forest-600 hover:bg-forest-700 text-white font-semibold px-8 py-3.5 rounded-lg transition">
+          <i class="fa-solid fa-plus text-xs mr-2"></i> List Your Business
+        </a>
+        <a href="/list-your-business/" class="bg-white border border-slate-300 hover:border-slate-400 text-navy-900 font-semibold px-8 py-3.5 rounded-lg transition">
+          <i class="fa-solid fa-tag text-xs mr-2"></i> See Pricing Plans
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ BROWSE EVERY STATE ═══════════ -->
+  <section id="all-states" class="bg-white py-16 lg:py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-3 mb-8">
+        <div class="w-10 h-10 bg-navy-900 rounded-lg flex items-center justify-center text-white">
+          <i class="fa-solid fa-list"></i>
+        </div>
+        <h2 class="font-serif text-2xl lg:text-3xl font-bold text-navy-900">
+          Browse every state
+        </h2>
+      </div>
+      <p class="text-sm text-slate-600 mb-6">
+        Every state with active dog care providers. The number is total providers available in each state.
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+        {states.map((state) => (
+          <a
+            href={`/${state.slug}/`}
+            class="flex items-center justify-between px-4 py-2.5 rounded-lg hover:bg-forest-50 border border-transparent hover:border-forest-200 transition group"
+          >
+            <span class="font-medium text-navy-900 group-hover:text-forest-700">
+              {state.display}
+            </span>
+            <span class="text-xs text-slate-400 group-hover:text-forest-600">
+              {state.count}
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

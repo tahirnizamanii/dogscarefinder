@@ -1,0 +1,408 @@
+---
+// src/layouts/BaseLayout.astro
+import { buildGraph, organizationSchema, websiteSchema } from "../lib/schemas.js";
+
+export interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  schemas?: object[];
+}
+
+const { title, description, canonical, schemas = [] } = Astro.props;
+const siteName = "DogCareFinder";
+const currentPath = Astro.url.pathname;
+
+const navItems = [
+  { name: "Home", href: "/", matches: (p) => p === "/" },
+  { name: "Services", href: "/service/", matches: (p) => p.startsWith("/service") },
+  { name: "List Business", href: "/list-your-business/", matches: (p) => p.startsWith("/list-your-business") || p.startsWith("/submit-listing") },
+  { name: "Resources", href: "/blog/", matches: (p) => p.startsWith("/blog") },
+  { name: "About", href: "/about/", matches: (p) => p.startsWith("/about") },
+  { name: "Partnerships", href: "/partnerships/", matches: (p) => p.startsWith("/partnerships") },
+  { name: "Contact", href: "/contact/", matches: (p) => p.startsWith("/contact") },
+];
+
+const graph = buildGraph([organizationSchema(), websiteSchema(), ...schemas]);
+---
+
+<!doctype html>
+<html lang="en" class="overflow-x-hidden">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="color-scheme" content="light" />
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <script is:inline src="https://cdn.tailwindcss.com"></script>
+    <script is:inline>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              navy: { 50: "#eef3f8", 100: "#d9e3ee", 500: "#1e3a5f", 700: "#132a45", 800: "#0f2038", 900: "#002955" },
+              forest: { 50: "#f0f6f1", 100: "#dbe9dd", 200: "#cdd9bb", 500: "#5c8d68", 600: "#5E7741", 700: "#4A5E32", 800: "#2d4d37" },
+              cream: { 50: "#fdfcf8", 100: "#F7F4EC", 200: "#f5f1e8" },
+              gold: { 300: "#e4c267", 400: "#C9952A", 500: "#b3831f", 600: "#9a7420" },
+            },
+            fontFamily: {
+              serif: ['"Fraunces"', "Georgia", "serif"],
+              sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
+              mono: ['"JetBrains Mono"', "ui-monospace", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(graph)}></script>
+
+    <style is:inline>
+      html, body { overflow-x: hidden !important; max-width: 100vw; }
+
+      .nav-link {
+        position: relative;
+        padding: 6px 0;
+        color: #002955;
+        font-weight: 600;
+        white-space: nowrap;
+        transition: color 0.2s ease-in-out;
+        text-decoration: none;
+        font-size: 14px;
+      }
+      .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #5E7741;
+        transition: width 0.25s ease-in-out;
+        border-radius: 2px;
+      }
+      .nav-link:hover { color: #5E7741; }
+      .nav-link:hover::after { width: 100%; }
+      .nav-link.active { color: #5E7741; }
+      .nav-link.active::after { width: 100%; }
+
+      /* Compact nav on lg (1024-1279px) to prevent overflow */
+      @media (min-width: 1024px) and (max-width: 1279px) {
+        .nav-link { font-size: 12.5px !important; }
+        .nav-desktop { gap: 14px !important; }
+        .brand-logo-text { font-size: 15px !important; }
+        .brand-logo-sub { font-size: 9px !important; }
+        .logo-box { width: 40px !important; height: 40px !important; }
+        .logo-box i { font-size: 18px !important; }
+        .nav-cta-btn { padding-left: 12px !important; padding-right: 12px !important; font-size: 12.5px !important; }
+      }
+
+      /* Medium desktop safety */
+      @media (min-width: 1280px) and (max-width: 1400px) {
+        .nav-desktop { gap: 20px !important; }
+      }
+    </style>
+  </head>
+
+  <body class="bg-cream-100 text-slate-800 font-sans antialiased overflow-x-hidden">
+
+    <!-- ═══════════════ NAVIGATION ═══════════════ -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm w-full">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16 lg:h-20 gap-3">
+
+          <!-- Logo -->
+          <a href="/" class="flex items-center gap-3 select-none group shrink-0">
+            <div class="logo-box w-11 h-11 lg:w-12 lg:h-12 bg-navy-900 rounded-lg flex items-center justify-center text-white relative overflow-hidden">
+              <i class="fa-solid fa-dog text-xl lg:text-2xl"></i>
+            </div>
+            <div class="leading-none">
+              <div class="brand-logo-text text-lg lg:text-xl font-bold text-navy-900 tracking-tight">
+                DogCare<span class="text-forest-600">Finder</span>
+              </div>
+              <div class="brand-logo-sub text-[10px] lg:text-[11px] text-slate-500 font-medium mt-0.5 tracking-wide hidden sm:block">
+                Every dog. Every service. Every state.
+              </div>
+            </div>
+          </a>
+
+          <!-- Desktop Nav -->
+          <nav class="nav-desktop hidden lg:flex items-center gap-7 xl:gap-8 shrink-0">
+            {navItems.map((item) => (
+              <a href={item.href} class={`nav-link ${item.matches(currentPath) ? "active" : ""}`}>
+                {item.name}
+              </a>
+            ))}
+          </nav>
+
+          <!-- Desktop CTAs -->
+          <div class="hidden lg:flex items-center gap-2 shrink-0">
+            <a href="/login/" class="nav-cta-btn text-sm font-semibold text-navy-900 border border-navy-900/20 hover:bg-navy-900/5 transition px-4 py-2 rounded-lg flex items-center gap-1.5 whitespace-nowrap">
+              <i class="fa-solid fa-right-to-bracket text-xs"></i>
+              Login
+            </a>
+            <a href="/signup/" class="nav-cta-btn bg-forest-600 hover:bg-forest-700 text-white text-sm font-bold px-4 py-2 rounded-lg transition shadow-sm flex items-center gap-1.5 whitespace-nowrap">
+              <i class="fa-solid fa-user-plus text-xs"></i>
+              Sign Up
+            </a>
+          </div>
+
+          <!-- Mobile toggle -->
+          <button id="mobile-menu-toggle" class="lg:hidden w-10 h-10 rounded-lg flex items-center justify-center text-navy-900 hover:bg-slate-100 transition shrink-0" aria-label="Open menu">
+            <i class="fa-solid fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile overlay -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/50 z-40 hidden"></div>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="fixed top-0 right-0 w-80 max-w-[85%] h-full bg-navy-900 z-50 translate-x-full transition-transform duration-300 ease-out overflow-y-auto">
+      <div class="p-5">
+        <div class="flex justify-end mb-4">
+          <button id="mobile-menu-close" class="w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition" aria-label="Close menu">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+        <nav class="space-y-1">
+          {navItems.map((item) => (
+            <a href={item.href} class={`flex items-center gap-3 px-4 py-3 rounded-xl text-white hover:bg-white/10 transition ${item.matches(currentPath) ? "bg-forest-600" : ""}`}>
+              <span class="w-6 text-center text-gold-400">
+                {item.name === "Home" && <i class="fa-solid fa-home"></i>}
+                {item.name === "Services" && <i class="fa-solid fa-dog"></i>}
+                {item.name === "List Business" && <i class="fa-solid fa-plus-circle"></i>}
+                {item.name === "Resources" && <i class="fa-solid fa-book"></i>}
+                {item.name === "About" && <i class="fa-solid fa-info-circle"></i>}
+                {item.name === "Partnerships" && <i class="fa-solid fa-handshake"></i>}
+                {item.name === "Contact" && <i class="fa-solid fa-envelope"></i>}
+              </span>
+              <span class="font-medium">{item.name}</span>
+            </a>
+          ))}
+        </nav>
+        <div class="border-t border-white/10 my-4"></div>
+        <div class="space-y-2">
+          <a href="/login/" class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/15 text-white font-semibold hover:bg-white/10 transition">
+            <i class="fa-solid fa-right-to-bracket text-sm"></i> Login
+          </a>
+          <a href="/signup/" class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-forest-600 hover:bg-forest-700 text-white font-semibold transition">
+            <i class="fa-solid fa-user-plus text-sm"></i> Sign Up
+          </a>
+        </div>
+        <div class="mt-6 pt-4 border-t border-white/10 text-center">
+          <p class="text-[10px] text-white/50 font-mono">© {new Date().getFullYear()} DogCareFinder</p>
+        </div>
+      </div>
+    </div>
+
+    <script is:inline>
+      (function () {
+        var toggle = document.getElementById("mobile-menu-toggle");
+        var closeBtn = document.getElementById("mobile-menu-close");
+        var menu = document.getElementById("mobile-menu");
+        var overlay = document.getElementById("mobile-menu-overlay");
+        function openMenu() {
+          menu.classList.remove("translate-x-full");
+          overlay.classList.remove("hidden");
+          document.body.style.overflow = "hidden";
+        }
+        function closeMenu() {
+          menu.classList.add("translate-x-full");
+          overlay.classList.add("hidden");
+          document.body.style.overflow = "";
+        }
+        toggle && toggle.addEventListener("click", openMenu);
+        closeBtn && closeBtn.addEventListener("click", closeMenu);
+        overlay && overlay.addEventListener("click", closeMenu);
+        menu && menu.querySelectorAll("a").forEach(function (a) {
+          a.addEventListener("click", function () { setTimeout(closeMenu, 150); });
+        });
+      })();
+    </script>
+
+    <!-- MAIN -->
+    <main class="w-full overflow-x-hidden">
+      <slot />
+    </main>
+
+    <!-- NEWSLETTER -->
+    <section class="bg-navy-900 w-full">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div>
+            <h3 class="font-serif text-2xl sm:text-3xl font-bold text-white">Stay in the loop</h3>
+            <p class="mt-2 text-sm text-white/70 max-w-md">
+              New providers, seasonal dog care guides, and the occasional update — nothing more.
+            </p>
+          </div>
+          <form id="newsletter-form" class="grid grid-cols-1 sm:grid-cols-2 gap-2 min-w-0">
+            <input type="text" name="first_name" placeholder="First name" required class="w-full min-w-0 px-4 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400" />
+            <input type="text" name="last_name" placeholder="Last name" required class="w-full min-w-0 px-4 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400" />
+            <input type="email" name="email" placeholder="you@example.com" required class="sm:col-span-2 w-full min-w-0 px-4 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400" />
+            <button type="submit" class="sm:col-span-2 bg-forest-600 hover:bg-forest-700 text-white font-semibold py-2.5 rounded-lg transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-paper-plane text-sm"></i> Subscribe
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-cream-100 border-t border-slate-200 w-full">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10">
+
+          <div class="lg:col-span-2">
+            <div class="flex items-center gap-2.5 mb-4">
+              <div class="w-9 h-9 bg-navy-900 rounded-lg flex items-center justify-center text-white">
+                <i class="fa-solid fa-dog"></i>
+              </div>
+              <div class="leading-none">
+                <div class="text-base font-bold text-navy-900">DogCare</div>
+                <div class="text-xs font-medium text-forest-600">Finder</div>
+              </div>
+            </div>
+            <p class="text-sm text-slate-600 max-w-sm leading-relaxed">
+              The most complete canine services directory in the US. Find groomers, trainers,
+              boarding, vets, therapy dogs, and every dog care professional by state, city, and county.
+            </p>
+            <div class="mt-4 space-y-2">
+              <a href="mailto:info@dogcarefinder.com" class="flex items-center gap-2 text-sm text-slate-600 hover:text-forest-600 transition">
+                <i class="fa-solid fa-envelope text-forest-600 w-4"></i> info@dogcarefinder.com
+              </a>
+              <div class="flex items-start gap-2 text-sm text-slate-600">
+                <i class="fa-solid fa-location-dot text-forest-600 w-4 mt-0.5"></i>
+                <span>United States</span>
+              </div>
+            </div>
+            <p class="mt-4 text-xs text-forest-700 italic font-serif font-semibold">
+              <i class="fa-solid fa-dog"></i> Every dog. Every service. Every state.
+            </p>
+            <div class="mt-5">
+              <div class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">Follow Us</div>
+              <div class="flex gap-2">
+                <a href="https://www.facebook.com/dogcarefinder" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-white border border-slate-200 rounded-full flex items-center justify-center text-navy-900 hover:bg-forest-600 hover:text-white hover:border-forest-600 transition"><i class="fa-brands fa-facebook-f text-sm"></i></a>
+                <a href="https://www.instagram.com/dogcarefinder" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-white border border-slate-200 rounded-full flex items-center justify-center text-navy-900 hover:bg-forest-600 hover:text-white hover:border-forest-600 transition"><i class="fa-brands fa-instagram text-sm"></i></a>
+                <a href="https://www.tiktok.com/@dogcarefinder" target="_blank" rel="noopener noreferrer" class="w-9 h-9 bg-white border border-slate-200 rounded-full flex items-center justify-center text-navy-900 hover:bg-forest-600 hover:text-white hover:border-forest-600 transition"><i class="fa-brands fa-tiktok text-sm"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="font-serif text-sm font-bold text-forest-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <i class="fa-solid fa-dog"></i> Dog Owners
+            </h4>
+            <ul class="space-y-2.5 text-sm">
+              <li><a href="/#services" class="text-slate-600 hover:text-forest-600 transition">Dog Groomers</a></li>
+              <li><a href="/#services" class="text-slate-600 hover:text-forest-600 transition">Dog Trainers</a></li>
+              <li><a href="/#services" class="text-slate-600 hover:text-forest-600 transition">Dog Boarding</a></li>
+              <li><a href="/#services" class="text-slate-600 hover:text-forest-600 transition">Veterinarians</a></li>
+              <li><a href="/#services" class="text-slate-600 hover:text-forest-600 transition">Therapy Dogs</a></li>
+              <li><a href="/blog/" class="text-slate-600 hover:text-forest-600 transition">Dog Care Blog</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-serif text-sm font-bold text-forest-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <i class="fa-solid fa-store"></i> Providers
+            </h4>
+            <ul class="space-y-2.5 text-sm">
+              <li><a href="/list-your-business/" class="text-slate-600 hover:text-forest-600 transition">List Your Business</a></li>
+              <li><a href="/list-your-business/" class="text-slate-600 hover:text-forest-600 transition">See Pricing Plans</a></li>
+              <li><a href="/submit-listing/" class="text-slate-600 hover:text-forest-600 transition">Submit Listing Form</a></li>
+              <li><a href="/login/" class="text-slate-600 hover:text-forest-600 transition">Provider Login</a></li>
+              <li><a href="/signup/" class="text-slate-600 hover:text-forest-600 transition">Provider Sign Up</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="font-serif text-sm font-bold text-forest-700 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <i class="fa-solid fa-compass"></i> Directory
+            </h4>
+            <ul class="space-y-2.5 text-sm">
+              <li><a href="/#states" class="text-slate-600 hover:text-forest-600 transition">All States</a></li>
+              <li><a href="/service/" class="text-slate-600 hover:text-forest-600 transition">All Services</a></li>
+              <li><a href="/search/" class="text-slate-600 hover:text-forest-600 transition">Search Directory</a></li>
+              <li><a href="/blog/" class="text-slate-600 hover:text-forest-600 transition">Resources Hub</a></li>
+              <li><a href="/recommend-a-provider/" class="text-slate-600 hover:text-forest-600 transition">Recommend a Provider</a></li>
+              <li><a href="/partnerships/" class="text-slate-600 hover:text-forest-600 transition">Partnerships</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-12 pt-8 border-t border-slate-200">
+          <div class="flex flex-col lg:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+            <nav class="flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
+              <a href="/about/" class="hover:text-forest-600 transition">About</a>
+              <span class="text-slate-300">·</span>
+              <a href="/contact/" class="hover:text-forest-600 transition">Contact</a>
+              <span class="text-slate-300">·</span>
+              <a href="/terms-of-service/" class="hover:text-forest-600 transition">Terms of Service</a>
+              <span class="text-slate-300">·</span>
+              <a href="/privacy-policy/" class="hover:text-forest-600 transition">Privacy Policy</a>
+              <span class="text-slate-300">·</span>
+              <a href="/cookie-policy/" class="hover:text-forest-600 transition">Cookie Policy</a>
+              <span class="text-slate-300">·</span>
+              <a href="/cookie-settings/" class="hover:text-forest-600 transition">Cookie Settings</a>
+              <span class="text-slate-300">·</span>
+              <a href="/editorial-policy/" class="hover:text-forest-600 transition">Editorial Policy</a>
+              <span class="text-slate-300">·</span>
+              <a href="/disclaimer/" class="hover:text-forest-600 transition">Disclaimer</a>
+              <span class="text-slate-300">·</span>
+              <a href="/impressum/" class="hover:text-forest-600 transition">Impressum</a>
+            </nav>
+            <p class="text-[11px] text-slate-500 whitespace-nowrap">
+              <i class="fa-regular fa-copyright mr-1"></i>
+              {new Date().getFullYear()} DogCareFinder — All Rights Reserved
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script is:inline>
+      (function () {
+        var form = document.getElementById("newsletter-form");
+        if (!form) return;
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          var btn = form.querySelector("button");
+          var original = btn.innerHTML;
+          btn.innerHTML = '<i class="fa-solid fa-check"></i> Subscribed!';
+          btn.classList.add("bg-gold-400", "text-navy-900");
+          btn.classList.remove("bg-forest-600", "hover:bg-forest-700");
+          setTimeout(function () {
+            btn.innerHTML = original;
+            btn.classList.remove("bg-gold-400", "text-navy-900");
+            btn.classList.add("bg-forest-600", "hover:bg-forest-700");
+            form.reset();
+          }, 2500);
+        });
+      })();
+    </script>
+  </body>
+</html>

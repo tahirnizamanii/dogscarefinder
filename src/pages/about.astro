@@ -1,0 +1,74 @@
+---
+// src/pages/about.astro
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { breadcrumbSchema, webPageSchema } from "../lib/schemas.js";
+
+const title = "About DogCareFinder — The Nationwide Dog Care Directory";
+const description = "DogCareFinder is the most complete canine services directory in the US. Learn about our mission, verification standards, and editorial process.";
+const canonical = "https://dogcarefinder.com/about/";
+
+const schemas = [
+  webPageSchema(title, description, canonical),
+  breadcrumbSchema([
+    { name: "Home", url: "https://dogcarefinder.com/" },
+    { name: "About", url: canonical },
+  ]),
+];
+---
+
+<BaseLayout title={title} description={description} canonical={canonical} schemas={schemas}>
+  <section class="bg-navy-900 text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+      <nav class="text-xs text-white/70 flex justify-center gap-2 mb-4">
+        <a href="/" class="hover:text-white">Home</a>
+        <i class="fa-solid fa-chevron-right text-[9px] self-center"></i>
+        <span class="text-white font-semibold">About</span>
+      </nav>
+      <div class="inline-flex items-center gap-2 bg-white/10 rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest mb-4">
+        <i class="fa-solid fa-dog text-gold-400"></i> Our Mission
+      </div>
+      <h1 class="font-serif text-4xl md:text-5xl font-bold">About DogCareFinder</h1>
+      <p class="mt-4 text-white/80 max-w-2xl mx-auto">
+        The most complete canine services directory in the United States.
+      </p>
+    </div>
+  </section>
+
+  <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14 prose prose-slate max-w-none">
+    <h2 class="font-serif text-2xl font-bold text-navy-900 mb-4">Our Mission</h2>
+    <p class="text-slate-700 leading-relaxed mb-4">
+      DogCareFinder was built to help dog owners find trusted, verified dog care professionals — fast. Whether you need a groomer, a trainer, a boarding facility, a veterinarian, or a therapy dog service, our directory puts every option in one place.
+    </p>
+    <p class="text-slate-700 leading-relaxed mb-8">
+      We believe dog owners deserve clear, honest information without paying middleman fees. That's why our directory is 100% free to browse, with no referral fees and no booking commissions.
+    </p>
+
+    <h2 class="font-serif text-2xl font-bold text-navy-900 mb-4">How We Verify Listings</h2>
+    <ul class="list-disc pl-6 text-slate-700 space-y-2 mb-8">
+      <li><strong>Business name and address</strong> — cross-checked with public records and Google Maps.</li>
+      <li><strong>Contact information</strong> — verified when possible and updated regularly.</li>
+      <li><strong>Category</strong> — assigned based on primary services offered.</li>
+      <li><strong>Ratings and reviews</strong> — sourced from public review platforms when available.</li>
+    </ul>
+
+    <h2 class="font-serif text-2xl font-bold text-navy-900 mb-4">Editorial Standards</h2>
+    <p class="text-slate-700 leading-relaxed mb-4">
+      Our blog content is created for dog owners, not search engines. Every guide is reviewed for accuracy, and we update articles when industry best practices change. We do not sell placements in editorial content.
+    </p>
+
+    <h2 class="font-serif text-2xl font-bold text-navy-900 mb-4">Trust & Transparency</h2>
+    <p class="text-slate-700 leading-relaxed mb-8">
+      DogCareFinder is independently owned and operated. We do not accept payments for positive reviews. Verified listings carry a badge, and paid listings are always clearly marked.
+    </p>
+
+    <div class="bg-cream-100 border border-slate-200 rounded-2xl p-6 mt-10">
+      <h3 class="font-serif text-lg font-bold text-navy-900 mb-2">Get in touch</h3>
+      <p class="text-sm text-slate-600 mb-3">
+        Have a question, suggestion, or want to list your business?
+      </p>
+      <a href="/contact/" class="inline-flex items-center gap-2 bg-forest-600 hover:bg-forest-700 text-white font-semibold px-5 py-2.5 rounded-lg transition">
+        <i class="fa-solid fa-envelope"></i> Contact Us
+      </a>
+    </div>
+  </section>
+</BaseLayout>

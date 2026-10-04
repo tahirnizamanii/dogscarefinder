@@ -1,0 +1,147 @@
+---
+// src/pages/blog/category/[category].astro
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { fetchBlogPosts, slugify } from "../../../lib/database.js";
+import { breadcrumbSchema, webPageSchema, itemListSchema } from "../../../lib/schemas.js";
+
+export async function getStaticPaths() {
+  const posts = await fetchBlogPosts();
+  const cats = new Map();
+  for (const p of posts) {
+    const cat = p.category || "General";
+    const slug = slugify(cat);
+    if (!cats.has(slug)) cats.set(slug, cat);
+  }
+  return Array.from(cats.entries()).map(([slug, display]) => ({
+    params: { category: slug },
+    props: { categoryDisplay: display },
+  }));
+}
+
+const { category } = Astro.params;
+const { categoryDisplay } = Astro.props;
+
+const allPosts = await fetchBlogPosts();
+const posts = allPosts.filter((p) => slugify(p.category) === category);
+
+const title = `${categoryDisplay} Guides — ${posts.length} Expert Articles | DogCareFinder`;
+const description = `Expert ${categoryDisplay.toLowerCase()} guides for dog owners. Practical, no-fluff advice on ${categoryDisplay.toLowerCase()} for every breed and budget.`;
+const canonical = `https://dogcarefinder.com/blog/category/${category}/`;
+
+const schemas = [
+  webPageSchema(title, description, canonical),
+  breadcrumbSchema([
+    { name: "Home", url: "https://dogcarefinder.com/" },
+    { name: "Resources Hub", url: "https://dogcarefinder.com/blog/" },
+    { name: categoryDisplay, url: canonical },
+  ]),
+  {
+    "@type": "ItemList",
+    name: `${categoryDisplay} Guides`,
+    url: canonical,
+    numberOfItems: posts.length,
+    itemListElement: posts.map((p, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: `https://dogcarefinder.com/blog/${p.slug}/`,
+      name: p.title,
+    })),
+  },
+];
+
+const categoryCounts = new Map();
+for (const p of allPosts) {
+  const c = p.category || "General";
+  categoryCounts.set(c, (categoryCounts.get(c) || 0) + 1);
+}
+const categories = Array.from(categoryCounts.entries())
+  .map(([name, count]) => ({ name, count, slug: slugify(name) }))
+  .sort((a, b) => b.count - a.count);
+
+function formatDate(d) {
+  return new Date(d).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+}
+---
+
+<BaseLayout title={title} description={description} canonical={canonical} schemas={schemas}>
+  <section class="bg-navy-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <nav class="text-xs text-white/70 flex items-center gap-2 mb-4">
+        <a href="/" class="hover:text-white">Home</a>
+        <i class="fa-solid fa-chevron-right text-[9px]"></i>
+        <a href="/blog/" class="hover:text-white">Resources Hub</a>
+        <i class="fa-solid fa-chevron-right text-[9px]"></i>
+        <span class="text-white font-semibold">{categoryDisplay}</span>
+      </nav>
+      <div class="inline-flex items-center gap-2 bg-white/10 rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest mb-4">
+        <i class="fa-solid fa-bookmark text-gold-400"></i> Category
+      </div>
+      <h1 class="font-serif text-4xl lg:text-5xl font-bold">{categoryDisplay} Guides</h1>
+      <p class="mt-4 text-white/80 max-w-2xl">
+        {posts.length} expert guides on {categoryDisplay.toLowerCase()} — written for dog owners, not marketers.
+      </p>
+    </div>
+  </section>
+
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="flex flex-wrap items-center gap-2 mb-8 pb-6 border-b border-slate-200">
+      <a href="/blog/" class="inline-flex items-center gap-2 bg-white border border-slate-200 text-slate-700 hover:border-forest-400 text-xs font-semibold uppercase tracking-wider px-4 py-2 rounded-full transition">
+        <i class="fa-solid fa-layer-group text-[10px]"></i> All ({allPosts.length})
+      </a>
+      {categories.map((cat) => (
+        <a
+          href={`/blog/category/${cat.slug}/`}
+          class={`inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider px-4 py-2 rounded-full transition ${cat.slug === category ? "bg-forest-600 text-white border border-forest-600" : "bg-white border border-slate-200 text-slate-700 hover:border-forest-400"}`}
+        >
+          {cat.name}
+          <span class={`text-[10px] ${cat.slug === category ? "text-white/80" : "text-slate-400"}`}>({cat.count})</span>
+        </a>
+      ))}
+    </div>
+
+    {posts.length === 0 ? (
+      <div class="text-center py-16">
+        <i class="fa-solid fa-magnifying-glass text-4xl text-slate-300 mb-4"></i>
+        <p class="text-slate-500">No guides in this category yet.</p>
+      </div>
+    ) : (
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {posts.map((post) => (
+          <article class="group bg-white rounded-xl border border-slate-200 overflow-hidden hover:border-forest-400 hover:shadow-lg transition-all flex flex-col">
+            <a href={`/blog/${post.slug}/`} class="block overflow-hidden">
+              <div class="h-48 bg-gradient-to-br from-forest-500 to-navy-700 relative overflow-hidden">
+                {post.featuredImage ? (
+                  <img src={post.featuredImage} alt={post.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                ) : (
+                  <div class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-newspaper text-4xl text-white/20"></i></div>
+                )}
+                <span class="absolute top-3 left-3 bg-white/95 backdrop-blur text-navy-900 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md">
+                  {post.category}
+                </span>
+              </div>
+            </a>
+            <div class="p-5 flex-1 flex flex-col">
+              <h3 class="font-serif text-lg font-bold text-navy-900 leading-snug mb-2">
+                <a href={`/blog/${post.slug}/`} class="hover:text-forest-600 transition">{post.title}</a>
+              </h3>
+              <p class="text-sm text-slate-600 leading-relaxed flex-1 line-clamp-3">{post.excerpt}</p>
+              <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+                <div class="flex items-center gap-3">
+                  <span class="flex items-center gap-1"><i class="fa-regular fa-calendar"></i> {formatDate(post.publishDate)}</span>
+                  <span class="flex items-center gap-1"><i class="fa-solid fa-clock"></i> {post.readTime} min</span>
+                </div>
+                <i class="fa-solid fa-arrow-right text-forest-600 group-hover:translate-x-1 transition-transform"></i>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    )}
+
+    <div class="text-center mt-10">
+      <a href="/blog/" class="inline-flex items-center gap-2 text-forest-600 font-semibold hover:text-forest-700">
+        <i class="fa-solid fa-arrow-left text-xs"></i> Back to Resources Hub
+      </a>
+    </div>
+  </section>
+</BaseLayout>

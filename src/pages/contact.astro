@@ -1,0 +1,142 @@
+---
+// src/pages/contact.astro
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { breadcrumbSchema, webPageSchema, faqSchema } from "../lib/schemas.js";
+
+const title = "Contact DogCareFinder — Support, Feedback & Business Inquiries";
+const description = "Get in touch with DogCareFinder. Business inquiries, listing questions, feedback, or partnership opportunities — we respond to every email.";
+const canonical = "https://dogcarefinder.com/contact/";
+
+const faqs = [
+  { question: "How long does it take to get a reply?", answer: "Most emails receive a response within 1–2 business days. Partnership and media inquiries may take slightly longer." },
+  { question: "Can I list my business for free?", answer: "Yes. Basic listings are free forever. Visit /list-your-business/ to get started or /submit-listing/ to submit directly." },
+  { question: "How do I report an incorrect listing?", answer: "Email us at info@dogcarefinder.com with the business name and what needs updating. We'll verify and correct it promptly." },
+  { question: "Do you accept guest posts?", answer: "Occasionally, for relevant pet care topics. Send a pitch with your topic, background, and 2 writing samples." },
+];
+
+const schemas = [
+  webPageSchema(title, description, canonical),
+  breadcrumbSchema([
+    { name: "Home", url: "https://dogcarefinder.com/" },
+    { name: "Contact", url: canonical },
+  ]),
+  faqSchema(faqs),
+];
+---
+
+<BaseLayout title={title} description={description} canonical={canonical} schemas={schemas}>
+  <section class="bg-navy-900 text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+      <nav class="text-xs text-white/70 flex justify-center gap-2 mb-4">
+        <a href="/" class="hover:text-white">Home</a>
+        <i class="fa-solid fa-chevron-right text-[9px] self-center"></i>
+        <span class="text-white font-semibold">Contact</span>
+      </nav>
+      <div class="inline-flex items-center gap-2 bg-white/10 rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest mb-4">
+        <i class="fa-solid fa-headset text-gold-400"></i> Support
+      </div>
+      <h1 class="font-serif text-4xl md:text-5xl font-bold">Get in Touch</h1>
+      <p class="mt-4 text-white/80 max-w-2xl mx-auto">
+        Questions, feedback, or business inquiries — we read every email and reply personally.
+      </p>
+    </div>
+  </section>
+
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <div class="grid lg:grid-cols-3 gap-8">
+
+      <!-- Contact form -->
+      <div class="lg:col-span-2 bg-white border border-slate-200 rounded-2xl p-6 sm:p-8">
+        <h2 class="font-serif text-2xl font-bold text-navy-900 mb-6">Send a Message</h2>
+        <form id="contact-form" class="space-y-5">
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">Name *</label>
+              <input type="text" name="name" required placeholder="Your name" class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">Email *</label>
+              <input type="email" name="email" required placeholder="you@example.com" class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">Subject</label>
+            <select name="subject" class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm">
+              <option value="general">General inquiry</option>
+              <option value="listing">Listing question</option>
+              <option value="business">Business / partnership</option>
+              <option value="report">Report an issue</option>
+              <option value="press">Press / media</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">Message *</label>
+            <textarea name="message" required rows="6" placeholder="How can we help?" class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm resize-none"></textarea>
+          </div>
+          <div id="contact-message" class="hidden text-sm rounded-lg p-3"></div>
+          <button type="submit" class="bg-forest-600 hover:bg-forest-700 text-white font-bold py-3 px-8 rounded-lg transition inline-flex items-center gap-2">
+            <i class="fa-solid fa-paper-plane"></i> Send Message
+          </button>
+        </form>
+      </div>
+
+      <!-- Info sidebar -->
+      <aside class="space-y-5">
+        <div class="bg-white border border-slate-200 rounded-xl p-5">
+          <h3 class="font-bold text-navy-900 text-sm mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-envelope text-forest-600"></i> Email Us
+          </h3>
+          <a href="mailto:info@dogcarefinder.com" class="text-forest-600 font-semibold text-sm hover:underline break-all">info@dogcarefinder.com</a>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-xl p-5">
+          <h3 class="font-bold text-navy-900 text-sm mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-location-dot text-forest-600"></i> Location
+          </h3>
+          <p class="text-sm text-slate-600">United States — nationwide directory</p>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-xl p-5">
+          <h3 class="font-bold text-navy-900 text-sm mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-clock text-forest-600"></i> Response Time
+          </h3>
+          <p class="text-sm text-slate-600">1–2 business days. Most replies go out same day.</p>
+        </div>
+
+        <div class="bg-forest-50 border border-forest-200 rounded-xl p-5">
+          <h3 class="font-bold text-forest-800 text-sm mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-store"></i> Want to list?
+          </h3>
+          <p class="text-xs text-slate-700 mb-3">Free listings available for every dog care business.</p>
+          <a href="/list-your-business/" class="text-sm font-semibold text-forest-700 underline">List Your Business →</a>
+        </div>
+      </aside>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-14">
+      <h2 class="font-serif text-2xl font-bold text-navy-900 text-center mb-8">Common Questions</h2>
+      <div class="max-w-3xl mx-auto space-y-3">
+        {faqs.map((faq) => (
+          <details class="group bg-white border border-slate-200 rounded-xl">
+            <summary class="cursor-pointer flex items-center justify-between gap-4 p-5 font-semibold text-navy-900">
+              {faq.question}
+              <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform text-sm"></i>
+            </summary>
+            <div class="px-5 pb-5 text-sm text-slate-600 leading-relaxed">{faq.answer}</div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    document.getElementById("contact-form")?.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const msg = document.getElementById("contact-message");
+      msg.className = "text-sm rounded-lg p-3 bg-forest-50 text-forest-800";
+      msg.textContent = "Thank you! Your message has been received. We'll reply within 1–2 business days.";
+      e.target.reset();
+    });
+  </script>
+</BaseLayout>

@@ -1,0 +1,47 @@
+---
+// src/pages/disclaimer.astro
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { breadcrumbSchema, webPageSchema } from "../lib/schemas.js";
+
+const title = "Disclaimer | DogCareFinder";
+const description = "Legal disclaimer for DogCareFinder.";
+const canonical = "https://dogcarefinder.com/disclaimer/";
+
+const schemas = [
+  webPageSchema(title, description, canonical),
+  breadcrumbSchema([
+    { name: "Home", url: "https://dogcarefinder.com/" },
+    { name: "Disclaimer", url: canonical },
+  ]),
+];
+---
+
+<BaseLayout title={title} description={description} canonical={canonical} schemas={schemas}>
+  <section class="bg-navy-900 text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-14 text-center">
+      <nav class="text-xs text-white/70 flex justify-center gap-2 mb-4">
+        <a href="/" class="hover:text-white">Home</a>
+        <i class="fa-solid fa-chevron-right text-[9px] self-center"></i>
+        <span class="text-white font-semibold">Disclaimer</span>
+      </nav>
+      <h1 class="font-serif text-4xl md:text-5xl font-bold">Disclaimer</h1>
+    </div>
+  </section>
+
+  <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14 prose prose-slate max-w-none">
+    <h2 class="font-serif text-xl font-bold text-navy-900 mb-3">General Information Only</h2>
+    <p class="text-slate-700">The content on DogCareFinder is provided for general informational purposes only. It is not a substitute for professional veterinary, medical, legal, or financial advice.</p>
+
+    <h2 class="font-serif text-xl font-bold text-navy-900 mt-8 mb-3">No Endorsement</h2>
+    <p class="text-slate-700">Listing of a business does not constitute endorsement. We do not independently verify every listing. Always do your own due diligence before hiring any provider.</p>
+
+    <h2 class="font-serif text-xl font-bold text-navy-900 mt-8 mb-3">Pricing Information</h2>
+    <p class="text-slate-700">Pricing information in our guides is an estimate. Actual prices vary by location, provider, dog size/breed, and services selected.</p>
+
+    <h2 class="font-serif text-xl font-bold text-navy-900 mt-8 mb-3">External Links</h2>
+    <p class="text-slate-700">We are not responsible for the content of external sites linked from this site.</p>
+
+    <h2 class="font-serif text-xl font-bold text-navy-900 mt-8 mb-3">Veterinary Disclaimer</h2>
+    <p class="text-slate-700">Always consult a licensed veterinarian for health concerns. Information on this site does not replace professional medical advice for your dog.</p>
+  </section>
+</BaseLayout>
