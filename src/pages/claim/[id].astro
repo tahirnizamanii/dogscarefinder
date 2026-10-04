@@ -1,0 +1,247 @@
+---
+// src/pages/claim/[id].astro
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { fetchAllRecords } from "../../lib/database.js";
+
+export async function getStaticPaths() {
+  const listings = await fetchAllRecords();
+  return listings
+    .filter((l) => !l.claimVerified)
+    .map((l) => ({
+      params: { id: String(l.id) },
+      props: {
+        listing: {
+          id: l.id,
+          businessName: l.businessName,
+          city: l.city,
+          state: l.state,
+          website: l.website,
+          phone: l.phone,
+        },
+      },
+    }));
+}
+
+const { listing } = Astro.props;
+const API = import.meta.env.PUBLIC_API_BASE_URL || "";
+
+const title = `Claim ${listing.businessName} — DogCareFinder`;
+const description = `Verify ownership of ${listing.businessName} in ${listing.city}, ${listing.state} and take control of your listing.`;
+const canonical = `https://dogcarefinder.com/claim/${listing.id}/`;
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}>
+  <section class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center gap-2 bg-forest-50 text-forest-700 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4">
+        <i class="fa-solid fa-shield-halved"></i>
+        Verified Claim
+      </div>
+      <h1 class="font-serif text-3xl sm:text-4xl font-bold text-navy-900">
+        Claim this listing
+      </h1>
+      <p class="mt-3 text-slate-600">
+        Verify you own <strong class="text-navy-900">{listing.businessName}</strong> to unlock editing and premium features.
+      </p>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-2xl p-6 mb-6">
+      <div class="flex items-start gap-4">
+        <div class="w-14 h-14 bg-navy-900 rounded-xl flex items-center justify-center text-white shrink-0">
+          <i class="fa-solid fa-store text-xl"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <h2 class="font-bold text-navy-900 text-lg truncate">{listing.businessName}</h2>
+          <p class="text-sm text-slate-500 mt-0.5">
+            <i class="fa-solid fa-location-dot text-forest-600 mr-1"></i>
+            {listing.city}, {listing.state}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div id="step-login" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-6 text-center">
+      <i class="fa-solid fa-lock text-amber-600 text-3xl mb-3"></i>
+      <h3 class="font-bold text-navy-900 mb-2">Sign in required</h3>
+      <p class="text-sm text-slate-600 mb-4">You need an account to claim a listing.</p>
+      <a href={`/login/?redirect=/claim/${listing.id}/`} class="inline-flex items-center gap-2 bg-forest-600 hover:bg-forest-700 text-white font-semibold px-5 py-2.5 rounded-lg transition">
+        <i class="fa-solid fa-right-to-bracket"></i>
+        Log In
+      </a>
+    </div>
+
+    <div id="step-method" class="hidden bg-white border border-slate-200 rounded-2xl p-6">
+      <h3 class="font-bold text-navy-900 text-lg mb-2">Choose verification method</h3>
+      <p class="text-sm text-slate-500 mb-5">We'll send a 6-digit code to verify ownership.</p>
+
+      <div class="space-y-3">
+        {listing.website && (
+          <button data-method="domain_email" class="verify-method-btn w-full text-left bg-white hover:bg-forest-50 border-2 border-slate-200 hover:border-forest-400 rounded-xl p-4 transition flex items-start gap-3 group">
+            <div class="w-10 h-10 bg-forest-50 group-hover:bg-forest-100 rounded-lg flex items-center justify-center text-forest-600 shrink-0">
+              <i class="fa-solid fa-envelope"></i>
+            </div>
+            <div class="flex-1">
+              <div class="font-bold text-navy-900 text-sm">Email at your domain</div>
+              <div class="text-xs text-slate-500 mt-0.5">
+                We'll send a code to an email ending in your website's domain
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-forest-600 mt-3"></i>
+          </button>
+        )}
+
+        {listing.phone && (
+          <button data-method="phone_otp" class="verify-method-btn w-full text-left bg-white hover:bg-forest-50 border-2 border-slate-200 hover:border-forest-400 rounded-xl p-4 transition flex items-start gap-3 group">
+            <div class="w-10 h-10 bg-forest-50 group-hover:bg-forest-100 rounded-lg flex items-center justify-center text-forest-600 shrink-0">
+              <i class="fa-solid fa-phone"></i>
+            </div>
+            <div class="flex-1">
+              <div class="font-bold text-navy-900 text-sm">Phone verification</div>
+              <div class="text-xs text-slate-500 mt-0.5">
+                We'll send an SMS code to the phone number on this listing
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-forest-600 mt-3"></i>
+          </button>
+        )}
+      </div>
+
+      <div class="mt-5 pt-5 border-t border-slate-100 text-xs text-slate-500 leading-relaxed">
+        <i class="fa-solid fa-circle-info text-forest-600 mr-1"></i>
+        If you can't verify with either method, <a href="/contact/" class="text-forest-600 underline">contact support</a> to submit documents.
+      </div>
+    </div>
+
+    <div id="step-verify" class="hidden bg-white border border-slate-200 rounded-2xl p-6">
+      <h3 class="font-bold text-navy-900 text-lg mb-2">Enter verification code</h3>
+      <p class="text-sm text-slate-500 mb-5">
+        We sent a 6-digit code to <strong id="target-display" class="text-navy-900"></strong>
+      </p>
+
+      <input id="code-input" type="text" inputmode="numeric" maxlength="6" placeholder="000000"
+        class="w-full text-center text-3xl font-bold tracking-[0.4em] py-4 px-4 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-forest-500 focus:ring-4 focus:ring-forest-500/10" />
+
+      <button id="verify-btn" class="w-full mt-4 bg-forest-600 hover:bg-forest-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-2">
+        <i class="fa-solid fa-check"></i>
+        Verify & Claim
+      </button>
+
+      <button id="back-btn" class="w-full mt-2 text-sm text-slate-500 hover:text-navy-900 transition py-2">
+        ← Choose different method
+      </button>
+
+      <div id="verify-error" class="hidden mt-4 bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700"></div>
+    </div>
+
+    <div id="step-success" class="hidden bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-8 text-center">
+      <div class="w-16 h-16 mx-auto bg-emerald-500 rounded-full flex items-center justify-center text-white text-2xl mb-4">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <h3 class="font-serif text-2xl font-bold text-navy-900 mb-2">Listing claimed!</h3>
+      <p class="text-sm text-slate-600 mb-6">
+        You now have full control over this listing. Edit details, respond to reviews, and get more customers.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="/dashboard/claims/" class="inline-flex items-center justify-center gap-2 bg-forest-600 hover:bg-forest-700 text-white font-semibold px-6 py-3 rounded-lg transition">
+          <i class="fa-solid fa-gauge-high"></i>
+          Go to My Listings
+        </a>
+        <a href="/list-your-business/" class="inline-flex items-center justify-center gap-2 bg-white border border-slate-300 hover:border-slate-400 text-navy-900 font-semibold px-6 py-3 rounded-lg transition">
+          <i class="fa-solid fa-star"></i>
+          Upgrade to Featured
+        </a>
+      </div>
+    </div>
+
+  </section>
+
+  <script is:inline define:vars={{ API, LISTING_ID: listing.id }}>
+    (function () {
+      var stepLogin = document.getElementById("step-login");
+      var stepMethod = document.getElementById("step-method");
+      var stepVerify = document.getElementById("step-verify");
+      var stepSuccess = document.getElementById("step-success");
+      var targetDisplay = document.getElementById("target-display");
+      var codeInput = document.getElementById("code-input");
+      var verifyBtn = document.getElementById("verify-btn");
+      var backBtn = document.getElementById("back-btn");
+      var errBox = document.getElementById("verify-error");
+
+      function show(el) {
+        [stepLogin, stepMethod, stepVerify, stepSuccess].forEach(function (s) { s.classList.add("hidden"); });
+        el.classList.remove("hidden");
+      }
+
+      fetch(API + "/api/auth/me", { credentials: "include" })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (!d.user) return show(stepLogin);
+          show(stepMethod);
+        })
+        .catch(function () { show(stepLogin); });
+
+      document.querySelectorAll(".verify-method-btn").forEach(function (btn) {
+        btn.addEventListener("click", async function () {
+          var method = btn.getAttribute("data-method");
+          btn.disabled = true;
+          btn.style.opacity = "0.6";
+          try {
+            var res = await fetch(API + "/api/claims/start", {
+              method: "POST",
+              credentials: "include",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ listing_id: LISTING_ID, method: method }),
+            });
+            var data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Failed to start");
+            targetDisplay.textContent = data.target;
+            show(stepVerify);
+            codeInput.focus();
+          } catch (err) {
+            alert(err.message);
+            btn.disabled = false;
+            btn.style.opacity = "1";
+          }
+        });
+      });
+
+      backBtn.addEventListener("click", function () {
+        errBox.classList.add("hidden");
+        codeInput.value = "";
+        show(stepMethod);
+      });
+
+      verifyBtn.addEventListener("click", async function () {
+        var code = codeInput.value.trim();
+        if (code.length !== 6) {
+          errBox.textContent = "Please enter a 6-digit code";
+          errBox.classList.remove("hidden");
+          return;
+        }
+        verifyBtn.disabled = true;
+        verifyBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying...';
+        try {
+          var res = await fetch(API + "/api/claims/verify", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ listing_id: LISTING_ID, code: code }),
+          });
+          var data = await res.json();
+          if (!res.ok) throw new Error(data.error || "Verification failed");
+          show(stepSuccess);
+        } catch (err) {
+          errBox.textContent = err.message;
+          errBox.classList.remove("hidden");
+          verifyBtn.disabled = false;
+          verifyBtn.innerHTML = '<i class="fa-solid fa-check"></i> Verify & Claim';
+        }
+      });
+
+      codeInput.addEventListener("input", function () {
+        if (codeInput.value.length === 6) verifyBtn.click();
+      });
+    })();
+  </script>
+</BaseLayout>

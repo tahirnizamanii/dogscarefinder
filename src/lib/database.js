@@ -3,13 +3,11 @@ import mysql from "mysql2/promise";
 
 // ── Environment helper — works in Astro AND plain Node.js ───────────────
 function env(key) {
-  // Try Astro's import.meta.env first
   try {
     if (typeof import.meta !== "undefined" && import.meta && import.meta.env && import.meta.env[key]) {
       return import.meta.env[key];
     }
   } catch (e) {}
-  // Fallback to process.env (works in scripts)
   return process.env[key];
 }
 
@@ -80,7 +78,14 @@ export async function fetchAllRecords() {
         id, business_name AS businessName, category, state, city,
         street_address AS streetAddress, zip_code AS zipCode,
         phone, website, rating, review_count AS reviewCount,
-        description, featured
+        description, featured,
+        last_fetched_at AS lastFetchedAt,
+        google_place_id AS googlePlaceId,
+        reviews_json AS reviewsJson,
+        last_review_update AS lastReviewUpdate,
+        claimed_by AS claimedBy,
+        claimed_at AS claimedAt,
+        claim_verified AS claimVerified
        FROM listings
        ORDER BY featured DESC, rating DESC, review_count DESC`
     );
@@ -88,6 +93,13 @@ export async function fetchAllRecords() {
     _listingsCache = rows.map((row) => {
       const baseSlug = `${row.businessName || "provider"}-${row.city || ""}-${row.state || ""}`;
       const slug = slugify(baseSlug).substring(0, 150);
+
+      let reviews = null;
+      try {
+        reviews = row.reviewsJson
+          ? (typeof row.reviewsJson === "string" ? JSON.parse(row.reviewsJson) : row.reviewsJson)
+          : null;
+      } catch (e) { reviews = null; }
 
       return {
         id: String(row.id),
@@ -104,6 +116,15 @@ export async function fetchAllRecords() {
         reviewCount: Number(row.reviewCount) || 0,
         description: row.description || "",
         featured: Boolean(row.featured),
+
+        // ── NEW ──
+        lastFetchedAt: row.lastFetchedAt ? Number(row.lastFetchedAt) : null,
+        googlePlaceId: row.googlePlaceId || null,
+        reviewsJson: reviews,
+        lastReviewUpdate: row.lastReviewUpdate ? Number(row.lastReviewUpdate) : null,
+        claimedBy: row.claimedBy || null,
+        claimedAt: row.claimedAt ? Number(row.claimedAt) : null,
+        claimVerified: Boolean(row.claimVerified),
       };
     });
 
@@ -128,6 +149,7 @@ export async function fetchBlogPosts() {
         category, author, featured_image AS featuredImage,
         read_time AS readTime, keywords, faq, related_states AS relatedStates,
         related_categories AS relatedCategories,
+        related_state AS relatedState, related_city AS relatedCity,
         publish_date AS publishDate, updated_date AS updatedDate, featured
        FROM blog_posts
        WHERE publish_date <= NOW()
@@ -151,6 +173,8 @@ export async function fetchBlogPosts() {
       relatedCategories: row.relatedCategories
         ? row.relatedCategories.split(",").map((s) => s.trim())
         : [],
+      relatedState: row.relatedState || null,
+      relatedCity: row.relatedCity || null,
       publishDate: row.publishDate ? new Date(row.publishDate).toISOString() : new Date().toISOString(),
       updatedDate: row.updatedDate ? new Date(row.updatedDate).toISOString() : new Date().toISOString(),
       featured: Boolean(row.featured),
@@ -162,5 +186,87 @@ export async function fetchBlogPosts() {
     console.error("❌ Blog fetch failed:", err.message);
     _blogCache = [];
     return _blogCache;
+  }
+}
+
+// ── Related Guides (location-aware with fallback chain) ─────────────────
+export async function fetchRelatedGuides(stateCode, cityName, limit = 3) {
+  try {
+    const pool = getPool();
+    const collected = [];
+    const seenIds = new Set();
+
+    // 1. Guides tagged for this exact city + state
+    if (cityName && stateCode) {
+      const [cityRows] = await pool.query(
+        `SELECT id, title, slug, excerpt, category, publish_date AS publishDate, featured_image AS featuredImage
+         FROM blog_posts
+         WHERE publish_date <= NOW()
+           AND related_city = ? AND related_state = ?
+         ORDER BY publish_date DESC LIMIT ?`,
+        [cityName, stateCode, limit]
+      );
+      for (const r of cityRows) {
+        if (!seenIds.has(r.id)) { seenIds.add(r.id); collected.push(r); }
+      }
+    }
+
+    // 2. Guides tagged for this state (any city)
+    if (collected.length < limit && stateCode) {
+      const [stateRows] = await pool.query(
+        `SELECT id, title, slug, excerpt, category, publish_date AS publishDate, featured_image AS featuredImage
+         FROM blog_posts
+         WHERE publish_date <= NOW()
+           AND related_state = ?
+           AND (related_city IS NULL OR related_city != ?)
+         ORDER BY publish_date DESC LIMIT ?`,
+        [stateCode, cityName || "", limit - collected.length]
+      );
+      for (const r of stateRows) {
+        if (!seenIds.has(r.id)) { seenIds.add(r.id); collected.push(r); }
+      }
+    }
+
+    // 3. National guides (no location tag)
+    if (collected.length < limit) {
+      const [natRows] = await pool.query(
+        `SELECT id, title, slug, excerpt, category, publish_date AS publishDate, featured_image AS featuredImage
+         FROM blog_posts
+         WHERE publish_date <= NOW()
+           AND related_state IS NULL
+         ORDER BY featured DESC, publish_date DESC LIMIT ?`,
+        [limit - collected.length]
+      );
+      for (const r of natRows) {
+        if (!seenIds.has(r.id)) { seenIds.add(r.id); collected.push(r); }
+      }
+    }
+
+    // 4. Last resort — any recent guides
+    if (collected.length < limit) {
+      const [anyRows] = await pool.query(
+        `SELECT id, title, slug, excerpt, category, publish_date AS publishDate, featured_image AS featuredImage
+         FROM blog_posts
+         WHERE publish_date <= NOW()
+         ORDER BY publish_date DESC LIMIT ?`,
+        [limit - collected.length]
+      );
+      for (const r of anyRows) {
+        if (!seenIds.has(r.id)) { seenIds.add(r.id); collected.push(r); }
+      }
+    }
+
+    return collected.map((r) => ({
+      id: String(r.id),
+      title: r.title,
+      slug: r.slug,
+      excerpt: r.excerpt || "",
+      category: r.category || "Guides",
+      publishDate: r.publishDate ? new Date(r.publishDate).toISOString() : null,
+      featuredImage: r.featuredImage || "",
+    }));
+  } catch (err) {
+    console.error("❌ Related guides fetch failed:", err.message);
+    return [];
   }
 }

@@ -17,6 +17,22 @@ const schemas = [
 
 const tools = [
   {
+    icon: "fa-shield-halved",
+    title: "Moderation Queue",
+    description: "Review, approve, or reject user-submitted listings before they go live.",
+    url: "/admin/submissions/",
+    label: "Open Queue",
+    internal: true,
+  },
+  {
+    icon: "fa-user-check",
+    title: "Claim Moderation",
+    description: "Monitor business listing claims, verification attempts, and ownership changes.",
+    url: "/admin/claims/",
+    label: "Open Claims",
+    internal: true,
+  },
+  {
     icon: "fa-store",
     title: "Manage Listings",
     description: "View, approve, edit, and publish business listings in Airtable.",
@@ -88,8 +104,8 @@ const tools = [
       {tools.map((tool) => (
         <a
           href={tool.url}
-          target="_blank"
-          rel="noopener"
+          target={tool.internal ? undefined : "_blank"}
+          rel={tool.internal ? undefined : "noopener"}
           class="group bg-white border border-slate-200 rounded-2xl p-6 hover:border-forest-400 hover:shadow-lg transition-all"
         >
           <div class="w-12 h-12 bg-forest-50 group-hover:bg-forest-100 rounded-lg flex items-center justify-center text-forest-600 text-lg mb-4 transition">
@@ -99,7 +115,7 @@ const tools = [
           <p class="text-sm text-slate-600 leading-relaxed mb-4">{tool.description}</p>
           <div class="inline-flex items-center gap-2 text-forest-600 font-semibold text-sm group-hover:gap-3 transition-all">
             {tool.label}
-            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+            <i class={`fa-solid ${tool.internal ? "fa-arrow-right" : "fa-arrow-up-right-from-square"} text-xs`}></i>
           </div>
         </a>
       ))}

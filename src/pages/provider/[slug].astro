@@ -3,6 +3,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import {
   fetchAllRecords,
+  fetchRelatedGuides,
   toUrlSegment,
   slugify,
   renderStars,
@@ -43,6 +44,19 @@ const similar = allListings
       l.id !== provider.id
   )
   .slice(0, 4);
+
+// ── Related guides (location-aware fallback) ──────────────
+const relatedGuides = await fetchRelatedGuides(provider.state, provider.city, 3);
+
+// ── Verified date ─────────────────────────────────────────
+const lastVerified = provider.lastFetchedAt
+  ? new Date(Number(provider.lastFetchedAt)).toLocaleDateString("en-US", {
+      year: "numeric", month: "long", day: "numeric",
+    })
+  : null;
+
+// ── Reviews from JSON ─────────────────────────────────────
+const googleReviews = Array.isArray(provider.reviewsJson) ? provider.reviewsJson : [];
 
 // FAQs specific to this provider
 const faqs = [
@@ -122,9 +136,17 @@ const mapEmbedUrl = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div class="grid lg:grid-cols-3 gap-8 items-start">
         <div class="lg:col-span-2">
-          <div class="inline-flex items-center gap-2 bg-white/10 rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-white/90 mb-4">
-            <i class="fa-solid fa-store text-gold-400"></i>
-            Verified {provider.category}
+          <div class="flex flex-wrap items-center gap-2 mb-4">
+            <div class="inline-flex items-center gap-2 bg-white/10 rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-white/90">
+              <i class="fa-solid fa-store text-gold-400"></i>
+              {provider.category}
+            </div>
+            {provider.claimVerified && (
+              <div class="inline-flex items-center gap-2 bg-emerald-500/20 border border-emerald-400/40 rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-emerald-200">
+                <i class="fa-solid fa-shield-halved"></i>
+                Verified Owner
+              </div>
+            )}
           </div>
           <h1 class="font-serif text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
             {provider.businessName}
@@ -142,6 +164,12 @@ const mapEmbedUrl = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
               </div>
             )}
           </div>
+          {lastVerified && (
+            <p class="mt-3 text-xs text-white/60 flex items-center gap-1.5">
+              <i class="fa-solid fa-circle-check text-gold-400"></i>
+              Listing last verified {lastVerified}
+            </p>
+          )}
         </div>
       </div>
     </div>
@@ -185,6 +213,64 @@ const mapEmbedUrl = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
               referrerpolicy="no-referrer-when-downgrade"
               title={`Map of ${provider.businessName}`}
             ></iframe>
+          </div>
+        )}
+
+        <!-- ═══════════ GOOGLE REVIEWS ═══════════ -->
+        {googleReviews.length > 0 && (
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="font-serif text-2xl font-bold text-navy-900 flex items-center gap-2">
+                <i class="fa-brands fa-google text-forest-600"></i>
+                Customer Reviews
+              </h2>
+              {provider.rating !== null && (
+                <div class="flex items-center gap-2 bg-amber-50 rounded-lg px-3 py-1.5">
+                  <span class="text-amber-500"><i class="fa-solid fa-star"></i></span>
+                  <span class="font-bold text-amber-700 text-sm">{provider.rating.toFixed(1)}</span>
+                  <span class="text-xs text-amber-600">({provider.reviewCount})</span>
+                </div>
+              )}
+            </div>
+
+            <div class="space-y-4">
+              {googleReviews.slice(0, 5).map((review) => (
+                <div class="bg-slate-50 border border-slate-100 rounded-xl p-5">
+                  <div class="flex items-start gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-full bg-forest-100 flex items-center justify-center text-forest-700 font-bold text-sm shrink-0">
+                      {(review.author_name || review.authorName || "?").charAt(0).toUpperCase()}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center justify-between gap-2">
+                        <p class="font-semibold text-navy-900 text-sm truncate">
+                          {review.author_name || review.authorName || "Anonymous"}
+                        </p>
+                        <span class="text-xs text-slate-400 shrink-0">
+                          {review.relative_time_description || review.relativePublishTimeDescription || ""}
+                        </span>
+                      </div>
+                      <div class="flex items-center gap-1 text-amber-500 text-xs mt-0.5">
+                        {Array.from({ length: Math.round(review.rating || 0) }).map(() => (
+                          <i class="fa-solid fa-star"></i>
+                        ))}
+                        {Array.from({ length: 5 - Math.round(review.rating || 0) }).map(() => (
+                          <i class="fa-regular fa-star"></i>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <p class="text-sm text-slate-600 leading-relaxed">
+                    {review.text?.text || review.text || ""}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {provider.lastReviewUpdate && (
+              <p class="mt-4 text-[10px] text-slate-400 text-center">
+                Reviews synced from Google · Last updated {new Date(Number(provider.lastReviewUpdate)).toLocaleDateString()}
+              </p>
+            )}
           </div>
         )}
 
@@ -236,6 +322,42 @@ const mapEmbedUrl = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
             </div>
           </div>
         )}
+
+        <!-- ═══════════ RELATED GUIDES ═══════════ -->
+        {relatedGuides.length > 0 && (
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8">
+            <div class="flex items-center gap-2 mb-1">
+              <i class="fa-solid fa-book-open text-forest-600"></i>
+              <span class="text-[10px] font-bold uppercase tracking-widest text-forest-700">Related Guides</span>
+            </div>
+            <h2 class="font-serif text-xl font-bold text-navy-900 mb-4">
+              Dog care tips for {provider.city}, {provider.state}
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {relatedGuides.map((guide) => (
+                <a href={`/blog/${guide.slug}/`} class="group bg-slate-50 border border-slate-200 rounded-xl overflow-hidden hover:border-forest-400 hover:shadow-md transition-all">
+                  {guide.featuredImage && (
+                    <div class="h-28 overflow-hidden">
+                      <img src={guide.featuredImage} alt={guide.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                    </div>
+                  )}
+                  <div class="p-4">
+                    <div class="text-[9px] font-bold uppercase tracking-wider text-forest-600 mb-1.5">
+                      {guide.category}
+                    </div>
+                    <h3 class="font-semibold text-navy-900 text-sm leading-snug group-hover:text-forest-600 transition line-clamp-2">
+                      {guide.title}
+                    </h3>
+                    <span class="mt-3 inline-flex items-center gap-1 text-[10px] font-bold text-forest-600 uppercase tracking-wider">
+                      Read Guide <i class="fa-solid fa-arrow-right text-[9px]"></i>
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <!-- SIDEBAR -->
@@ -266,6 +388,20 @@ const mapEmbedUrl = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
               <i class="fa-solid fa-diamond-turn-right"></i>
               Get Directions
             </a>
+          )}
+
+          <!-- ═══════════ CLAIM CTA ═══════════ -->
+          {!provider.claimVerified && (
+            <>
+              <div class="my-4 border-t border-slate-100"></div>
+              <a href={`/claim/${provider.id}/`} class="w-full inline-flex items-center justify-center gap-2 bg-gold-400 hover:bg-gold-500 text-navy-900 font-bold py-3 px-4 rounded-lg transition">
+                <i class="fa-solid fa-shield-halved"></i>
+                Claim This Listing
+              </a>
+              <p class="text-[10px] text-slate-500 text-center mt-2 leading-relaxed">
+                Own this business? Claim it to update info and add photos.
+              </p>
+            </>
           )}
 
           <div class="mt-5 pt-5 border-t border-slate-100 space-y-3 text-sm">

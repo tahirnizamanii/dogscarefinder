@@ -1,0 +1,128 @@
+---
+// src/pages/dashboard/claims.astro
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { breadcrumbSchema, webPageSchema } from "../../lib/schemas.js";
+
+const title = "My Claimed Listings | DogCareFinder";
+const description = "Manage your claimed business listings.";
+const canonical = "https://dogcarefinder.com/dashboard/claims/";
+const API = import.meta.env.PUBLIC_API_BASE_URL || "";
+
+const schemas = [
+  webPageSchema(title, description, canonical),
+  breadcrumbSchema([
+    { name: "Home", url: "https://dogcarefinder.com/" },
+    { name: "Dashboard", url: "https://dogcarefinder.com/dashboard/" },
+    { name: "My Listings", url: canonical },
+  ]),
+];
+---
+
+<BaseLayout title={title} description={description} canonical={canonical} schemas={schemas}>
+  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <div class="mb-8">
+      <nav class="text-xs text-slate-500 flex gap-2 mb-2">
+        <a href="/" class="hover:text-forest-600">Home</a>
+        <i class="fa-solid fa-chevron-right text-[9px] self-center"></i>
+        <a href="/dashboard/" class="hover:text-forest-600">Dashboard</a>
+        <i class="fa-solid fa-chevron-right text-[9px] self-center"></i>
+        <span class="text-navy-900 font-semibold">My Listings</span>
+      </nav>
+      <h1 class="font-serif text-3xl font-bold text-navy-900">My Claimed Listings</h1>
+      <p class="text-sm text-slate-500 mt-1">Manage the business listings you own.</p>
+    </div>
+
+    <div id="loading" class="text-center py-16">
+      <i class="fa-solid fa-spinner fa-spin text-3xl text-forest-600"></i>
+      <p class="mt-4 text-slate-500">Loading your listings...</p>
+    </div>
+
+    <div id="unauthorized" class="hidden max-w-md mx-auto bg-white border border-slate-200 rounded-2xl p-8 text-center">
+      <div class="w-16 h-16 mx-auto bg-red-50 rounded-full flex items-center justify-center text-red-500 text-3xl mb-5">
+        <i class="fa-solid fa-lock"></i>
+      </div>
+      <h2 class="font-serif text-2xl font-bold text-navy-900 mb-3">Sign in required</h2>
+      <a href="/login/" class="bg-forest-600 hover:bg-forest-700 text-white font-semibold px-5 py-2.5 rounded-lg transition text-sm inline-block">
+        Log In
+      </a>
+    </div>
+
+    <div id="empty" class="hidden bg-white border border-slate-200 rounded-2xl p-12 text-center">
+      <i class="fa-solid fa-store text-5xl text-slate-300 mb-4"></i>
+      <h2 class="font-bold text-navy-900 text-lg mb-2">No claimed listings yet</h2>
+      <p class="text-sm text-slate-500 mb-4">
+        Find your business in the directory and claim it to manage your profile.
+      </p>
+      <a href="/" class="inline-flex items-center gap-2 bg-forest-600 hover:bg-forest-700 text-white font-semibold px-5 py-2.5 rounded-lg transition">
+        <i class="fa-solid fa-search"></i>
+        Browse Directory
+      </a>
+    </div>
+
+    <div id="listings-container" class="hidden space-y-4"></div>
+
+  </section>
+
+  <script is:inline define:vars={{ API }}>
+    (function () {
+      var loading = document.getElementById("loading");
+      var unauthorized = document.getElementById("unauthorized");
+      var empty = document.getElementById("empty");
+      var container = document.getElementById("listings-container");
+
+      function show(el) {
+        [loading, unauthorized, empty, container].forEach(function (x) { x.classList.add("hidden"); });
+        el.classList.remove("hidden");
+      }
+
+      function esc(s) {
+        return String(s || "").replace(/[&<>"']/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+        });
+      }
+
+      fetch(API + "/api/claims/mine", { credentials: "include" })
+        .then(function (r) {
+          if (r.status === 401) { show(unauthorized); throw new Error("unauth"); }
+          return r.json();
+        })
+        .then(function (data) {
+          var list = data.listings || [];
+          if (list.length === 0) { show(empty); return; }
+
+          container.innerHTML = list.map(function (l) {
+            return '<div class="bg-white border border-slate-200 rounded-2xl p-6">'
+              + '<div class="flex flex-wrap items-start justify-between gap-3 mb-4">'
+              + '<div class="flex-1 min-w-0">'
+              + '<div class="flex items-center gap-2 mb-1">'
+              + '<span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded">'
+              + '<i class="fa-solid fa-shield-halved text-[8px]"></i> Verified Owner'
+              + '</span>'
+              + '</div>'
+              + '<h3 class="font-serif text-xl font-bold text-navy-900">' + esc(l.business_name) + '</h3>'
+              + '<p class="text-sm text-slate-500 mt-1">'
+              + '<i class="fa-solid fa-tag text-forest-600 mr-1 text-xs"></i>' + esc(l.category)
+              + '<span class="mx-2 text-slate-300">·</span>'
+              + '<i class="fa-solid fa-location-dot text-forest-600 mr-1 text-xs"></i>'
+              + esc(l.city) + ', ' + esc(l.state)
+              + '</p>'
+              + '</div>'
+              + '<a href="/dashboard/claims/' + l.id + '/edit/" class="text-sm font-semibold text-forest-600 hover:text-forest-700 inline-flex items-center gap-1">'
+              + 'Edit <i class="fa-solid fa-arrow-right text-xs"></i>'
+              + '</a>'
+              + '</div>'
+              + '<a href="/provider/' + esc(l.slug || '') + '/" class="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-navy-900 transition">'
+              + '<i class="fa-solid fa-external-link text-xs"></i> View public page'
+              + '</a>'
+              + '</div>';
+          }).join("");
+
+          show(container);
+        })
+        .catch(function (err) {
+          if (err.message !== "unauth") show(unauthorized);
+        });
+    })();
+  </script>
+</BaseLayout>

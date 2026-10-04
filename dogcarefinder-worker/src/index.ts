@@ -4,14 +4,18 @@ import bcrypt from "bcryptjs";
 
 interface Env {
   HYPERDRIVE: Hyperdrive;
+  RESEND_API_KEY?: string;
+  CLOUDFLARE_DEPLOY_HOOK?: string;
 }
 
-// ─── CORS — allows any *.dogscarefinder.pages.dev subdomain ────
+// ─── CORS ───────────────────────────────────────────────────────
 function corsHeaders(origin: string | null): Record<string, string> {
   const allowedPatterns = [
     /^https:\/\/[a-z0-9-]+\.dogscarefinder\.pages\.dev$/,
     /^https:\/\/dogscarefinder\.pages\.dev$/,
     /^https:\/\/main\.dogscarefinder\.pages\.dev$/,
+    /^https:\/\/dogcarefinder\.com$/,
+    /^https:\/\/www\.dogcarefinder\.com$/,
     /^http:\/\/localhost:\d+$/,
     /^http:\/\/127\.0\.0\.1:\d+$/,
   ];
@@ -80,7 +84,9 @@ async function getUserFromRequest(request: Request, env: Env): Promise<any> {
   return rows[0] || null;
 }
 
-// ─── Handlers: Auth ─────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════════════════════
 async function handleSignup(request: Request, env: Env): Promise<Response> {
   try {
     const body: any = await request.json();
@@ -186,7 +192,9 @@ async function handleMe(request: Request, env: Env): Promise<Response> {
   return json({ user });
 }
 
-// ─── Handlers: Listings ─────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+// LISTINGS
+// ═══════════════════════════════════════════════════════════════
 async function handleSubmitListing(request: Request, env: Env): Promise<Response> {
   try {
     const user = await getUserFromRequest(request, env);
@@ -233,7 +241,9 @@ async function handleListSubmissions(request: Request, env: Env): Promise<Respon
   }
 }
 
-// ─── Handlers: Admin ────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+// ADMIN
+// ═══════════════════════════════════════════════════════════════
 async function requireAdmin(request: Request, env: Env): Promise<any | null> {
   const user = await getUserFromRequest(request, env);
   if (!user || user.role !== "admin") return null;
@@ -274,36 +284,33 @@ async function handleAdminApprove(request: Request, env: Env, id: string): Promi
 
   try {
     const conn = await db(env);
-
-    const [subs]: any = await conn.query(
-      "SELECT * FROM listing_submissions WHERE id = ?",
-      [id]
-    );
+    const [subs]: any = await conn.query("SELECT * FROM listing_submissions WHERE id = ?", [id]);
     if (subs.length === 0) {
       await conn.end();
       return json({ error: "Submission not found" }, 404);
     }
     const sub = subs[0];
 
-    // Insert into listings table
     await conn.query(
       `INSERT INTO listings 
-        (business_name, category, state, city, street_address, zip_code, phone, website, rating, review_count)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL, 0)`,
+        (business_name, category, state, city, street_address, zip_code, phone, website, rating, review_count, last_fetched_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL, 0, ?)`,
       [
         sub.business_name, sub.category, sub.state, sub.city,
         sub.street_address || "", sub.zip_code || "",
-        sub.phone || "", sub.website || "",
+        sub.phone || "", sub.website || "", Date.now(),
       ]
     );
 
-    // Mark submission as approved
-    await conn.query(
-      "UPDATE listing_submissions SET status = 'approved' WHERE id = ?",
-      [id]
-    );
-
+    await conn.query("UPDATE listing_submissions SET status = 'approved' WHERE id = ?", [id]);
     await conn.end();
+
+    // Trigger rebuild
+    try {
+      const hookUrl = (env as any).CLOUDFLARE_DEPLOY_HOOK;
+      if (hookUrl) await fetch(hookUrl, { method: "POST" });
+    } catch (e) { console.error("Deploy hook failed:", e); }
+
     return json({ success: true, id, message: "Approved and published" });
   } catch (err: any) {
     console.error("Admin approve error:", err);
@@ -314,13 +321,9 @@ async function handleAdminApprove(request: Request, env: Env, id: string): Promi
 async function handleAdminReject(request: Request, env: Env, id: string): Promise<Response> {
   const admin = await requireAdmin(request, env);
   if (!admin) return json({ error: "Admin access required" }, 403);
-
   try {
     const conn = await db(env);
-    await conn.query(
-      "UPDATE listing_submissions SET status = 'rejected' WHERE id = ?",
-      [id]
-    );
+    await conn.query("UPDATE listing_submissions SET status = 'rejected' WHERE id = ?", [id]);
     await conn.end();
     return json({ success: true, id, message: "Submission rejected" });
   } catch (err: any) {
@@ -329,7 +332,270 @@ async function handleAdminReject(request: Request, env: Env, id: string): Promis
   }
 }
 
-// ─── Handlers: Health ───────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+// CLAIMS
+// ═══════════════════════════════════════════════════════════════
+async function handleClaimStart(request: Request, env: Env): Promise<Response> {
+  const user = await getUserFromRequest(request, env);
+  if (!user) return json({ error: "Not authenticated" }, 401);
+
+  try {
+    const { listing_id, method } = await request.json() as any;
+    if (!listing_id) return json({ error: "Missing listing_id" }, 400);
+    if (!["domain_email", "phone_otp"].includes(method)) return json({ error: "Invalid method" }, 400);
+
+    const conn = await db(env);
+    const [listings]: any = await conn.query(
+      "SELECT id, business_name, website, phone, claimed_by FROM listings WHERE id = ?",
+      [listing_id]
+    );
+    if (listings.length === 0) { await conn.end(); return json({ error: "Listing not found" }, 404); }
+
+    const listing = listings[0];
+    if (listing.claimed_by) { await conn.end(); return json({ error: "This listing is already claimed" }, 409); }
+
+    let target = "";
+    if (method === "domain_email") {
+      if (!listing.website) { await conn.end(); return json({ error: "No website on file" }, 400); }
+      try {
+        const url = listing.website.startsWith("http") ? listing.website : `https://${listing.website}`;
+        const host = new URL(url).hostname.replace(/^www\./, "");
+        target = `verify@${host}`;
+      } catch { await conn.end(); return json({ error: "Invalid website URL" }, 400); }
+    } else {
+      if (!listing.phone) { await conn.end(); return json({ error: "No phone on file" }, 400); }
+      target = listing.phone;
+    }
+
+    const code = String(Math.floor(100000 + Math.random() * 900000));
+    const now = Date.now();
+
+    await conn.query(
+      `INSERT INTO listing_claims 
+         (listing_id, user_id, verification_method, verification_code, verification_email, status, created_at)
+       VALUES (?, ?, ?, ?, ?, 'pending', ?)`,
+      [listing_id, user.id, method, code, target, now]
+    );
+    await conn.end();
+
+    if (method === "domain_email") {
+      await sendVerificationEmail(env, target, listing.business_name, code);
+    }
+
+    return json({
+      success: true,
+      method,
+      target: maskTarget(target, method),
+      message: method === "domain_email"
+        ? `Verification code sent to ${maskTarget(target, method)}`
+        : `Verification code sent via SMS to ${maskTarget(target, method)}`,
+    });
+  } catch (err: any) {
+    console.error("Claim start error:", err);
+    return json({ error: err.message }, 500);
+  }
+}
+
+async function handleClaimVerify(request: Request, env: Env): Promise<Response> {
+  const user = await getUserFromRequest(request, env);
+  if (!user) return json({ error: "Not authenticated" }, 401);
+
+  try {
+    const { listing_id, code } = await request.json() as any;
+    if (!listing_id || !code) return json({ error: "Missing fields" }, 400);
+
+    const conn = await db(env);
+    const [claims]: any = await conn.query(
+      `SELECT id, verification_code, attempts, created_at 
+       FROM listing_claims 
+       WHERE listing_id = ? AND user_id = ? AND status = 'pending'
+       ORDER BY created_at DESC LIMIT 1`,
+      [listing_id, user.id]
+    );
+    if (claims.length === 0) { await conn.end(); return json({ error: "No pending claim" }, 404); }
+
+    const claim = claims[0];
+
+    if (Date.now() - Number(claim.created_at) > 24 * 60 * 60 * 1000) {
+      await conn.query("UPDATE listing_claims SET status='expired' WHERE id = ?", [claim.id]);
+      await conn.end();
+      return json({ error: "Code expired. Start again." }, 410);
+    }
+
+    if (claim.attempts >= 5) {
+      await conn.query("UPDATE listing_claims SET status='rejected' WHERE id = ?", [claim.id]);
+      await conn.end();
+      return json({ error: "Too many attempts. Contact support." }, 429);
+    }
+
+    if (claim.verification_code !== String(code).trim()) {
+      await conn.query("UPDATE listing_claims SET attempts = attempts + 1 WHERE id = ?", [claim.id]);
+      await conn.end();
+      return json({ error: "Incorrect code" }, 400);
+    }
+
+    const now = Date.now();
+    await conn.query("UPDATE listing_claims SET status='verified', verified_at=? WHERE id = ?", [now, claim.id]);
+    await conn.query(
+      "UPDATE listings SET claimed_by=?, claimed_at=?, claim_verified=1 WHERE id = ?",
+      [user.id, now, listing_id]
+    );
+    await conn.end();
+
+    // Trigger rebuild
+    try {
+      const hookUrl = (env as any).CLOUDFLARE_DEPLOY_HOOK;
+      if (hookUrl) await fetch(hookUrl, { method: "POST" });
+    } catch (e) {}
+
+    return json({ success: true, message: "Listing claimed successfully" });
+  } catch (err: any) {
+    console.error("Claim verify error:", err);
+    return json({ error: err.message }, 500);
+  }
+}
+
+async function handleMyClaims(request: Request, env: Env): Promise<Response> {
+  const user = await getUserFromRequest(request, env);
+  if (!user) return json({ error: "Not authenticated" }, 401);
+
+  try {
+    const conn = await db(env);
+    const [rows]: any = await conn.query(
+      `SELECT id, business_name, category, city, state, phone, website, claimed_at, claim_verified
+       FROM listings WHERE claimed_by = ? ORDER BY claimed_at DESC`,
+      [user.id]
+    );
+    await conn.end();
+    return json({ listings: rows });
+  } catch (err: any) {
+    return json({ error: err.message }, 500);
+  }
+}
+
+async function handleClaimUpdate(request: Request, env: Env, listingId: string): Promise<Response> {
+  const user = await getUserFromRequest(request, env);
+  if (!user) return json({ error: "Not authenticated" }, 401);
+
+  try {
+    const conn = await db(env);
+    const [rows]: any = await conn.query("SELECT claimed_by FROM listings WHERE id = ?", [listingId]);
+    if (rows.length === 0) { await conn.end(); return json({ error: "Not found" }, 404); }
+    if (rows[0].claimed_by !== user.id) { await conn.end(); return json({ error: "Not your listing" }, 403); }
+
+    const body: any = await request.json();
+    const allowed = ["business_name", "description", "phone", "website", "street_address", "zip_code"];
+    const updates: string[] = [];
+    const values: any[] = [];
+    for (const key of allowed) {
+      if (body[key] !== undefined) { updates.push(`${key} = ?`); values.push(body[key]); }
+    }
+    if (updates.length === 0) { await conn.end(); return json({ error: "No valid fields" }, 400); }
+
+    values.push(listingId);
+    await conn.query(`UPDATE listings SET ${updates.join(", ")} WHERE id = ?`, values);
+    await conn.end();
+
+    try {
+      const hookUrl = (env as any).CLOUDFLARE_DEPLOY_HOOK;
+      if (hookUrl) await fetch(hookUrl, { method: "POST" });
+    } catch (e) {}
+
+    return json({ success: true });
+  } catch (err: any) {
+    return json({ error: err.message }, 500);
+  }
+}
+
+async function handleAdminListClaims(request: Request, env: Env): Promise<Response> {
+  const admin = await requireAdmin(request, env);
+  if (!admin) return json({ error: "Admin access required" }, 403);
+
+  try {
+    const url = new URL(request.url);
+    const status = url.searchParams.get("status") || "pending";
+    const conn = await db(env);
+    const [rows]: any = await conn.query(
+      `SELECT 
+         c.id, c.listing_id, c.user_id, c.verification_method, c.verification_email,
+         c.status, c.attempts, c.created_at, c.verified_at,
+         l.business_name, l.category, l.city, l.state,
+         u.email AS claimer_email, u.full_name AS claimer_name
+       FROM listing_claims c
+       LEFT JOIN listings l ON l.id = c.listing_id
+       LEFT JOIN users u ON u.id = c.user_id
+       WHERE c.status = ?
+       ORDER BY c.created_at DESC`,
+      [status]
+    );
+    await conn.end();
+    return json({ claims: rows, status });
+  } catch (err: any) {
+    return json({ error: err.message }, 500);
+  }
+}
+
+// ─── Email helper (Resend) ────────────────────────────────────
+async function sendVerificationEmail(env: Env, to: string, businessName: string, code: string) {
+  const RESEND_KEY = env.RESEND_API_KEY;
+  if (!RESEND_KEY) { console.error("RESEND_API_KEY not set — skipping email"); return; }
+
+  const html = `
+    <div style="font-family:Inter,sans-serif;max-width:520px;margin:0 auto;padding:32px 24px;background:#F7F4EC;">
+      <div style="background:#002955;padding:24px;border-radius:12px 12px 0 0;text-align:center;">
+        <h1 style="color:#fff;margin:0;font-size:20px;font-weight:700;">DogCareFinder</h1>
+      </div>
+      <div style="background:#fff;padding:32px 24px;border-radius:0 0 12px 12px;">
+        <h2 style="color:#002955;font-family:Georgia,serif;margin:0 0 16px;font-size:22px;">
+          Verify your claim
+        </h2>
+        <p style="color:#475569;line-height:1.6;margin:0 0 24px;">
+          Someone is trying to claim <strong>${businessName}</strong> on DogCareFinder.
+          If this was you, use the code below to verify ownership:
+        </p>
+        <div style="background:#F7F4EC;border:2px dashed #5E7741;border-radius:12px;padding:20px;text-align:center;margin:0 0 24px;">
+          <div style="font-size:36px;font-weight:800;letter-spacing:8px;color:#002955;font-family:monospace;">
+            ${code}
+          </div>
+        </div>
+        <p style="color:#64748b;font-size:13px;line-height:1.6;margin:0;">
+          This code expires in 24 hours. If you didn't request this, you can safely ignore this email.
+        </p>
+      </div>
+      <p style="color:#94a3b8;font-size:11px;text-align:center;margin-top:20px;">
+        © ${new Date().getFullYear()} DogCareFinder
+      </p>
+    </div>
+  `;
+
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from: "DogCareFinder <verify@dogcarefinder.com>",
+        to: [to],
+        subject: `Your verification code: ${code}`,
+        html,
+      }),
+    });
+    if (!res.ok) console.error("Resend error:", await res.text());
+  } catch (err) {
+    console.error("Email send failed:", err);
+  }
+}
+
+function maskTarget(target: string, method: string) {
+  if (method === "domain_email") {
+    const [user, domain] = target.split("@");
+    return `${user.slice(0, 2)}***@${domain}`;
+  }
+  return target.replace(/\d(?=\d{4})/g, "*");
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HEALTH
+// ═══════════════════════════════════════════════════════════════
 async function handleHealth(env: Env): Promise<Response> {
   try {
     const conn = await db(env);
@@ -341,14 +607,15 @@ async function handleHealth(env: Env): Promise<Response> {
   }
 }
 
-// ─── Router ─────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+// ROUTER
+// ═══════════════════════════════════════════════════════════════
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     const origin = request.headers.get("Origin");
     const cors = corsHeaders(origin);
 
-    // Handle CORS preflight
     if (request.method === "OPTIONS") {
       return new Response(null, { status: 204, headers: cors });
     }
@@ -358,13 +625,12 @@ export default {
       const path = url.pathname;
       const method = request.method;
 
-      // ── Root + health ────────────────────────────────────
       if (path === "/" && method === "GET") {
         response = json({ status: "ok", service: "DogCareFinder API" });
       } else if (path === "/health" && method === "GET") {
         response = await handleHealth(env);
 
-      // ── Auth routes ──────────────────────────────────────
+      // AUTH
       } else if (path === "/api/auth/signup" && method === "POST") {
         response = await handleSignup(request, env);
       } else if (path === "/api/auth/login" && method === "POST") {
@@ -374,13 +640,13 @@ export default {
       } else if (path === "/api/auth/me" && method === "GET") {
         response = await handleMe(request, env);
 
-      // ── Listing routes ───────────────────────────────────
+      // LISTINGS
       } else if (path === "/api/listings/submit" && method === "POST") {
         response = await handleSubmitListing(request, env);
       } else if (path === "/api/listings/" && method === "GET") {
         response = await handleListSubmissions(request, env);
 
-      // ── Admin routes ─────────────────────────────────────
+      // ADMIN — submissions
       } else if (path === "/api/admin/submissions" && method === "GET") {
         response = await handleAdminListSubmissions(request, env);
       } else if (path.startsWith("/api/admin/submissions/") && path.endsWith("/approve") && method === "POST") {
@@ -390,7 +656,21 @@ export default {
         const id = path.replace("/api/admin/submissions/", "").replace("/reject", "");
         response = await handleAdminReject(request, env, id);
 
-      // ── 404 ───────────────────────────────────────────────
+      // ADMIN — claims
+      } else if (path === "/api/admin/claims" && method === "GET") {
+        response = await handleAdminListClaims(request, env);
+
+      // CLAIMS
+      } else if (path === "/api/claims/start" && method === "POST") {
+        response = await handleClaimStart(request, env);
+      } else if (path === "/api/claims/verify" && method === "POST") {
+        response = await handleClaimVerify(request, env);
+      } else if (path === "/api/claims/mine" && method === "GET") {
+        response = await handleMyClaims(request, env);
+      } else if (/^\/api\/claims\/\d+\/update$/.test(path) && method === "POST") {
+        const id = path.split("/")[3];
+        response = await handleClaimUpdate(request, env, id);
+
       } else {
         response = json({ error: "Not found" }, 404);
       }
@@ -399,7 +679,6 @@ export default {
       response = json({ error: err.message || "Internal error" }, 500);
     }
 
-    // Merge CORS headers into final response
     const headers = new Headers(response.headers);
     for (const [k, v] of Object.entries(cors)) headers.set(k, v);
     return new Response(response.body, { status: response.status, headers });
