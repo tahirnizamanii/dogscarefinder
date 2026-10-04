@@ -14,9 +14,10 @@ const NOMINATIM_URL = "https://nominatim.openstreetmap.org/search";
 const userAgent = "DogCareFinder/1.0 (contact@dogcarefinder.com)";
 
 // Config
-const DELAY_BETWEEN_CITIES = 6000;   // 6 sec between cities
-const MAX_RETRIES = 3;                // retry failed cities
-const RETRY_DELAY = 15000;            // 15 sec between retries
+const DELAY_BETWEEN_CITIES = 3000;   // 3 sec between cities
+const MAX_RETRIES = 2;                // retry failed cities
+const RETRY_DELAY = 8000;             // 8 sec between retries
+const FETCH_TIMEOUT = 30000;          // 30 sec per request
 
 // ─── Strip BOM helper ──────────────────────────────────────
 function readJson(filePath) {
@@ -29,12 +30,26 @@ function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
+// ─── Fetch with timeout ────────────────────────────────────
+async function fetchWithTimeout(url, options = {}, timeoutMs = FETCH_TIMEOUT) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { ...options, signal: controller.signal });
+    clearTimeout(timeoutId);
+    return res;
+  } catch (err) {
+    clearTimeout(timeoutId);
+    throw err;
+  }
+}
+
 // ─── Get city bounding box from Nominatim ─────────────────
 async function getCityBounds(city, state) {
   const query = `${city}, ${state}, USA`;
   const url = `${NOMINATIM_URL}?q=${encodeURIComponent(query)}&format=json&limit=1`;
 
-  const res = await fetch(url, {
+  const res = await fetchWithTimeout(url, {
     headers: { "User-Agent": userAgent },
   });
   if (!res.ok) throw new Error(`Nominatim ${res.status}`);
@@ -71,11 +86,10 @@ async function queryOverpass(bounds, attempt = 1) {
 out center tags;
   `.trim();
 
-  // Pick a different mirror on each attempt
   const mirror = OVERPASS_MIRRORS[(attempt - 1) % OVERPASS_MIRRORS.length];
 
   try {
-    const res = await fetch(mirror, {
+    const res = await fetchWithTimeout(mirror, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -84,22 +98,15 @@ out center tags;
       body: `data=${encodeURIComponent(query)}`,
     });
 
-    // Handle rate limit or server error
-    if (res.status === 429) {
-      throw new Error("RATE_LIMIT");
-    }
-    if (res.status === 504 || res.status === 503 || res.status === 502) {
-      throw new Error("SERVER_ERROR");
-    }
-    if (!res.ok) {
-      throw new Error(`Overpass ${res.status}`);
-    }
+    if (res.status === 429) throw new Error("RATE_LIMIT");
+    if (res.status === 504 || res.status === 503 || res.status === 502) throw new Error("SERVER_ERROR");
+    if (!res.ok) throw new Error(`Overpass ${res.status}`);
 
     const data = await res.json();
     return data.elements || [];
   } catch (err) {
     if (attempt < MAX_RETRIES) {
-      console.log(`   Retry ${attempt}/${MAX_RETRIES} (${err.message}) after ${RETRY_DELAY / 1000}s`);
+      console.log(`   Retry ${attempt}/${MAX_RETRIES - 1} (${err.message}) after ${RETRY_DELAY / 1000}s`);
       await sleep(RETRY_DELAY);
       return queryOverpass(bounds, attempt + 1);
     }
@@ -171,7 +178,6 @@ async function main() {
     }
   }
 
-  // Track which cities we've already scraped so we can resume
   let scrapedCities = [];
   if (fs.existsSync(progressPath)) {
     try {
@@ -187,7 +193,7 @@ async function main() {
   );
 
   if (citiesToScrape.length === 0) {
-    console.log("✅ All cities already scraped!");
+    console.log("All cities already scraped!");
     console.log(`   Pool has ${existing.length} listings`);
     return;
   }
@@ -201,9 +207,18 @@ async function main() {
 
   const newListings = [];
   let cityIndex = 0;
+  const startTime = Date.now();
+  const MAX_RUNTIME_MS = 12 * 60 * 1000; // 12 minutes max runtime
 
   for (const { city, state } of citiesToScrape) {
     cityIndex++;
+
+    // Check time budget — exit gracefully if running long
+    if (Date.now() - startTime > MAX_RUNTIME_MS) {
+      console.log(`\nTime limit reached. Saving progress and exiting.`);
+      break;
+    }
+
     console.log(`[${cityIndex}/${citiesToScrape.length}] ${city}, ${state}`);
 
     try {
@@ -214,7 +229,6 @@ async function main() {
         continue;
       }
 
-      // Small delay after Nominatim (rate limit: 1 req/sec)
       await sleep(1500);
 
       const elements = await queryOverpass(bounds);
@@ -233,12 +247,10 @@ async function main() {
         added++;
       }
 
-      console.log(`   ✅ Added ${added} new listings`);
-
-      // Mark this city as scraped
+      console.log(`   Added ${added} new listings`);
       scrapedCities.push({ city, state });
 
-      // Save progress after every city (resumable)
+      // Save after every city
       fs.writeFileSync(
         poolPath,
         JSON.stringify([...existing, ...newListings], null, 2),
@@ -250,19 +262,16 @@ async function main() {
         "utf-8"
       );
 
-      // Wait before next city
       await sleep(DELAY_BETWEEN_CITIES);
     } catch (err) {
-      console.error(`   ❌ Error: ${err.message}`);
-      // Don't mark as scraped - will retry on next run
-      await sleep(30000);
+      console.error(`   Error: ${err.message}`);
+      await sleep(5000);
     }
   }
 
-  console.log(`\n🎉 Done. Total added this run: ${newListings.length}`);
-  console.log(`   Pool now has ${existing.length + newListings.length} listings`);
+  console.log(`\nDone. Total added this run: ${newListings.length}`);
+  console.log(`Pool now has ${existing.length + newListings.length} listings`);
 
-  // Category breakdown
   const combined = [...existing, ...newListings];
   const byCat = {};
   for (const l of combined) {
