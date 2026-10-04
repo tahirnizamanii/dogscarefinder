@@ -80,7 +80,7 @@ async function getUserFromRequest(request: Request, env: Env): Promise<any> {
   return rows[0] || null;
 }
 
-// ─── Handlers ───────────────────────────────────────────────
+// ─── Handlers: Auth ─────────────────────────────────────────
 async function handleSignup(request: Request, env: Env): Promise<Response> {
   try {
     const body: any = await request.json();
@@ -186,6 +186,7 @@ async function handleMe(request: Request, env: Env): Promise<Response> {
   return json({ user });
 }
 
+// ─── Handlers: Listings ─────────────────────────────────────
 async function handleSubmitListing(request: Request, env: Env): Promise<Response> {
   try {
     const user = await getUserFromRequest(request, env);
@@ -232,6 +233,103 @@ async function handleListSubmissions(request: Request, env: Env): Promise<Respon
   }
 }
 
+// ─── Handlers: Admin ────────────────────────────────────────
+async function requireAdmin(request: Request, env: Env): Promise<any | null> {
+  const user = await getUserFromRequest(request, env);
+  if (!user || user.role !== "admin") return null;
+  return user;
+}
+
+async function handleAdminListSubmissions(request: Request, env: Env): Promise<Response> {
+  const admin = await requireAdmin(request, env);
+  if (!admin) return json({ error: "Admin access required" }, 403);
+
+  try {
+    const url = new URL(request.url);
+    const status = url.searchParams.get("status") || "pending";
+
+    const conn = await db(env);
+    const [rows]: any = await conn.query(
+      `SELECT 
+        s.id, s.business_name, s.category, s.state, s.city,
+        s.street_address, s.zip_code, s.phone, s.website,
+        s.status, s.created_at,
+        u.email AS submitter_email, u.full_name AS submitter_name
+       FROM listing_submissions s
+       JOIN users u ON u.id = s.user_id
+       WHERE s.status = ?
+       ORDER BY s.created_at DESC`,
+      [status]
+    );
+    await conn.end();
+    return json({ submissions: rows, status });
+  } catch (err: any) {
+    return json({ error: err.message }, 500);
+  }
+}
+
+async function handleAdminApprove(request: Request, env: Env, id: string): Promise<Response> {
+  const admin = await requireAdmin(request, env);
+  if (!admin) return json({ error: "Admin access required" }, 403);
+
+  try {
+    const conn = await db(env);
+
+    const [subs]: any = await conn.query(
+      "SELECT * FROM listing_submissions WHERE id = ?",
+      [id]
+    );
+    if (subs.length === 0) {
+      await conn.end();
+      return json({ error: "Submission not found" }, 404);
+    }
+    const sub = subs[0];
+
+    // Insert into listings table
+    await conn.query(
+      `INSERT INTO listings 
+        (business_name, category, state, city, street_address, zip_code, phone, website, rating, review_count)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL, 0)`,
+      [
+        sub.business_name, sub.category, sub.state, sub.city,
+        sub.street_address || "", sub.zip_code || "",
+        sub.phone || "", sub.website || "",
+      ]
+    );
+
+    // Mark submission as approved
+    await conn.query(
+      "UPDATE listing_submissions SET status = 'approved' WHERE id = ?",
+      [id]
+    );
+
+    await conn.end();
+    return json({ success: true, id, message: "Approved and published" });
+  } catch (err: any) {
+    console.error("Admin approve error:", err);
+    return json({ error: err.message }, 500);
+  }
+}
+
+async function handleAdminReject(request: Request, env: Env, id: string): Promise<Response> {
+  const admin = await requireAdmin(request, env);
+  if (!admin) return json({ error: "Admin access required" }, 403);
+
+  try {
+    const conn = await db(env);
+    await conn.query(
+      "UPDATE listing_submissions SET status = 'rejected' WHERE id = ?",
+      [id]
+    );
+    await conn.end();
+    return json({ success: true, id, message: "Submission rejected" });
+  } catch (err: any) {
+    console.error("Admin reject error:", err);
+    return json({ error: err.message }, 500);
+  }
+}
+
+// ─── Handlers: Health ───────────────────────────────────────
 async function handleHealth(env: Env): Promise<Response> {
   try {
     const conn = await db(env);
@@ -260,10 +358,13 @@ export default {
       const path = url.pathname;
       const method = request.method;
 
+      // ── Root + health ────────────────────────────────────
       if (path === "/" && method === "GET") {
         response = json({ status: "ok", service: "DogCareFinder API" });
       } else if (path === "/health" && method === "GET") {
         response = await handleHealth(env);
+
+      // ── Auth routes ──────────────────────────────────────
       } else if (path === "/api/auth/signup" && method === "POST") {
         response = await handleSignup(request, env);
       } else if (path === "/api/auth/login" && method === "POST") {
@@ -272,10 +373,24 @@ export default {
         response = await handleLogout(request, env);
       } else if (path === "/api/auth/me" && method === "GET") {
         response = await handleMe(request, env);
+
+      // ── Listing routes ───────────────────────────────────
       } else if (path === "/api/listings/submit" && method === "POST") {
         response = await handleSubmitListing(request, env);
       } else if (path === "/api/listings/" && method === "GET") {
         response = await handleListSubmissions(request, env);
+
+      // ── Admin routes ─────────────────────────────────────
+      } else if (path === "/api/admin/submissions" && method === "GET") {
+        response = await handleAdminListSubmissions(request, env);
+      } else if (path.startsWith("/api/admin/submissions/") && path.endsWith("/approve") && method === "POST") {
+        const id = path.replace("/api/admin/submissions/", "").replace("/approve", "");
+        response = await handleAdminApprove(request, env, id);
+      } else if (path.startsWith("/api/admin/submissions/") && path.endsWith("/reject") && method === "POST") {
+        const id = path.replace("/api/admin/submissions/", "").replace("/reject", "");
+        response = await handleAdminReject(request, env, id);
+
+      // ── 404 ───────────────────────────────────────────────
       } else {
         response = json({ error: "Not found" }, 404);
       }
