@@ -1,522 +1,195 @@
 ---
-// src/pages/list-your-business.astro
+// src/pages/submit-listing.astro
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { breadcrumbSchema, webPageSchema, serviceSchema } from "../lib/schemas.js";
+import { breadcrumbSchema, webPageSchema, faqSchema } from "../lib/schemas.js";
 
-const title = "List Your Dog Care Business — Free Directory Listing | DogCareFinder";
-const description = "Join the fastest-growing directory of dog care professionals. Free and paid listings available. Get found by dog owners searching your city and state.";
-const canonical = "https://dogcarefinder.com/list-your-business/";
-const API = import.meta.env.PUBLIC_API_BASE_URL || "http://localhost:3001";
+const title = "Submit Your Dog Care Business — Free Directory Listing | DogCareFinder";
+const description = "Add your dog grooming, training, boarding, or vet business to our nationwide directory. Free listing. Takes 2 minutes.";
+const canonical = "https://dogcarefinder.com/submit-listing/";
+const API = import.meta.env.PUBLIC_API_BASE_URL || "";
+
+const faqs = [
+  { question: "How long does it take?", answer: "About 2 minutes. We review and publish within 24-48 hours." },
+  { question: "Is the listing free?", answer: "Yes. Basic listings are free forever. Upgrade anytime for extra visibility." },
+  { question: "What information do I need?", answer: "Business name, category, address, phone number. Website is optional." },
+  { question: "Can I edit later?", answer: "Yes — after submission, you can update your listing from your dashboard." },
+];
 
 const schemas = [
   webPageSchema(title, description, canonical),
   breadcrumbSchema([
     { name: "Home", url: "https://dogcarefinder.com/" },
-    { name: "List Your Business", url: canonical },
+    { name: "Submit Listing", url: canonical },
   ]),
-  serviceSchema(
-    "Dog Care Business Listing",
-    "Directory listing service for dog care businesses in the USA",
-    canonical,
-    { "@type": "Country", name: "United States" }
-  ),
-];
-
-const CATEGORIES = [
-  "Groomers",
-  "Trainers",
-  "Boarding",
-  "Vets",
-  "Therapy",
+  faqSchema(faqs),
 ];
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical} schemas={schemas}>
-
-  <!-- HERO -->
-  <section class="bg-cream-100 border-b border-slate-200">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 text-center">
-      <nav class="text-xs text-slate-500 flex justify-center items-center gap-2 mb-5">
-        <a href="/" class="hover:text-forest-600">Home</a>
-        <i class="fa-solid fa-chevron-right text-[9px]"></i>
-        <span class="text-navy-900 font-semibold">List Your Business</span>
+  <section class="bg-navy-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 text-center">
+      <nav class="text-xs text-white/70 flex justify-center gap-2 mb-4">
+        <a href="/" class="hover:text-white">Home</a>
+        <i class="fa-solid fa-chevron-right text-[9px] self-center"></i>
+        <span class="text-white font-semibold">Submit Listing</span>
       </nav>
-
-      <div class="inline-flex items-center gap-2 bg-forest-50 border border-forest-200 text-forest-700 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4">
-        <i class="fa-solid fa-store"></i>
-        Dog Care Directory Listing
+      <div class="inline-flex items-center gap-2 bg-white/10 rounded-full px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest mb-4">
+        <i class="fa-solid fa-store text-gold-400"></i> Free Directory Listing
       </div>
-
-      <h1 class="font-serif text-4xl sm:text-5xl font-bold text-navy-900 leading-tight">
-        List Your Business
-      </h1>
-      <p class="mt-4 text-slate-600 max-w-2xl mx-auto">
-        Join the fastest-growing directory of dog care professionals — now serving pet owners across the United States.
+      <h1 class="font-serif text-4xl sm:text-5xl font-bold">Submit Your Business</h1>
+      <p class="mt-4 text-white/80 max-w-2xl mx-auto">
+        Add your dog care business to our nationwide directory. Free listing — no referral fees, no commissions.
       </p>
     </div>
   </section>
 
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-
-    <!-- NOT LOGGED IN BANNER -->
-    <div class="bg-gold-400/20 border border-gold-400/50 rounded-xl px-5 py-4 mb-8 flex items-start gap-3">
-      <i class="fa-solid fa-circle-exclamation text-gold-600 mt-0.5"></i>
-      <p class="text-sm text-navy-900">
-        <strong>You're not logged in.</strong>
-        <a href="/signup/" class="text-forest-700 font-semibold underline">Sign up</a> or
-        <a href="/login/" class="text-forest-700 font-semibold underline">log in</a>
-        to list your business.
-      </p>
-    </div>
-
-    <!-- ═══════════════ STEP 1 — PRICING PLANS ═══════════════ -->
-    <section class="mb-10">
-      <div class="flex items-center gap-2 mb-1">
-        <span class="text-forest-700 font-bold text-sm">1.</span>
-        <h2 class="font-serif text-2xl font-bold text-navy-900">Select Your Listing Plan</h2>
-      </div>
-      <p class="text-sm text-slate-500 mb-6 ml-6">Premium members enjoy verified badges and priority directory placement.</p>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-
-        <!-- BASIC -->
-        <div class="bg-white border-2 border-slate-200 rounded-2xl p-5 flex flex-col relative">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Basic</span>
-            <span class="w-4 h-4 rounded-full border-2 border-slate-300"></span>
-          </div>
-          <div class="mt-2">
-            <div class="text-3xl font-serif font-bold text-navy-900">Free</div>
-            <div class="text-xs text-slate-500 mt-1">Listed forever</div>
-          </div>
-          <ul class="mt-5 space-y-2 text-sm text-slate-600 flex-1">
-            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-slate-400 mt-1 text-xs"></i><span>One category</span></li>
-            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-slate-400 mt-1 text-xs"></i><span>Appears in search</span></li>
-            <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-slate-300 mt-1 text-xs"></i><span class="text-slate-400">Contact info hidden</span></li>
-            <li class="flex items-start gap-2"><i class="fa-solid fa-xmark text-slate-300 mt-1 text-xs"></i><span class="text-slate-400">No photos</span></li>
-          </ul>
-          <button type="button" data-plan="basic" class="plan-select mt-5 w-full bg-slate-100 hover:bg-slate-200 text-navy-900 font-semibold py-2.5 rounded-lg transition text-sm">
-            Select Basic
-          </button>
-        </div>
-
-        <!-- MONTHLY -->
-        <div class="bg-white border-2 border-slate-200 rounded-2xl p-5 flex flex-col relative">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Monthly</span>
-            <span class="w-4 h-4 rounded-full border-2 border-slate-300"></span>
-          </div>
-          <div class="mt-2">
-            <div class="text-3xl font-serif font-bold text-navy-900">$19<span class="text-base font-sans font-normal text-slate-500">/mo</span></div>
-            <div class="text-xs text-slate-500 mt-1">Billed monthly</div>
-          </div>
-          <ul class="mt-5 space-y-2 text-sm text-slate-600 flex-1">
-            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-forest-600 mt-1 text-xs"></i><span>Contact visible</span></li>
-            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-forest-600 mt-1 text-xs"></i><span>Verified badge</span></li>
-            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-forest-600 mt-1 text-xs"></i><span>Priority placement</span></li>
-            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-forest-600 mt-1 text-xs"></i><span>Up to 5 photos</span></li>
-            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-forest-600 mt-1 text-xs"></i><span>10% off marketing partner</span></li>
-          </ul>
-          <button type="button" data-plan="monthly" class="plan-select mt-5 w-full bg-forest-600 hover:bg-forest-700 text-white font-semibold py-2.5 rounded-lg transition text-sm">
-            Select Monthly
-          </button>
-        </div>
-
-        <!-- ANNUAL (MOST POPULAR) -->
-        <div class="bg-white border-2 border-gold-400 rounded-2xl p-5 flex flex-col relative shadow-lg">
-          <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gold-400 text-navy-900 text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full whitespace-nowrap">
-            ★ Only 99 of our founding spots left ★
-          </div>
-          <div class="flex items-center justify-between mb-2 pt-2">
-            <span class="text-[10px] font-bold uppercase tracking-widest text-gold-600">Annual</span>
-            <span class="w-4 h-4 rounded-full border-2 border-gold-400 bg-gold-400 relative">
-              <span class="absolute inset-1 bg-white rounded-full"></span>
-            </span>
-          </div>
-          <div class="mt-2">
-            <div class="text-3xl font-serif font-bold text-navy-900">$149<span class="text-base font-sans font-normal text-slate-500">/yr</span></div>
-            <div class="text-xs text-forest-700 font-semibold mt-1">Save 35%</div>
-          </div>
-          <ul class="mt-5 space-y-2 text-sm text-slate-600 flex-1">
-            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-gold-500 mt-1 text-xs"></i><span>Everything in Monthly</span></li>
-            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-gold-500 mt-1 text-xs"></i><span>Priority support</span></li>
-            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-gold-500 mt-1 text-xs"></i><span>Up to 10 photos</span></li>
-            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-gold-500 mt-1 text-xs"></i><span>15% off marketing partner</span></li>
-          </ul>
-          <button type="button" data-plan="annual" class="plan-select mt-5 w-full bg-gold-400 hover:bg-gold-500 text-navy-900 font-bold py-2.5 rounded-lg transition text-sm">
-            Select Annual
-          </button>
-        </div>
-
-        <!-- LIFETIME -->
-        <div class="bg-navy-900 text-white rounded-2xl p-5 flex flex-col relative">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-[10px] font-bold uppercase tracking-widest text-gold-400">Lifetime</span>
-            <span class="w-4 h-4 rounded-full border-2 border-white/30"></span>
-          </div>
-          <div class="mt-2">
-            <div class="text-3xl font-serif font-bold">$299</div>
-            <div class="text-xs text-white/70 mt-1">One-time payment</div>
-          </div>
-          <ul class="mt-5 space-y-2 text-sm text-white/90 flex-1">
-            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-gold-400 mt-1 text-xs"></i><span>Forever, no renewals</span></li>
-            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-gold-400 mt-1 text-xs"></i><span>Unlimited photos</span></li>
-            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-gold-400 mt-1 text-xs"></i><span>Featured placement</span></li>
-            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-gold-400 mt-1 text-xs"></i><span>20% off marketing partner</span></li>
-          </ul>
-          <button type="button" data-plan="lifetime" class="plan-select mt-5 w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold py-2.5 rounded-lg transition text-sm">
-            Select Lifetime
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════ DISCOUNT CALLOUT ═══════════════ -->
-    <section class="mb-10">
-      <div class="bg-gold-400/15 border-2 border-gold-400/40 rounded-2xl p-6 sm:p-8">
-        <div class="grid lg:grid-cols-3 gap-6 items-center">
-
-          <div class="lg:col-span-2">
-            <div class="inline-flex items-center gap-2 bg-gold-400 text-navy-900 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-4">
-              <i class="fa-solid fa-gift"></i> Included With Paid Plans
-            </div>
-            <h3 class="font-serif text-2xl font-bold text-navy-900 leading-tight mb-3">
-              The plan you choose unlocks your marketing partner discount
-            </h3>
-            <p class="text-sm text-slate-600 mb-5 leading-relaxed">
-              Every paid tier comes with a standing discount on Trio Assist services — web design, local SEO, reputation management, social media, and more. Pick your plan, and your savings are locked in.
-            </p>
-
-            <div class="flex flex-wrap items-center gap-2 mb-4">
-              <span class="inline-flex items-center gap-1.5 bg-white border border-slate-200 rounded-full px-3 py-1.5 text-xs font-bold text-navy-900">
-                <i class="fa-solid fa-tag text-forest-600 text-[10px]"></i>
-                Monthly · 10%
-              </span>
-              <span class="inline-flex items-center gap-1.5 bg-white border border-slate-200 rounded-full px-3 py-1.5 text-xs font-bold text-navy-900">
-                <i class="fa-solid fa-tag text-forest-600 text-[10px]"></i>
-                Annual · 15%
-              </span>
-              <span class="inline-flex items-center gap-1.5 bg-navy-900 text-white rounded-full px-3 py-1.5 text-xs font-bold">
-                <i class="fa-solid fa-tag text-gold-400 text-[10px]"></i>
-                Lifetime · 20%
-              </span>
-            </div>
-
-            <div class="bg-white border border-slate-200 rounded-xl px-4 py-3 text-xs text-slate-600">
-              <i class="fa-solid fa-envelope text-forest-600 mr-1"></i>
-              Email your marketing partner and mention your member code — <strong class="text-navy-900">DOG-MONTHLY</strong>, <strong class="text-navy-900">DOG-ANNUAL</strong>, or <strong class="text-navy-900">DOG-LIFETIME</strong> — to claim your discount.
-            </div>
-          </div>
-
-          <div class="lg:col-span-1 flex flex-col gap-3">
-            <a href="#" class="bg-forest-600 hover:bg-forest-700 text-white font-bold py-3 px-6 rounded-lg text-center transition shadow-md">
-              <i class="fa-solid fa-phone mr-2"></i>
-              Get Your Free Consult
-            </a>
-            <a href="#" class="bg-white border border-slate-300 hover:border-slate-400 text-navy-900 font-semibold py-3 px-6 rounded-lg text-center transition text-sm">
-              Explore Services
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════ STEP 2 — BUSINESS DETAILS ═══════════════ -->
-    <section class="mb-10">
-      <div class="flex items-center gap-2 mb-1">
-        <span class="text-forest-700 font-bold text-sm">2.</span>
-        <h2 class="font-serif text-2xl font-bold text-navy-900">Business Details</h2>
-      </div>
-      <p class="text-sm text-slate-500 mb-6 ml-6">Complete your new listing details below. Fields marked <span class="text-red-500">*</span> are required.</p>
-
-      <form id="listing-form" class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8">
-        <div class="grid lg:grid-cols-2 gap-6">
-
-          <!-- LEFT COLUMN -->
-          <div class="space-y-5">
-
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">
-                <i class="fa-solid fa-store text-forest-600 mr-1"></i> Business Name <span class="text-red-500">*</span>
-              </label>
-              <input type="text" name="businessName" required
-                placeholder="e.g. Happy Tails Grooming"
-                class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">
-                <i class="fa-solid fa-location-dot text-forest-600 mr-1"></i> Street Address
-              </label>
-              <input type="text" name="streetAddress"
-                placeholder="e.g. 123 Main St"
-                class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">
-                <i class="fa-solid fa-envelope text-forest-600 mr-1"></i> Business Email <span class="text-red-500">*</span>
-              </label>
-              <input type="email" name="businessEmail" required
-                placeholder="info@yourbusiness.com"
-                class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">
-                <i class="fa-solid fa-clock text-forest-600 mr-1"></i> Business Hours
-              </label>
-              <input type="text" name="businessHours"
-                placeholder="e.g. Mon–Fri 8am–6pm"
-                class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">
-                <i class="fa-solid fa-map text-forest-600 mr-1"></i> Service Area
-              </label>
-              <input type="text" name="serviceArea"
-                placeholder="e.g. Mobile service within 30 miles of Austin"
-                class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">
-                <i class="fa-solid fa-align-left text-forest-600 mr-1"></i> Description <span class="text-red-500">*</span>
-              </label>
-              <textarea name="description" required rows="5"
-                placeholder="Provide details about your credentials, facilities, and services."
-                class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm resize-none"></textarea>
-            </div>
-          </div>
-
-          <!-- RIGHT COLUMN -->
-          <div class="space-y-5">
-
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">
-                <i class="fa-solid fa-tags text-forest-600 mr-1"></i> Service Category <span class="text-red-500">*</span>
-              </label>
-              <div class="grid grid-cols-2 gap-2">
-                {CATEGORIES.map((cat) => (
-                  <label class="flex items-center gap-2 px-3 py-2.5 border border-slate-200 rounded-lg hover:border-forest-400 cursor-pointer transition">
-                    <input type="checkbox" name="category" value={cat}
-                      class="rounded border-slate-300 text-forest-600 focus:ring-forest-500" />
-                    <span class="text-sm text-slate-700">{cat}</span>
-                  </label>
-                ))}
+  <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <div class="grid lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2">
+        <div id="login-required" class="hidden mb-6 bg-gold-400/15 border border-gold-400/40 rounded-xl p-5">
+          <div class="flex items-start gap-3">
+            <i class="fa-solid fa-circle-info text-gold-500 mt-0.5"></i>
+            <div class="flex-1">
+              <p class="text-sm text-navy-900 font-semibold mb-2">Please log in to submit a listing</p>
+              <div class="flex gap-2">
+                <a href="/login/" class="bg-forest-600 hover:bg-forest-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition">Log In</a>
+                <a href="/signup/" class="bg-white border border-slate-300 hover:border-slate-400 text-navy-900 text-xs font-bold px-4 py-2 rounded-lg transition">Sign Up Free</a>
               </div>
-              <p class="text-[10px] text-slate-500 mt-1.5">Select up to 3 categories that best describe your business.</p>
             </div>
+          </div>
+        </div>
 
-            <div class="grid grid-cols-3 gap-3">
-              <div class="col-span-2">
-                <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">
-                  <i class="fa-solid fa-city text-forest-600 mr-1"></i> City <span class="text-red-500">*</span>
-                </label>
-                <input type="text" name="city" required placeholder="Austin"
-                  class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
+        <form id="listing-form" class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+          <div class="bg-forest-600 text-white px-6 py-4 flex items-center gap-3">
+            <i class="fa-solid fa-pen-to-square text-lg"></i>
+            <h2 class="font-bold text-base">Business Listing Form</h2>
+          </div>
+          <div class="p-6 sm:p-8 space-y-5">
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">Business Name *</label>
+              <input type="text" name="businessName" required class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" placeholder="e.g. Happy Tails Grooming" />
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">Category *</label>
+                <select name="category" required class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm">
+                  <option value="">Select category...</option>
+                  <option value="Groomers">Dog Groomers</option>
+                  <option value="Trainers">Dog Trainers</option>
+                  <option value="Boarding">Dog Boarding</option>
+                  <option value="Vets">Veterinarians</option>
+                  <option value="Therapy">Therapy Dogs</option>
+                </select>
               </div>
               <div>
-                <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">State <span class="text-red-500">*</span></label>
-                <input type="text" name="state" required maxlength="2" placeholder="TX"
-                  class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm uppercase" />
+                <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">State *</label>
+                <input type="text" name="state" required maxlength="2" placeholder="TX" class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm uppercase" />
               </div>
             </div>
-
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">
-                <i class="fa-solid fa-mail-bulk text-forest-600 mr-1"></i> Zip Code
-              </label>
-              <input type="text" name="zipCode" placeholder="78701"
-                class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">City *</label>
+                <input type="text" name="city" required class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">Zip Code</label>
+                <input type="text" name="zipCode" class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
+              </div>
             </div>
-
             <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">
-                <i class="fa-solid fa-phone text-forest-600 mr-1"></i> Contact Phone <span class="text-red-500">*</span>
-              </label>
-              <input type="tel" name="phone" required placeholder="(512) 555-0100"
-                class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
+              <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">Street Address</label>
+              <input type="text" name="streetAddress" class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
             </div>
-
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">
-                <i class="fa-solid fa-globe text-forest-600 mr-1"></i> Website URL
-              </label>
-              <input type="url" name="website" placeholder="https://yourbusiness.com"
-                class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">Phone</label>
+                <input type="tel" name="phone" class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" placeholder="(512) 555-0100" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">Website</label>
+                <input type="url" name="website" class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" placeholder="https://..." />
+              </div>
             </div>
-
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">
-                <i class="fa-solid fa-dollar-sign text-forest-600 mr-1"></i> Pricing Note
-              </label>
-              <input type="text" name="pricingNote" placeholder="e.g. Call for pricing details"
-                class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
-            </div>
+            <div id="form-message" class="hidden text-sm rounded-lg p-3"></div>
+            <button type="submit" id="submit-btn" class="w-full bg-forest-600 hover:bg-forest-700 text-white font-bold py-3.5 rounded-lg transition shadow-sm flex items-center justify-center gap-2">
+              <i class="fa-solid fa-paper-plane"></i>
+              Submit Listing
+            </button>
           </div>
-        </div>
-
-        <!-- SERVICE FLAGS (locked for free plan) -->
-        <div class="mt-8 pt-8 border-t border-slate-200">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="font-bold text-navy-900 text-sm flex items-center gap-2">
-              <i class="fa-solid fa-flag text-forest-600"></i> Service Flags
-            </h3>
-            <span class="text-[10px] font-bold uppercase tracking-widest text-gold-600 bg-gold-400/20 px-2.5 py-1 rounded-full">
-              <i class="fa-solid fa-lock text-[9px] mr-1"></i> Upgrade Required
-            </span>
-          </div>
-          <div class="grid sm:grid-cols-3 gap-3 opacity-50">
-            <label class="flex items-center gap-2 px-4 py-3 border border-slate-200 rounded-lg bg-slate-50 cursor-not-allowed">
-              <input type="checkbox" disabled class="rounded border-slate-300" />
-              <span class="text-sm text-slate-600">Mobile Operations</span>
-            </label>
-            <label class="flex items-center gap-2 px-4 py-3 border border-slate-200 rounded-lg bg-slate-50 cursor-not-allowed">
-              <input type="checkbox" disabled class="rounded border-slate-300" />
-              <span class="text-sm text-slate-600">Emergency Services</span>
-            </label>
-            <label class="flex items-center gap-2 px-4 py-3 border border-slate-200 rounded-lg bg-slate-50 cursor-not-allowed">
-              <input type="checkbox" disabled class="rounded border-slate-300" />
-              <span class="text-sm text-slate-600">Accepting Clients</span>
-            </label>
-          </div>
-        </div>
-
-        <!-- SOCIAL MEDIA (locked for free plan) -->
-        <div class="mt-6 pt-6 border-t border-slate-200">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="font-bold text-navy-900 text-sm flex items-center gap-2">
-              <i class="fa-solid fa-share-nodes text-forest-600"></i> Social Media Links
-            </h3>
-            <span class="text-[10px] font-bold uppercase tracking-widest text-gold-600 bg-gold-400/20 px-2.5 py-1 rounded-full">
-              <i class="fa-solid fa-lock text-[9px] mr-1"></i> Upgrade Required
-            </span>
-          </div>
-          <div class="opacity-50">
-            <label class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">
-              <i class="fa-brands fa-facebook text-forest-600 mr-1"></i> Facebook URL
-            </label>
-            <input type="url" disabled placeholder="https://facebook.com/yourpage"
-              class="w-full px-4 py-3 border border-slate-200 rounded-lg text-sm bg-slate-50 cursor-not-allowed" />
-          </div>
-        </div>
-
-        <!-- MESSAGES -->
-        <div id="form-message" class="hidden mt-6 text-sm rounded-lg p-4"></div>
-
-        <!-- SUBMIT -->
-        <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p class="text-xs text-slate-500">
-            By submitting, you agree to our
-            <a href="/terms-of-service/" class="text-forest-600 underline">Terms of Service</a>
-            and
-            <a href="/privacy-policy/" class="text-forest-600 underline">Privacy Policy</a>.
-          </p>
-          <button type="submit" id="submit-btn"
-            class="bg-forest-600 hover:bg-forest-700 text-white font-bold py-3.5 px-8 rounded-lg transition shadow-md inline-flex items-center gap-2 whitespace-nowrap">
-            <i class="fa-solid fa-paper-plane"></i>
-            Submit &amp; Process
-          </button>
-        </div>
-      </form>
-    </section>
-
-    <!-- FAQ -->
-    <section class="max-w-3xl mx-auto pb-14">
-      <h2 class="font-serif text-2xl font-bold text-navy-900 text-center mb-8">Common questions</h2>
-      <div class="space-y-3">
-        <details class="group bg-white border border-slate-200 rounded-xl">
-          <summary class="cursor-pointer flex items-center justify-between gap-4 p-5 font-semibold text-navy-900">
-            How long does approval take?
-            <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
-          </summary>
-          <div class="px-5 pb-5 text-sm text-slate-600 leading-relaxed">
-            Most listings are reviewed and published within 24–48 hours.
-          </div>
-        </details>
-        <details class="group bg-white border border-slate-200 rounded-xl">
-          <summary class="cursor-pointer flex items-center justify-between gap-4 p-5 font-semibold text-navy-900">
-            Can I update my listing later?
-            <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
-          </summary>
-          <div class="px-5 pb-5 text-sm text-slate-600 leading-relaxed">
-            Yes — you can edit your listing anytime from your account dashboard.
-          </div>
-        </details>
-        <details class="group bg-white border border-slate-200 rounded-xl">
-          <summary class="cursor-pointer flex items-center justify-between gap-4 p-5 font-semibold text-navy-900">
-            Do you charge referral fees or commissions?
-            <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
-          </summary>
-          <div class="px-5 pb-5 text-sm text-slate-600 leading-relaxed">
-            Never. You only pay for your listing tier — no per-lead or per-booking fees.
-          </div>
-        </details>
+        </form>
       </div>
-    </section>
-  </div>
+
+      <aside class="space-y-5">
+        <div class="bg-white border border-slate-200 rounded-xl p-5">
+          <h3 class="font-bold text-navy-900 text-sm mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-list-check text-forest-600"></i>
+            What You'll Need
+          </h3>
+          <ul class="space-y-2.5 text-sm text-slate-600">
+            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-forest-600 mt-1 text-xs"></i><span>Business name</span></li>
+            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-forest-600 mt-1 text-xs"></i><span>Category</span></li>
+            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-forest-600 mt-1 text-xs"></i><span>Address, city, state</span></li>
+            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-forest-600 mt-1 text-xs"></i><span>Phone number</span></li>
+            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-forest-600 mt-1 text-xs"></i><span>Website (optional)</span></li>
+          </ul>
+        </div>
+        <div class="bg-forest-50 border border-forest-200 rounded-xl p-5">
+          <h3 class="font-bold text-forest-800 text-sm mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-clock"></i> Review Time
+          </h3>
+          <p class="text-sm text-slate-700 leading-relaxed">Most listings are reviewed within <strong>24-48 hours</strong>.</p>
+        </div>
+        <div class="bg-navy-900 text-white rounded-xl p-5">
+          <h3 class="font-bold text-sm mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-headset text-gold-400"></i> Need Help?
+          </h3>
+          <p class="text-sm text-white/80 mb-3">Questions?</p>
+          <a href="mailto:info@dogcarefinder.com" class="inline-flex items-center gap-2 text-gold-400 font-semibold text-sm">
+            <i class="fa-solid fa-envelope"></i> info@dogcarefinder.com
+          </a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-14">
+    <h2 class="font-serif text-2xl font-bold text-navy-900 text-center mb-8">Common questions</h2>
+    <div class="space-y-3">
+      {faqs.map((faq) => (
+        <details class="group bg-white border border-slate-200 rounded-xl">
+          <summary class="cursor-pointer flex items-center justify-between gap-4 p-5 font-semibold text-navy-900">
+            {faq.question}
+            <i class="fa-solid fa-chevron-down text-slate-400 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <div class="px-5 pb-5 text-sm text-slate-600 leading-relaxed">{faq.answer}</div>
+        </details>
+      ))}
+    </div>
+  </section>
 
   <script is:inline define:vars={{ API }}>
     (function () {
       var form = document.getElementById("listing-form");
       var msg = document.getElementById("form-message");
       var btn = document.getElementById("submit-btn");
-      var selectedPlan = "basic";
+      var loginRequired = document.getElementById("login-required");
 
-      // Check if user is logged in — if not, redirect warning
       fetch(API + "/api/auth/me", { credentials: "include" })
         .then(function (r) { return r.json(); })
         .then(function (d) {
-          if (!d.user) {
-            // Show banner — already visible
-          }
+          if (!d.user) loginRequired.classList.remove("hidden");
         })
         .catch(function () {});
 
-      // Plan selection buttons
-      document.querySelectorAll(".plan-select").forEach(function (b) {
-        b.addEventListener("click", function () {
-          selectedPlan = b.getAttribute("data-plan");
-          document.querySelectorAll(".plan-select").forEach(function (x) {
-            x.classList.remove("ring-4", "ring-forest-300");
-          });
-          b.classList.add("ring-4", "ring-forest-300");
-        });
-      });
-
-      // Form submission
       form.addEventListener("submit", async function (e) {
         e.preventDefault();
         msg.className = "hidden";
-
-        var formData = new FormData(form);
-        var payload = {
-          businessName: formData.get("businessName") || "",
-          category: formData.getAll("category")[0] || "",
-          state: formData.get("state") || "",
-          city: formData.get("city") || "",
-          streetAddress: formData.get("streetAddress") || "",
-          zipCode: formData.get("zipCode") || "",
-          phone: formData.get("phone") || "",
-          website: formData.get("website") || "",
-          plan: selectedPlan,
-          businessEmail: formData.get("businessEmail") || "",
-          businessHours: formData.get("businessHours") || "",
-          serviceArea: formData.get("serviceArea") || "",
-          pricingNote: formData.get("pricingNote") || "",
-          description: formData.get("description") || "",
-        };
-
-        if (!payload.businessName || !payload.category || !payload.state || !payload.city || !payload.phone) {
-          msg.className = "text-sm rounded-lg p-4 bg-red-50 text-red-700 mb-4";
-          msg.textContent = "Please fill in all required fields (marked with *).";
-          return;
-        }
-
         btn.disabled = true;
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+
+        var formData = new FormData(form);
+        var payload = {};
+        formData.forEach(function (v, k) { payload[k] = String(v).trim(); });
 
         try {
           var res = await fetch(API + "/api/listings/submit", {
@@ -528,25 +201,26 @@ const CATEGORIES = [
           var data = await res.json();
 
           if (res.ok && data.success) {
-            msg.className = "text-sm rounded-lg p-4 bg-forest-50 text-forest-800 mb-4";
-            msg.textContent = data.message || "Submission received! Redirecting to your dashboard...";
+            msg.className = "text-sm rounded-lg p-3 bg-forest-50 text-forest-800";
+            msg.textContent = data.message || "Submission received!";
+            form.reset();
             setTimeout(function () { window.location.href = "/dashboard/"; }, 1500);
           } else if (res.status === 401) {
-            msg.className = "text-sm rounded-lg p-4 bg-gold-400/20 text-navy-900 mb-4";
-            msg.innerHTML = 'You need to be logged in to submit a listing. <a href="/signup/" class="text-forest-700 font-semibold underline">Sign up</a> or <a href="/login/" class="text-forest-700 font-semibold underline">log in</a>.';
+            msg.className = "text-sm rounded-lg p-3 bg-gold-400/20 text-navy-900";
+            msg.innerHTML = 'You need to be logged in. <a href="/login/" class="text-forest-700 font-semibold underline">Log in</a> or <a href="/signup/" class="text-forest-700 font-semibold underline">Sign up</a>.';
             btn.disabled = false;
-            btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit &amp; Process';
+            btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Listing';
           } else {
-            msg.className = "text-sm rounded-lg p-4 bg-red-50 text-red-700 mb-4";
-            msg.textContent = data.error || "Submission failed. Please try again.";
+            msg.className = "text-sm rounded-lg p-3 bg-red-50 text-red-700";
+            msg.textContent = data.error || "Submission failed";
             btn.disabled = false;
-            btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit &amp; Process';
+            btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Listing';
           }
         } catch (err) {
-          msg.className = "text-sm rounded-lg p-4 bg-red-50 text-red-700 mb-4";
-          msg.textContent = "Network error. Please check your connection and try again.";
+          msg.className = "text-sm rounded-lg p-3 bg-red-50 text-red-700";
+          msg.textContent = "Network error. Please try again.";
           btn.disabled = false;
-          btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit &amp; Process';
+          btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Listing';
         }
       });
     })();

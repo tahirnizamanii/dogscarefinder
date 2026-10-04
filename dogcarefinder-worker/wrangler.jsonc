@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "dogcare-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "edba270c236c4556a77cee0fb197bd94",
+      "localConnectionString": "mysql://u258108094_Dogscarefinder:Dogscarefinder%401@srv1317.hstgr.io:3306/u258108094_Dogscarefinder?sslMode=required"
+    }
+  ],
+  "observability": { "enabled": true }
+}

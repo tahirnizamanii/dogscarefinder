@@ -4,8 +4,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { breadcrumbSchema, webPageSchema } from "../lib/schemas.js";
 
 const title = "Provider Dashboard | DogCareFinder";
-const description = "Manage your DogCareFinder business listing.";
+const description = "Manage your DogCareFinder listing submissions.";
 const canonical = "https://dogcarefinder.com/dashboard/";
+const API = import.meta.env.PUBLIC_API_BASE_URL || "";
 
 const schemas = [
   webPageSchema(title, description, canonical),
@@ -17,26 +18,143 @@ const schemas = [
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical} schemas={schemas}>
-  <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div class="bg-white border border-slate-200 rounded-2xl p-10 text-center">
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <div id="loading" class="text-center py-16">
+      <i class="fa-solid fa-spinner fa-spin text-3xl text-forest-600"></i>
+      <p class="mt-4 text-slate-500">Loading dashboard...</p>
+    </div>
+
+    <div id="not-logged-in" class="hidden max-w-md mx-auto bg-white border border-slate-200 rounded-2xl p-8 text-center">
       <div class="w-16 h-16 mx-auto bg-gold-400/15 rounded-full flex items-center justify-center text-gold-500 text-3xl mb-5">
-        <i class="fa-solid fa-tools"></i>
+        <i class="fa-solid fa-lock"></i>
       </div>
-      <h1 class="font-serif text-3xl font-bold text-navy-900 mb-3">Provider Dashboard Coming Soon</h1>
-      <p class="text-slate-600 max-w-lg mx-auto mb-8">
-        Once provider accounts launch, you'll be able to manage your listings, update business details,
-        and track performance from a personalized dashboard.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-3 justify-center">
-        <a href="/submit-listing/" class="inline-flex items-center gap-2 bg-forest-600 hover:bg-forest-700 text-white font-semibold px-6 py-3 rounded-lg transition">
-          <i class="fa-solid fa-plus-circle"></i>
-          Submit a Listing Now
-        </a>
-        <a href="/list-your-business/" class="inline-flex items-center gap-2 bg-white border border-slate-300 hover:border-slate-400 text-navy-900 font-semibold px-6 py-3 rounded-lg transition">
-          <i class="fa-solid fa-tags"></i>
-          View Plans
-        </a>
+      <h1 class="font-serif text-2xl font-bold text-navy-900 mb-3">You're Not Logged In</h1>
+      <p class="text-slate-600 mb-6 text-sm">Sign in to access your dashboard.</p>
+      <div class="flex gap-3 justify-center">
+        <a href="/login/" class="bg-forest-600 hover:bg-forest-700 text-white font-semibold px-5 py-2.5 rounded-lg transition text-sm">Log In</a>
+        <a href="/signup/" class="bg-white border border-slate-300 hover:border-slate-400 text-navy-900 font-semibold px-5 py-2.5 rounded-lg transition text-sm">Sign Up</a>
+      </div>
+    </div>
+
+    <div id="dashboard" class="hidden">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+          <h1 class="font-serif text-3xl font-bold text-navy-900">Dashboard</h1>
+          <p class="text-sm text-slate-500 mt-1">Welcome back, <span id="user-name" class="font-semibold text-navy-900"></span></p>
+        </div>
+        <div class="flex gap-3">
+          <a href="/submit-listing/" class="bg-forest-600 hover:bg-forest-700 text-white font-semibold px-5 py-2.5 rounded-lg transition text-sm inline-flex items-center gap-2">
+            <i class="fa-solid fa-plus"></i> Add Listing
+          </a>
+          <button id="logout-btn" class="bg-white border border-slate-300 hover:border-slate-400 text-navy-900 font-semibold px-5 py-2.5 rounded-lg transition text-sm inline-flex items-center gap-2">
+            <i class="fa-solid fa-right-from-bracket"></i> Log Out
+          </button>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-3 gap-5 mb-8">
+        <div class="bg-white border border-slate-200 rounded-2xl p-6">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-forest-50 text-forest-600 rounded-lg flex items-center justify-center"><i class="fa-solid fa-list"></i></div>
+            <div>
+              <div id="stat-total" class="text-2xl font-bold text-navy-900">0</div>
+              <div class="text-xs text-slate-500 uppercase tracking-wider">Total</div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-6">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-gold-400/15 text-gold-500 rounded-lg flex items-center justify-center"><i class="fa-solid fa-clock"></i></div>
+            <div>
+              <div id="stat-pending" class="text-2xl font-bold text-navy-900">0</div>
+              <div class="text-xs text-slate-500 uppercase tracking-wider">Pending</div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-6">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center"><i class="fa-solid fa-check"></i></div>
+            <div>
+              <div id="stat-approved" class="text-2xl font-bold text-navy-900">0</div>
+              <div class="text-xs text-slate-500 uppercase tracking-wider">Live</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+        <div class="p-6 border-b border-slate-200">
+          <h2 class="font-bold text-navy-900">Your Listing Submissions</h2>
+        </div>
+        <div id="submissions-list"></div>
       </div>
     </div>
   </section>
+
+  <script is:inline define:vars={{ API }}>
+    (function () {
+      var loading = document.getElementById("loading");
+      var notLoggedIn = document.getElementById("not-logged-in");
+      var dashboard = document.getElementById("dashboard");
+
+      function show(el) {
+        loading.classList.add("hidden");
+        notLoggedIn.classList.add("hidden");
+        dashboard.classList.add("hidden");
+        el.classList.remove("hidden");
+      }
+
+      function escapeHtml(str) {
+        return String(str || "").replace(/[&<>"']/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+        });
+      }
+
+      async function load() {
+        try {
+          var meRes = await fetch(API + "/api/auth/me", { credentials: "include" });
+          var me = await meRes.json();
+          if (!me.user) { show(notLoggedIn); return; }
+
+          show(dashboard);
+          document.getElementById("user-name").textContent = me.user.fullName || me.user.email;
+
+          var subsRes = await fetch(API + "/api/listings/", { credentials: "include" });
+          var subs = await subsRes.json();
+          var list = subs.submissions || [];
+
+          document.getElementById("stat-total").textContent = list.length;
+          document.getElementById("stat-pending").textContent = list.filter(function (s) { return s.status === "pending"; }).length;
+          document.getElementById("stat-approved").textContent = list.filter(function (s) { return s.status === "approved"; }).length;
+
+          var container = document.getElementById("submissions-list");
+          if (list.length === 0) {
+            container.innerHTML = '<div class="p-10 text-center"><i class="fa-solid fa-inbox text-4xl text-slate-300 mb-3"></i><p class="text-slate-500 text-sm mb-4">No submissions yet.</p><a href="/submit-listing/" class="inline-flex items-center gap-2 bg-forest-600 hover:bg-forest-700 text-white font-semibold px-5 py-2.5 rounded-lg transition text-sm"><i class="fa-solid fa-plus"></i> Add Your First Listing</a></div>';
+            return;
+          }
+
+          container.innerHTML = list.map(function (s) {
+            var statusColors = { pending: "bg-amber-50 text-amber-700", approved: "bg-emerald-50 text-emerald-700", rejected: "bg-red-50 text-red-700" };
+            var statusColor = statusColors[s.status] || "bg-slate-100 text-slate-600";
+            var date = new Date(Number(s.created_at)).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+            return '<div class="p-5 border-b border-slate-100 last:border-b-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3">'
+              + '<div><div class="font-semibold text-navy-900">' + escapeHtml(s.business_name) + '</div>'
+              + '<div class="text-sm text-slate-500 mt-1">' + escapeHtml(s.category) + ' &middot; ' + escapeHtml(s.city) + ', ' + escapeHtml(s.state) + '</div>'
+              + '<div class="text-xs text-slate-400 mt-1">Submitted ' + date + '</div></div>'
+              + '<span class="inline-flex items-center gap-1.5 ' + statusColor + ' text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full self-start sm:self-center">' + escapeHtml(s.status) + '</span>'
+              + '</div>';
+          }).join("");
+        } catch (err) {
+          show(notLoggedIn);
+        }
+      }
+
+      document.getElementById("logout-btn").addEventListener("click", async function () {
+        await fetch(API + "/api/auth/logout", { method: "POST", credentials: "include" });
+        window.location.href = "/";
+      });
+
+      load();
+    })();
+  </script>
 </BaseLayout>

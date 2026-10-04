@@ -4,8 +4,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { breadcrumbSchema, webPageSchema } from "../lib/schemas.js";
 
 const title = "Sign Up | DogCareFinder";
-const description = "Create a provider account to list your dog care business on DogCareFinder.";
+const description = "Create a provider account to list your dog care business.";
 const canonical = "https://dogcarefinder.com/signup/";
+const API = import.meta.env.PUBLIC_API_BASE_URL || "";
 
 const schemas = [
   webPageSchema(title, description, canonical),
@@ -17,7 +18,6 @@ const schemas = [
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical} schemas={schemas}>
-
   <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-20">
     <div class="text-center mb-8">
       <nav class="text-xs text-slate-500 flex justify-center gap-2 mb-4">
@@ -26,21 +26,10 @@ const schemas = [
         <span class="text-navy-900 font-semibold">Sign Up</span>
       </nav>
       <div class="inline-flex items-center gap-2 bg-forest-50 text-forest-700 text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4">
-        <i class="fa-solid fa-user-plus"></i>
-        Get Started
+        <i class="fa-solid fa-user-plus"></i> Get Started
       </div>
       <h1 class="font-serif text-4xl sm:text-5xl font-bold text-navy-900">Sign Up</h1>
-      <p class="mt-3 text-slate-600 max-w-md mx-auto">
-        Create a provider account to list your dog care business. Browsing the directory is free — no account needed.
-      </p>
-    </div>
-
-    <div class="max-w-md mx-auto mb-6 bg-gold-400/15 border border-gold-400/40 rounded-xl p-4 flex items-start gap-3">
-      <i class="fa-solid fa-circle-info text-gold-500 mt-0.5"></i>
-      <p class="text-sm text-navy-900">
-        <strong>Coming soon.</strong> In the meantime, submit your listing through the
-        <a href="/list-your-business/" class="text-forest-700 font-semibold underline">list your business</a> form.
-      </p>
+      <p class="mt-3 text-slate-600 max-w-md mx-auto">Create a provider account to list your dog care business.</p>
     </div>
 
     <div class="max-w-md mx-auto bg-white border border-slate-200 rounded-2xl shadow-sm p-6 sm:p-8">
@@ -49,26 +38,14 @@ const schemas = [
           <label for="fullname" class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">
             <i class="fa-solid fa-user text-forest-600 mr-1"></i> Full Name
           </label>
-          <input
-            type="text"
-            id="fullname"
-            name="fullname"
-            placeholder="John Doe"
-            class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent text-sm"
-          />
+          <input type="text" id="fullname" name="fullname" required autocomplete="name" placeholder="John Doe" class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
         </div>
 
         <div>
           <label for="email" class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">
             <i class="fa-solid fa-envelope text-forest-600 mr-1"></i> Email Address
           </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="you@example.com"
-            class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent text-sm"
-          />
+          <input type="email" id="email" name="email" required autocomplete="email" placeholder="you@example.com" class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
         </div>
 
         <div>
@@ -76,59 +53,30 @@ const schemas = [
             <i class="fa-solid fa-lock text-forest-600 mr-1"></i> Password
           </label>
           <div class="relative">
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="At least 8 characters"
-              class="w-full px-4 py-3 pr-11 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent text-sm"
-            />
-            <button
-              type="button"
-              id="toggle-password"
-              class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-              aria-label="Toggle password visibility"
-            >
+            <input type="password" id="password" name="password" required autocomplete="new-password" minlength="8" placeholder="At least 8 characters" class="w-full px-4 py-3 pr-11 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
+            <button type="button" id="toggle-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
               <i class="fa-solid fa-eye"></i>
             </button>
           </div>
-          <p class="mt-1.5 text-[11px] text-slate-500">
-            <i class="fa-solid fa-circle-info text-slate-400 mr-1"></i>
-            Must be at least 8 characters.
-          </p>
+          <p class="mt-1.5 text-[11px] text-slate-500"><i class="fa-solid fa-circle-info text-slate-400 mr-1"></i>Must be at least 8 characters.</p>
         </div>
 
         <div>
           <label for="confirm" class="block text-xs font-bold uppercase tracking-wider text-navy-900 mb-2">
             <i class="fa-solid fa-shield-halved text-forest-600 mr-1"></i> Confirm Password
           </label>
-          <input
-            type="password"
-            id="confirm"
-            name="confirm"
-            placeholder="Confirm your password"
-            class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 focus:border-transparent text-sm"
-          />
+          <input type="password" id="confirm" name="confirm" required autocomplete="new-password" placeholder="Confirm your password" class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest-500 text-sm" />
         </div>
 
         <label class="flex items-start gap-2 text-xs text-slate-600 cursor-pointer">
-          <input type="checkbox" class="mt-0.5 rounded border-slate-300 text-forest-600 focus:ring-forest-500" />
-          <span>
-            I agree to the
-            <a href="/" class="text-forest-600 underline">Terms of Service</a>
-            and
-            <a href="/" class="text-forest-600 underline">Privacy Policy</a>
-          </span>
+          <input type="checkbox" required class="mt-0.5 rounded border-slate-300 text-forest-600 focus:ring-forest-500" />
+          <span>I agree to the <a href="/terms-of-service/" class="text-forest-600 underline">Terms of Service</a> and <a href="/privacy-policy/" class="text-forest-600 underline">Privacy Policy</a></span>
         </label>
 
-        <div id="form-message" class="hidden text-sm text-center rounded-lg p-3"></div>
+        <div id="form-message" class="hidden text-sm rounded-lg p-3"></div>
 
-        <button
-          type="submit"
-          class="w-full bg-forest-600 hover:bg-forest-700 text-white font-bold py-3.5 rounded-lg transition shadow-sm flex items-center justify-center gap-2"
-        >
-          <i class="fa-solid fa-user-plus"></i>
-          Create Account
+        <button type="submit" id="submit-btn" class="w-full bg-forest-600 hover:bg-forest-700 text-white font-bold py-3.5 rounded-lg transition shadow-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-user-plus"></i> Create Account
         </button>
       </form>
 
@@ -139,25 +87,70 @@ const schemas = [
     </div>
   </section>
 
-  <script is:inline>
-    const form = document.getElementById("signup-form");
-    const msg = document.getElementById("form-message");
-    const toggle = document.getElementById("toggle-password");
-    const pw = document.getElementById("password");
+  <script is:inline define:vars={{ API }}>
+    (function () {
+      var form = document.getElementById("signup-form");
+      var msg = document.getElementById("form-message");
+      var btn = document.getElementById("submit-btn");
+      var toggle = document.getElementById("toggle-password");
+      var pw = document.getElementById("password");
+      var confirmPw = document.getElementById("confirm");
 
-    toggle?.addEventListener("click", () => {
-      const isPw = pw.type === "password";
-      pw.type = isPw ? "text" : "password";
-      toggle.innerHTML = isPw
-        ? '<i class="fa-solid fa-eye-slash"></i>'
-        : '<i class="fa-solid fa-eye"></i>';
-    });
+      toggle.addEventListener("click", function () {
+        var isPw = pw.type === "password";
+        pw.type = isPw ? "text" : "password";
+        toggle.innerHTML = isPw ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>';
+      });
 
-    form?.addEventListener("submit", (e) => {
-      e.preventDefault();
-      msg.classList.remove("hidden", "bg-red-50", "text-red-700", "bg-forest-50", "text-forest-700");
-      msg.classList.add("bg-gold-400/15", "text-navy-900");
-      msg.textContent = "Sign up is coming soon. Please use the List Your Business form for now.";
-    });
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        msg.className = "hidden";
+
+        if (pw.value !== confirmPw.value) {
+          msg.className = "text-sm rounded-lg p-3 bg-red-50 text-red-700";
+          msg.textContent = "Passwords don't match.";
+          return;
+        }
+
+        if (pw.value.length < 8) {
+          msg.className = "text-sm rounded-lg p-3 bg-red-50 text-red-700";
+          msg.textContent = "Password must be at least 8 characters.";
+          return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating account...';
+
+        try {
+          var res = await fetch(API + "/api/auth/signup", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              fullName: document.getElementById("fullname").value.trim(),
+              email: document.getElementById("email").value.trim(),
+              password: pw.value,
+            }),
+          });
+          var data = await res.json();
+
+          if (res.ok && data.success) {
+            msg.className = "text-sm rounded-lg p-3 bg-forest-50 text-forest-800";
+            msg.textContent = "Account created! Redirecting to your dashboard...";
+            setTimeout(function () { window.location.href = "/dashboard/"; }, 700);
+          } else {
+            msg.className = "text-sm rounded-lg p-3 bg-red-50 text-red-700";
+            msg.textContent = data.error || "Signup failed";
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
+          }
+        } catch (err) {
+          msg.className = "text-sm rounded-lg p-3 bg-red-50 text-red-700";
+          msg.textContent = "Network error. Please try again.";
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
+        }
+      });
+    })();
   </script>
 </BaseLayout>
