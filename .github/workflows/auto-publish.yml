@@ -2,9 +2,9 @@ name: Auto Publish Content
 
 on:
   schedule:
-    # Runs every day at 6:00 AM UTC
+    # Runs every day at 6:00 AM UTC (11:00 AM Pakistan time)
     - cron: '0 6 * * *'
-  workflow_dispatch: # Allows manual trigger from Actions tab
+  workflow_dispatch:
 
 jobs:
   publish:
@@ -23,7 +23,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # ── 1. Generate new blog posts ─────────────────────
       - name: Generate Blog Posts
         env:
           AI_BASE_URL: ${{ secrets.AI_BASE_URL }}
@@ -35,9 +34,8 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
           DB_SSL: ${{ secrets.DB_SSL }}
-        run: node scripts/generate-blog-posts.mjs --limit=3 --delay=8000
+        run: node scripts/generate-blog-posts.mjs --limit=10 --delay=8000
 
-      # ── 2. Import new listings ─────────────────────────
       - name: Import Listings
         env:
           DB_HOST: ${{ secrets.DB_HOST }}
@@ -46,9 +44,8 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
           DB_SSL: ${{ secrets.DB_SSL }}
-        run: node scripts/import-listings.mjs --limit=10
+        run: node scripts/import-listings.mjs --limit=25
 
-      # ── 3. Build Astro site with fresh data ────────────
       - name: Build Astro Site
         env:
           DB_HOST: ${{ secrets.DB_HOST }}
@@ -60,7 +57,6 @@ jobs:
           PUBLIC_API_BASE_URL: ${{ secrets.PUBLIC_API_BASE_URL }}
         run: npm run build
 
-      # ── 4. Deploy to Cloudflare Pages ──────────────────
       - name: Deploy to Cloudflare Pages
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
