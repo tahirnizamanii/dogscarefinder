@@ -2,5 +2,33 @@
   {
     "city": "Austin",
     "state": "TX"
+  },
+  {
+    "city": "San Antonio",
+    "state": "TX"
+  },
+  {
+    "city": "Fort Worth",
+    "state": "TX"
+  },
+  {
+    "city": "El Paso",
+    "state": "TX"
+  },
+  {
+    "city": "Long Beach",
+    "state": "CA"
+  },
+  {
+    "city": "Brooklyn",
+    "state": "NY"
+  },
+  {
+    "city": "Buffalo",
+    "state": "NY"
+  },
+  {
+    "city": "Rochester",
+    "state": "NY"
   }
 ]
