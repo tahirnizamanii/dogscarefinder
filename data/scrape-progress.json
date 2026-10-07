@@ -30,5 +30,29 @@
   {
     "city": "Rochester",
     "state": "NY"
+  },
+  {
+    "city": "Dallas",
+    "state": "TX"
+  },
+  {
+    "city": "Los Angeles",
+    "state": "CA"
+  },
+  {
+    "city": "San Francisco",
+    "state": "CA"
+  },
+  {
+    "city": "Sacramento",
+    "state": "CA"
+  },
+  {
+    "city": "Aurora",
+    "state": "IL"
+  },
+  {
+    "city": "Tucson",
+    "state": "AZ"
   }
 ]
