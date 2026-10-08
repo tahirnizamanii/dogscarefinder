@@ -1,21 +1,26 @@
-name: Auto Publish Content
+name: Auto Publish + SEO Optimize
 
 on:
   schedule:
-    - cron: '0 6 * * *'      # Daily: scrape + generate blog posts + deploy
-    - cron: '0 7 1 * *'      # 1st of every month: refresh Google reviews
+    # Daily at 6am UTC — full content + SEO pipeline
+    - cron: '0 6 * * *'
+    # 1st of every month at 7am UTC — adds review refresh
+    - cron: '0 7 1 * *'
   workflow_dispatch:
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -28,19 +33,19 @@ jobs:
         run: npm ci
 
       # ═══════════════════════════════════════════════════════════
-      # SCRAPE — Google Places API (with website validation)
+      # STEP 1 — Scrape new listings from OpenStreetMap (free)
       # ═══════════════════════════════════════════════════════════
-      - name: Scrape Google Places for Listings
+      - name: Scrape OSM for Listings
         timeout-minutes: 15
-        env:
-          GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
-        run: node scripts/scrape-google-places.mjs
+        continue-on-error: true
+        run: node scripts/scrape-osm.mjs
 
       # ═══════════════════════════════════════════════════════════
-      # BLOG — Generate posts via AI
+      # STEP 2 — Generate new blog posts via AI (Groq)
       # ═══════════════════════════════════════════════════════════
       - name: Generate Blog Posts
         timeout-minutes: 10
+        continue-on-error: true
         env:
           AI_BASE_URL: ${{ secrets.AI_BASE_URL }}
           AI_API_KEY: ${{ secrets.AI_API_KEY }}
@@ -54,10 +59,11 @@ jobs:
         run: node scripts/generate-blog-posts.mjs --limit=10 --delay=8000
 
       # ═══════════════════════════════════════════════════════════
-      # IMPORT — Listings pool → MySQL
+      # STEP 3 — Import new listings into MySQL
       # ═══════════════════════════════════════════════════════════
       - name: Import Listings
         timeout-minutes: 5
+        continue-on-error: true
         env:
           DB_HOST: ${{ secrets.DB_HOST }}
           DB_PORT: ${{ secrets.DB_PORT }}
@@ -68,7 +74,25 @@ jobs:
         run: node scripts/import-listings.mjs --limit=50
 
       # ═══════════════════════════════════════════════════════════
-      # BUILD — Astro SSG
+      # STEP 4 — SEO DOCTOR (auto-optimize the site)
+      # ═══════════════════════════════════════════════════════════
+      # Runs AFTER content is added, BEFORE build.
+      # Clears dead URLs, prunes thin pages, builds internal links.
+      - name: Run SEO Doctor
+        timeout-minutes: 12
+        continue-on-error: true
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_SSL: ${{ secrets.DB_SSL }}
+          GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
+        run: npm run seo:doctor
+
+      # ═══════════════════════════════════════════════════════════
+      # STEP 5 — Build Astro site (uses configs from step 4)
       # ═══════════════════════════════════════════════════════════
       - name: Build Astro Site
         timeout-minutes: 10
@@ -83,33 +107,34 @@ jobs:
         run: npm run build
 
       # ═══════════════════════════════════════════════════════════
-      # DEPLOY — Cloudflare Pages
+      # STEP 6 — Deploy to Cloudflare Pages
       # ═══════════════════════════════════════════════════════════
       - name: Deploy to Cloudflare Pages
         timeout-minutes: 5
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: npx wrangler pages deploy dist --project-name=dogscarefinder --branch=main
+        run: npx wrangler pages deploy dist --project-name=dogscarefinder --branch=main --commit-dirty=true
 
       # ═══════════════════════════════════════════════════════════
-      # COMMIT — Persist pool + progress
+      # STEP 7 — Commit results (pool, configs, reports)
       # ═══════════════════════════════════════════════════════════
-      - name: Commit Updated Pool
+      - name: Commit Updated Files
         timeout-minutes: 2
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/listings-pool.json data/gplaces-progress.json || true
-          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update listings pool [skip ci]"
+          git add data/ config/ reports/ || true
+          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-optimize: listings pool + configs + reports [skip ci]"
           git push || true
 
       # ═══════════════════════════════════════════════════════════
-      # MONTHLY — Refresh Google reviews for all listings
+      # STEP 8 — Monthly only: refresh Google reviews
       # ═══════════════════════════════════════════════════════════
       - name: Update Google Reviews (Monthly)
         if: github.event.schedule == '0 7 1 * *'
         timeout-minutes: 30
+        continue-on-error: true
         env:
           GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
           DB_HOST: ${{ secrets.DB_HOST }}
