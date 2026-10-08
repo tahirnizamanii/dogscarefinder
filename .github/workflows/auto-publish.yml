@@ -27,10 +27,18 @@ jobs:
         timeout-minutes: 5
         run: npm ci
 
-      - name: Scrape OSM for Listings
+      # ═══════════════════════════════════════════════════════════
+      # SCRAPE — Google Places API (with website validation)
+      # ═══════════════════════════════════════════════════════════
+      - name: Scrape Google Places for Listings
         timeout-minutes: 15
-        run: node scripts/scrape-osm.mjs
+        env:
+          GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
+        run: node scripts/scrape-google-places.mjs
 
+      # ═══════════════════════════════════════════════════════════
+      # BLOG — Generate posts via AI
+      # ═══════════════════════════════════════════════════════════
       - name: Generate Blog Posts
         timeout-minutes: 10
         env:
@@ -45,6 +53,9 @@ jobs:
           DB_SSL: ${{ secrets.DB_SSL }}
         run: node scripts/generate-blog-posts.mjs --limit=10 --delay=8000
 
+      # ═══════════════════════════════════════════════════════════
+      # IMPORT — Listings pool → MySQL
+      # ═══════════════════════════════════════════════════════════
       - name: Import Listings
         timeout-minutes: 5
         env:
@@ -54,8 +65,11 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
           DB_SSL: ${{ secrets.DB_SSL }}
-        run: node scripts/import-listings.mjs --limit=25
+        run: node scripts/import-listings.mjs --limit=50
 
+      # ═══════════════════════════════════════════════════════════
+      # BUILD — Astro SSG
+      # ═══════════════════════════════════════════════════════════
       - name: Build Astro Site
         timeout-minutes: 10
         env:
@@ -68,6 +82,9 @@ jobs:
           PUBLIC_API_BASE_URL: ${{ secrets.PUBLIC_API_BASE_URL }}
         run: npm run build
 
+      # ═══════════════════════════════════════════════════════════
+      # DEPLOY — Cloudflare Pages
+      # ═══════════════════════════════════════════════════════════
       - name: Deploy to Cloudflare Pages
         timeout-minutes: 5
         env:
@@ -75,18 +92,20 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: npx wrangler pages deploy dist --project-name=dogscarefinder --branch=main
 
+      # ═══════════════════════════════════════════════════════════
+      # COMMIT — Persist pool + progress
+      # ═══════════════════════════════════════════════════════════
       - name: Commit Updated Pool
         timeout-minutes: 2
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/listings-pool.json data/scrape-progress.json || true
+          git add data/listings-pool.json data/gplaces-progress.json || true
           git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update listings pool [skip ci]"
           git push || true
 
       # ═══════════════════════════════════════════════════════════
-      # MONTHLY ONLY — refresh Google reviews for all listings
-      # Runs on the 1st of every month at 07:00 UTC
+      # MONTHLY — Refresh Google reviews for all listings
       # ═══════════════════════════════════════════════════════════
       - name: Update Google Reviews (Monthly)
         if: github.event.schedule == '0 7 1 * *'

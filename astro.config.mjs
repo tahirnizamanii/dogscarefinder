@@ -1,24 +1,14 @@
 // astro.config.mjs
 import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
-// import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
-  site: "https://dogscarefinder.pages.dev",
+  site: "https://dogcarefinder.com",
   output: "static",
   vite: {
     plugins: [tailwindcss()],
   },
-  integrations: [
-    // sitemap({
-    //   filter: (page) =>
-    //     !page.includes("/admin") &&
-    //     !page.includes("/dashboard") &&
-    //     !page.includes("/login") &&
-    //     !page.includes("/signup") &&
-    //     !page.includes("/api/"),
-    // }),
-  ],
+  integrations: [],
   build: { format: "directory" },
   compressHTML: true,
 });

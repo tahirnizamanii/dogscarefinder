@@ -1,0 +1,194 @@
+[
+  {
+    "state": "ca",
+    "city": "los-angeles",
+    "category": "trainers",
+    "count": 1
+  },
+  {
+    "state": "ca",
+    "city": "los-angeles",
+    "category": "vets",
+    "count": 1
+  },
+  {
+    "state": "ca",
+    "city": "los-angeles",
+    "category": "boarding",
+    "count": 1
+  },
+  {
+    "state": "co",
+    "city": "denver",
+    "category": "boarding",
+    "count": 1
+  },
+  {
+    "state": "co",
+    "city": "denver",
+    "category": "groomers",
+    "count": 1
+  },
+  {
+    "state": "fl",
+    "city": "miami",
+    "category": "groomers",
+    "count": 1
+  },
+  {
+    "state": "fl",
+    "city": "miami",
+    "category": "trainers",
+    "count": 1
+  },
+  {
+    "state": "fl",
+    "city": "miami",
+    "category": "boarding",
+    "count": 1
+  },
+  {
+    "state": "il",
+    "city": "chicago",
+    "category": "vets",
+    "count": 1
+  },
+  {
+    "state": "il",
+    "city": "chicago",
+    "category": "groomers",
+    "count": 1
+  },
+  {
+    "state": "ma",
+    "city": "boston",
+    "category": "vets",
+    "count": 1
+  },
+  {
+    "state": "ma",
+    "city": "boston",
+    "category": "boarding",
+    "count": 1
+  },
+  {
+    "state": "ma",
+    "city": "boston",
+    "category": "groomers",
+    "count": 1
+  },
+  {
+    "state": "ny",
+    "city": "new-york",
+    "category": "trainers",
+    "count": 1
+  },
+  {
+    "state": "ny",
+    "city": "new-york",
+    "category": "groomers",
+    "count": 1
+  },
+  {
+    "state": "ny",
+    "city": "new-york",
+    "category": "therapy",
+    "count": 1
+  },
+  {
+    "state": "or",
+    "city": "portland",
+    "category": "trainers",
+    "count": 1
+  },
+  {
+    "state": "or",
+    "city": "portland",
+    "category": "boarding",
+    "count": 1
+  },
+  {
+    "state": "or",
+    "city": "portland",
+    "category": "vets",
+    "count": 1
+  },
+  {
+    "state": "or",
+    "city": "portland",
+    "category": "groomers",
+    "count": 1
+  },
+  {
+    "state": "tx",
+    "city": "austin",
+    "category": "trainers",
+    "count": 1
+  },
+  {
+    "state": "tx",
+    "city": "dallas",
+    "category": "boarding",
+    "count": 1
+  },
+  {
+    "state": "tx",
+    "city": "pflugerville",
+    "category": "groomers",
+    "count": 1
+  },
+  {
+    "state": "tx",
+    "city": "pflugerville",
+    "category": "boarding",
+    "count": 1
+  },
+  {
+    "state": "tx",
+    "city": "san-antonio",
+    "category": "boarding",
+    "count": 1
+  },
+  {
+    "state": "wa",
+    "city": "seattle",
+    "category": "boarding",
+    "count": 1
+  },
+  {
+    "state": "wa",
+    "city": "seattle",
+    "category": "trainers",
+    "count": 1
+  },
+  {
+    "state": "co",
+    "city": "denver",
+    "category": "trainers",
+    "count": 2
+  },
+  {
+    "state": "tx",
+    "city": "dallas",
+    "category": "trainers",
+    "count": 2
+  },
+  {
+    "state": "tx",
+    "city": "pflugerville",
+    "category": "therapy",
+    "count": 2
+  },
+  {
+    "state": "tx",
+    "city": "round-rock",
+    "category": "groomers",
+    "count": 2
+  },
+  {
+    "state": "wa",
+    "city": "seattle",
+    "category": "vets",
+    "count": 2
+  }
+]

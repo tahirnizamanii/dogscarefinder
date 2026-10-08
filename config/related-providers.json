@@ -1,0 +1,4637 @@
+{
+  "1": {
+    "sameCategory": [
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      },
+      {
+        "id": 61,
+        "name": "Rivers & Reefs Pet Center"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "2": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      }
+    ]
+  },
+  "3": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 4,
+        "name": "Golden Vet Clinic"
+      },
+      {
+        "id": 9,
+        "name": "Golden State Trainers"
+      }
+    ]
+  },
+  "4": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 9,
+        "name": "Golden State Trainers"
+      },
+      {
+        "id": 3,
+        "name": "Paws & Board"
+      }
+    ]
+  },
+  "5": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 8,
+        "name": "NYC Puppy Pros"
+      },
+      {
+        "id": 15,
+        "name": "Manhattan Grooming Co"
+      }
+    ]
+  },
+  "6": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 43,
+        "name": "Denver Dog Trainers"
+      },
+      {
+        "id": 10,
+        "name": "Denver K9 Academy"
+      },
+      {
+        "id": 44,
+        "name": "Mile High Groomers"
+      }
+    ]
+  },
+  "7": {
+    "sameCategory": [
+      {
+        "id": 36,
+        "name": "Big D Trainers"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 35,
+        "name": "Dallas Dog Ranch"
+      }
+    ]
+  },
+  "8": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 15,
+        "name": "Manhattan Grooming Co"
+      },
+      {
+        "id": 5,
+        "name": "Bark Avenue Therapy"
+      }
+    ]
+  },
+  "9": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 4,
+        "name": "Golden Vet Clinic"
+      },
+      {
+        "id": 3,
+        "name": "Paws & Board"
+      }
+    ]
+  },
+  "10": {
+    "sameCategory": [
+      {
+        "id": 43,
+        "name": "Denver Dog Trainers"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 6,
+        "name": "Denver Dog Resort"
+      },
+      {
+        "id": 44,
+        "name": "Mile High Groomers"
+      }
+    ]
+  },
+  "11": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 22,
+        "name": "Emerald City Vets"
+      },
+      {
+        "id": 54,
+        "name": "Seattle Sound Vets"
+      },
+      {
+        "id": 21,
+        "name": "Seattle Pet Resort"
+      }
+    ]
+  },
+  "12": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 25,
+        "name": "Miami Pet Care"
+      },
+      {
+        "id": 26,
+        "name": "Sunshine State Groomers"
+      }
+    ]
+  },
+  "13": {
+    "sameCategory": [
+      {
+        "id": 48,
+        "name": "Chicago Dog Academy"
+      },
+      {
+        "id": 20,
+        "name": "Windy City Trainers"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 49,
+        "name": "Windy City Vets"
+      },
+      {
+        "id": 19,
+        "name": "Chicago Dog Wash"
+      }
+    ]
+  },
+  "14": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      },
+      {
+        "id": 61,
+        "name": "Rivers & Reefs Pet Center"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "15": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 8,
+        "name": "NYC Puppy Pros"
+      },
+      {
+        "id": 5,
+        "name": "Bark Avenue Therapy"
+      }
+    ]
+  },
+  "16": {
+    "sameCategory": [
+      {
+        "id": 47,
+        "name": "Brooklyn Dog Ranch"
+      }
+    ],
+    "otherCategories": []
+  },
+  "17": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 18,
+        "name": "Bay Area Vets"
+      }
+    ]
+  },
+  "18": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 17,
+        "name": "SF Puppy Academy"
+      }
+    ]
+  },
+  "19": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 13,
+        "name": "Chicago Canine Academy"
+      },
+      {
+        "id": 49,
+        "name": "Windy City Vets"
+      },
+      {
+        "id": 48,
+        "name": "Chicago Dog Academy"
+      }
+    ]
+  },
+  "20": {
+    "sameCategory": [
+      {
+        "id": 13,
+        "name": "Chicago Canine Academy"
+      },
+      {
+        "id": 48,
+        "name": "Chicago Dog Academy"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 49,
+        "name": "Windy City Vets"
+      },
+      {
+        "id": 19,
+        "name": "Chicago Dog Wash"
+      }
+    ]
+  },
+  "21": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 22,
+        "name": "Emerald City Vets"
+      },
+      {
+        "id": 54,
+        "name": "Seattle Sound Vets"
+      },
+      {
+        "id": 11,
+        "name": "Seattle Puppy School"
+      }
+    ]
+  },
+  "22": {
+    "sameCategory": [
+      {
+        "id": 54,
+        "name": "Seattle Sound Vets"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 21,
+        "name": "Seattle Pet Resort"
+      },
+      {
+        "id": 11,
+        "name": "Seattle Puppy School"
+      }
+    ]
+  },
+  "23": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 52,
+        "name": "Portland Paws Vets"
+      },
+      {
+        "id": 24,
+        "name": "Rose City Dog Training"
+      },
+      {
+        "id": 53,
+        "name": "Rose City Boarding"
+      }
+    ]
+  },
+  "24": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 52,
+        "name": "Portland Paws Vets"
+      },
+      {
+        "id": 53,
+        "name": "Rose City Boarding"
+      },
+      {
+        "id": 23,
+        "name": "Portland Paws Grooming"
+      }
+    ]
+  },
+  "25": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 12,
+        "name": "Miami Dog Training Co"
+      },
+      {
+        "id": 26,
+        "name": "Sunshine State Groomers"
+      }
+    ]
+  },
+  "26": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 25,
+        "name": "Miami Pet Care"
+      },
+      {
+        "id": 12,
+        "name": "Miami Dog Training Co"
+      }
+    ]
+  },
+  "27": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 28,
+        "name": "Peach State Vets"
+      }
+    ]
+  },
+  "28": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 27,
+        "name": "Atlanta Dog Academy"
+      }
+    ]
+  },
+  "29": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 50,
+        "name": "Boston Back Bay Vets"
+      },
+      {
+        "id": 30,
+        "name": "Beantown Groomers"
+      }
+    ]
+  },
+  "30": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 29,
+        "name": "Boston Bay Boarding"
+      },
+      {
+        "id": 50,
+        "name": "Boston Back Bay Vets"
+      }
+    ]
+  },
+  "31": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 32,
+        "name": "Liberty Bell Vets"
+      }
+    ]
+  },
+  "32": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 31,
+        "name": "Philly Dog Trainers"
+      }
+    ]
+  },
+  "33": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 34,
+        "name": "Space City Groomers"
+      }
+    ]
+  },
+  "34": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 33,
+        "name": "Houston Hound Hotel"
+      }
+    ]
+  },
+  "35": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 7,
+        "name": "Dallas Dog Academy"
+      },
+      {
+        "id": 36,
+        "name": "Big D Trainers"
+      }
+    ]
+  },
+  "36": {
+    "sameCategory": [
+      {
+        "id": 7,
+        "name": "Dallas Dog Academy"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 35,
+        "name": "Dallas Dog Ranch"
+      }
+    ]
+  },
+  "37": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 38,
+        "name": "Sunny Days Grooming"
+      }
+    ]
+  },
+  "38": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 37,
+        "name": "San Diego Pet Care"
+      }
+    ]
+  },
+  "39": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 40,
+        "name": "Desert Paws Vets"
+      }
+    ]
+  },
+  "40": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 39,
+        "name": "Phoenix Dog Ranch"
+      }
+    ]
+  },
+  "41": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 42,
+        "name": "Music City Pet Resort"
+      }
+    ]
+  },
+  "42": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 41,
+        "name": "Nashville Dog Trainers"
+      }
+    ]
+  },
+  "43": {
+    "sameCategory": [
+      {
+        "id": 10,
+        "name": "Denver K9 Academy"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 6,
+        "name": "Denver Dog Resort"
+      },
+      {
+        "id": 44,
+        "name": "Mile High Groomers"
+      }
+    ]
+  },
+  "44": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 6,
+        "name": "Denver Dog Resort"
+      },
+      {
+        "id": 43,
+        "name": "Denver Dog Trainers"
+      },
+      {
+        "id": 10,
+        "name": "Denver K9 Academy"
+      }
+    ]
+  },
+  "45": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 46,
+        "name": "Sin City Vets"
+      }
+    ]
+  },
+  "46": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 45,
+        "name": "Vegas Pet Palace"
+      }
+    ]
+  },
+  "47": {
+    "sameCategory": [
+      {
+        "id": 16,
+        "name": "Brooklyn Bark Boarding"
+      }
+    ],
+    "otherCategories": []
+  },
+  "48": {
+    "sameCategory": [
+      {
+        "id": 13,
+        "name": "Chicago Canine Academy"
+      },
+      {
+        "id": 20,
+        "name": "Windy City Trainers"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 49,
+        "name": "Windy City Vets"
+      },
+      {
+        "id": 19,
+        "name": "Chicago Dog Wash"
+      }
+    ]
+  },
+  "49": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 13,
+        "name": "Chicago Canine Academy"
+      },
+      {
+        "id": 48,
+        "name": "Chicago Dog Academy"
+      },
+      {
+        "id": 20,
+        "name": "Windy City Trainers"
+      }
+    ]
+  },
+  "50": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 29,
+        "name": "Boston Bay Boarding"
+      },
+      {
+        "id": 30,
+        "name": "Beantown Groomers"
+      }
+    ]
+  },
+  "51": {
+    "sameCategory": [],
+    "otherCategories": []
+  },
+  "52": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 24,
+        "name": "Rose City Dog Training"
+      },
+      {
+        "id": 53,
+        "name": "Rose City Boarding"
+      },
+      {
+        "id": 23,
+        "name": "Portland Paws Grooming"
+      }
+    ]
+  },
+  "53": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 52,
+        "name": "Portland Paws Vets"
+      },
+      {
+        "id": 24,
+        "name": "Rose City Dog Training"
+      },
+      {
+        "id": 23,
+        "name": "Portland Paws Grooming"
+      }
+    ]
+  },
+  "54": {
+    "sameCategory": [
+      {
+        "id": 22,
+        "name": "Emerald City Vets"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 21,
+        "name": "Seattle Pet Resort"
+      },
+      {
+        "id": 11,
+        "name": "Seattle Puppy School"
+      }
+    ]
+  },
+  "55": {
+    "sameCategory": [],
+    "otherCategories": []
+  },
+  "56": {
+    "sameCategory": [],
+    "otherCategories": []
+  },
+  "57": {
+    "sameCategory": [],
+    "otherCategories": []
+  },
+  "58": {
+    "sameCategory": [],
+    "otherCategories": []
+  },
+  "59": {
+    "sameCategory": [
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      },
+      {
+        "id": 67,
+        "name": "Manchaca Road Animal Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "60": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 61,
+        "name": "Rivers & Reefs Pet Center"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "61": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "62": {
+    "sameCategory": [
+      {
+        "id": 115,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": []
+  },
+  "63": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "64": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "65": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      },
+      {
+        "id": 67,
+        "name": "Manchaca Road Animal Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "66": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 67,
+        "name": "Manchaca Road Animal Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "67": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "68": {
+    "sameCategory": [
+      {
+        "id": 81,
+        "name": "Healthy Pet"
+      },
+      {
+        "id": 82,
+        "name": "Wild Birds Unlimited"
+      },
+      {
+        "id": 83,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 69,
+        "name": "Banfield Pet Hospital"
+      },
+      {
+        "id": 93,
+        "name": "Cypress Creek Pet Care"
+      },
+      {
+        "id": 111,
+        "name": "Hill Country Veterinary Hospital"
+      }
+    ]
+  },
+  "69": {
+    "sameCategory": [
+      {
+        "id": 93,
+        "name": "Cypress Creek Pet Care"
+      },
+      {
+        "id": 111,
+        "name": "Hill Country Veterinary Hospital"
+      },
+      {
+        "id": 123,
+        "name": "Avery Ranch Animal Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 68,
+        "name": "PetSmart"
+      },
+      {
+        "id": 81,
+        "name": "Healthy Pet"
+      },
+      {
+        "id": 82,
+        "name": "Wild Birds Unlimited"
+      }
+    ]
+  },
+  "70": {
+    "sameCategory": [
+      {
+        "id": 98,
+        "name": "Taurus Academy"
+      },
+      {
+        "id": 125,
+        "name": "Southpaws Playschool"
+      },
+      {
+        "id": 137,
+        "name": "Austin Dogtown Boarding & Daycare"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "71": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "72": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "73": {
+    "sameCategory": [
+      {
+        "id": 74,
+        "name": "Austin Pets Alive! Town Lake Animal Center"
+      },
+      {
+        "id": 75,
+        "name": "Austin Pets Alive! Town Lake Animal Adoption Cetner"
+      },
+      {
+        "id": 107,
+        "name": "Austin Pets Alive! Tarrytown Cattery"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "74": {
+    "sameCategory": [
+      {
+        "id": 73,
+        "name": "Austin Pets Alive! Tarrytown Dog Adoption Center Play Yard & Gift Shop"
+      },
+      {
+        "id": 75,
+        "name": "Austin Pets Alive! Town Lake Animal Adoption Cetner"
+      },
+      {
+        "id": 107,
+        "name": "Austin Pets Alive! Tarrytown Cattery"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "75": {
+    "sameCategory": [
+      {
+        "id": 73,
+        "name": "Austin Pets Alive! Tarrytown Dog Adoption Center Play Yard & Gift Shop"
+      },
+      {
+        "id": 74,
+        "name": "Austin Pets Alive! Town Lake Animal Center"
+      },
+      {
+        "id": 107,
+        "name": "Austin Pets Alive! Tarrytown Cattery"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "76": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "77": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "78": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "79": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "80": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "81": {
+    "sameCategory": [
+      {
+        "id": 68,
+        "name": "PetSmart"
+      },
+      {
+        "id": 82,
+        "name": "Wild Birds Unlimited"
+      },
+      {
+        "id": 83,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 69,
+        "name": "Banfield Pet Hospital"
+      },
+      {
+        "id": 93,
+        "name": "Cypress Creek Pet Care"
+      },
+      {
+        "id": 111,
+        "name": "Hill Country Veterinary Hospital"
+      }
+    ]
+  },
+  "82": {
+    "sameCategory": [
+      {
+        "id": 68,
+        "name": "PetSmart"
+      },
+      {
+        "id": 81,
+        "name": "Healthy Pet"
+      },
+      {
+        "id": 83,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 69,
+        "name": "Banfield Pet Hospital"
+      },
+      {
+        "id": 93,
+        "name": "Cypress Creek Pet Care"
+      },
+      {
+        "id": 111,
+        "name": "Hill Country Veterinary Hospital"
+      }
+    ]
+  },
+  "83": {
+    "sameCategory": [
+      {
+        "id": 68,
+        "name": "PetSmart"
+      },
+      {
+        "id": 81,
+        "name": "Healthy Pet"
+      },
+      {
+        "id": 82,
+        "name": "Wild Birds Unlimited"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 69,
+        "name": "Banfield Pet Hospital"
+      },
+      {
+        "id": 93,
+        "name": "Cypress Creek Pet Care"
+      },
+      {
+        "id": 111,
+        "name": "Hill Country Veterinary Hospital"
+      }
+    ]
+  },
+  "84": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "85": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "86": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "87": {
+    "sameCategory": [
+      {
+        "id": 130,
+        "name": "Central Texas Veterinary Specialty & Emergency Hospital"
+      },
+      {
+        "id": 131,
+        "name": "Firehouse Animal Health Center"
+      },
+      {
+        "id": 145,
+        "name": "Round Rock Animal Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 116,
+        "name": "Petco"
+      },
+      {
+        "id": 117,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "88": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "89": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "90": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "91": {
+    "sameCategory": [
+      {
+        "id": 149,
+        "name": "Pflugerville Animal Welfare Services"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 138,
+        "name": "Petco"
+      },
+      {
+        "id": 144,
+        "name": "Doggy Day Out Kennel & Daycare"
+      }
+    ]
+  },
+  "92": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "93": {
+    "sameCategory": [
+      {
+        "id": 69,
+        "name": "Banfield Pet Hospital"
+      },
+      {
+        "id": 111,
+        "name": "Hill Country Veterinary Hospital"
+      },
+      {
+        "id": 123,
+        "name": "Avery Ranch Animal Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 68,
+        "name": "PetSmart"
+      },
+      {
+        "id": 81,
+        "name": "Healthy Pet"
+      },
+      {
+        "id": 82,
+        "name": "Wild Birds Unlimited"
+      }
+    ]
+  },
+  "94": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "95": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "96": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "97": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "98": {
+    "sameCategory": [
+      {
+        "id": 70,
+        "name": "Dogtopia"
+      },
+      {
+        "id": 125,
+        "name": "Southpaws Playschool"
+      },
+      {
+        "id": 137,
+        "name": "Austin Dogtown Boarding & Daycare"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "99": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "100": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "101": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "102": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "103": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "104": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 134,
+        "name": "Wild Birds Unlimited"
+      }
+    ]
+  },
+  "105": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "106": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "107": {
+    "sameCategory": [
+      {
+        "id": 73,
+        "name": "Austin Pets Alive! Tarrytown Dog Adoption Center Play Yard & Gift Shop"
+      },
+      {
+        "id": 74,
+        "name": "Austin Pets Alive! Town Lake Animal Center"
+      },
+      {
+        "id": 75,
+        "name": "Austin Pets Alive! Town Lake Animal Adoption Cetner"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "108": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "109": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "110": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "111": {
+    "sameCategory": [
+      {
+        "id": 69,
+        "name": "Banfield Pet Hospital"
+      },
+      {
+        "id": 93,
+        "name": "Cypress Creek Pet Care"
+      },
+      {
+        "id": 123,
+        "name": "Avery Ranch Animal Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 68,
+        "name": "PetSmart"
+      },
+      {
+        "id": 81,
+        "name": "Healthy Pet"
+      },
+      {
+        "id": 82,
+        "name": "Wild Birds Unlimited"
+      }
+    ]
+  },
+  "112": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "113": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "114": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "115": {
+    "sameCategory": [
+      {
+        "id": 62,
+        "name": "PetSmart"
+      }
+    ],
+    "otherCategories": []
+  },
+  "116": {
+    "sameCategory": [
+      {
+        "id": 117,
+        "name": "PetSmart"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 87,
+        "name": "Banfield Pet Hospital"
+      },
+      {
+        "id": 130,
+        "name": "Central Texas Veterinary Specialty & Emergency Hospital"
+      },
+      {
+        "id": 131,
+        "name": "Firehouse Animal Health Center"
+      }
+    ]
+  },
+  "117": {
+    "sameCategory": [
+      {
+        "id": 116,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 87,
+        "name": "Banfield Pet Hospital"
+      },
+      {
+        "id": 130,
+        "name": "Central Texas Veterinary Specialty & Emergency Hospital"
+      },
+      {
+        "id": 131,
+        "name": "Firehouse Animal Health Center"
+      }
+    ]
+  },
+  "118": {
+    "sameCategory": [
+      {
+        "id": 73,
+        "name": "Austin Pets Alive! Tarrytown Dog Adoption Center Play Yard & Gift Shop"
+      },
+      {
+        "id": 74,
+        "name": "Austin Pets Alive! Town Lake Animal Center"
+      },
+      {
+        "id": 75,
+        "name": "Austin Pets Alive! Town Lake Animal Adoption Cetner"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "119": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "120": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "121": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "122": {
+    "sameCategory": [
+      {
+        "id": 73,
+        "name": "Austin Pets Alive! Tarrytown Dog Adoption Center Play Yard & Gift Shop"
+      },
+      {
+        "id": 74,
+        "name": "Austin Pets Alive! Town Lake Animal Center"
+      },
+      {
+        "id": 75,
+        "name": "Austin Pets Alive! Town Lake Animal Adoption Cetner"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "123": {
+    "sameCategory": [
+      {
+        "id": 69,
+        "name": "Banfield Pet Hospital"
+      },
+      {
+        "id": 93,
+        "name": "Cypress Creek Pet Care"
+      },
+      {
+        "id": 111,
+        "name": "Hill Country Veterinary Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 68,
+        "name": "PetSmart"
+      },
+      {
+        "id": 81,
+        "name": "Healthy Pet"
+      },
+      {
+        "id": 82,
+        "name": "Wild Birds Unlimited"
+      }
+    ]
+  },
+  "124": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "125": {
+    "sameCategory": [
+      {
+        "id": 70,
+        "name": "Dogtopia"
+      },
+      {
+        "id": 98,
+        "name": "Taurus Academy"
+      },
+      {
+        "id": 137,
+        "name": "Austin Dogtown Boarding & Daycare"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "126": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "127": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "128": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "129": {
+    "sameCategory": [
+      {
+        "id": 73,
+        "name": "Austin Pets Alive! Tarrytown Dog Adoption Center Play Yard & Gift Shop"
+      },
+      {
+        "id": 74,
+        "name": "Austin Pets Alive! Town Lake Animal Center"
+      },
+      {
+        "id": 75,
+        "name": "Austin Pets Alive! Town Lake Animal Adoption Cetner"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "130": {
+    "sameCategory": [
+      {
+        "id": 87,
+        "name": "Banfield Pet Hospital"
+      },
+      {
+        "id": 131,
+        "name": "Firehouse Animal Health Center"
+      },
+      {
+        "id": 145,
+        "name": "Round Rock Animal Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 116,
+        "name": "Petco"
+      },
+      {
+        "id": 117,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "131": {
+    "sameCategory": [
+      {
+        "id": 87,
+        "name": "Banfield Pet Hospital"
+      },
+      {
+        "id": 130,
+        "name": "Central Texas Veterinary Specialty & Emergency Hospital"
+      },
+      {
+        "id": 145,
+        "name": "Round Rock Animal Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 116,
+        "name": "Petco"
+      },
+      {
+        "id": 117,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "132": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "133": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "134": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 104,
+        "name": "Westlake Animal Hospital"
+      }
+    ]
+  },
+  "135": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "136": {
+    "sameCategory": [
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      },
+      {
+        "id": 66,
+        "name": "Westgate Pet & Bird Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "137": {
+    "sameCategory": [
+      {
+        "id": 70,
+        "name": "Dogtopia"
+      },
+      {
+        "id": 98,
+        "name": "Taurus Academy"
+      },
+      {
+        "id": 125,
+        "name": "Southpaws Playschool"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "138": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 91,
+        "name": "House Rabbit Resource Network"
+      },
+      {
+        "id": 144,
+        "name": "Doggy Day Out Kennel & Daycare"
+      },
+      {
+        "id": 149,
+        "name": "Pflugerville Animal Welfare Services"
+      }
+    ]
+  },
+  "139": {
+    "sameCategory": [
+      {
+        "id": 70,
+        "name": "Dogtopia"
+      },
+      {
+        "id": 98,
+        "name": "Taurus Academy"
+      },
+      {
+        "id": 125,
+        "name": "Southpaws Playschool"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "140": {
+    "sameCategory": [
+      {
+        "id": 70,
+        "name": "Dogtopia"
+      },
+      {
+        "id": 98,
+        "name": "Taurus Academy"
+      },
+      {
+        "id": 125,
+        "name": "Southpaws Playschool"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "141": {
+    "sameCategory": [
+      {
+        "id": 70,
+        "name": "Dogtopia"
+      },
+      {
+        "id": 98,
+        "name": "Taurus Academy"
+      },
+      {
+        "id": 125,
+        "name": "Southpaws Playschool"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "142": {
+    "sameCategory": [
+      {
+        "id": 70,
+        "name": "Dogtopia"
+      },
+      {
+        "id": 98,
+        "name": "Taurus Academy"
+      },
+      {
+        "id": 125,
+        "name": "Southpaws Playschool"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "143": {
+    "sameCategory": [
+      {
+        "id": 69,
+        "name": "Banfield Pet Hospital"
+      },
+      {
+        "id": 93,
+        "name": "Cypress Creek Pet Care"
+      },
+      {
+        "id": 111,
+        "name": "Hill Country Veterinary Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 68,
+        "name": "PetSmart"
+      },
+      {
+        "id": 81,
+        "name": "Healthy Pet"
+      },
+      {
+        "id": 82,
+        "name": "Wild Birds Unlimited"
+      }
+    ]
+  },
+  "144": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 91,
+        "name": "House Rabbit Resource Network"
+      },
+      {
+        "id": 138,
+        "name": "Petco"
+      },
+      {
+        "id": 149,
+        "name": "Pflugerville Animal Welfare Services"
+      }
+    ]
+  },
+  "145": {
+    "sameCategory": [
+      {
+        "id": 87,
+        "name": "Banfield Pet Hospital"
+      },
+      {
+        "id": 130,
+        "name": "Central Texas Veterinary Specialty & Emergency Hospital"
+      },
+      {
+        "id": 131,
+        "name": "Firehouse Animal Health Center"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 116,
+        "name": "Petco"
+      },
+      {
+        "id": 117,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "146": {
+    "sameCategory": [
+      {
+        "id": 87,
+        "name": "Banfield Pet Hospital"
+      },
+      {
+        "id": 130,
+        "name": "Central Texas Veterinary Specialty & Emergency Hospital"
+      },
+      {
+        "id": 131,
+        "name": "Firehouse Animal Health Center"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 116,
+        "name": "Petco"
+      },
+      {
+        "id": 117,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "147": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "148": {
+    "sameCategory": [
+      {
+        "id": 70,
+        "name": "Dogtopia"
+      },
+      {
+        "id": 98,
+        "name": "Taurus Academy"
+      },
+      {
+        "id": 125,
+        "name": "Southpaws Playschool"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      }
+    ]
+  },
+  "149": {
+    "sameCategory": [
+      {
+        "id": 91,
+        "name": "House Rabbit Resource Network"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 138,
+        "name": "Petco"
+      },
+      {
+        "id": 144,
+        "name": "Doggy Day Out Kennel & Daycare"
+      }
+    ]
+  },
+  "150": {
+    "sameCategory": [
+      {
+        "id": 1,
+        "name": "Happy Tails Grooming"
+      },
+      {
+        "id": 14,
+        "name": "Happy Paws Grooming"
+      },
+      {
+        "id": 60,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 2,
+        "name": "Austin Dog Trainers"
+      },
+      {
+        "id": 59,
+        "name": "Manchaca Village Veterinary Care"
+      },
+      {
+        "id": 65,
+        "name": "Thrive Pet Healthcare"
+      }
+    ]
+  },
+  "151": {
+    "sameCategory": [
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      },
+      {
+        "id": 157,
+        "name": "Pet Wants San Antonio"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ]
+  },
+  "152": {
+    "sameCategory": [
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      },
+      {
+        "id": 161,
+        "name": "Great Northwest Animal Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "153": {
+    "sameCategory": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      },
+      {
+        "id": 157,
+        "name": "Pet Wants San Antonio"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ]
+  },
+  "154": {
+    "sameCategory": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 157,
+        "name": "Pet Wants San Antonio"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ]
+  },
+  "155": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      },
+      {
+        "id": 161,
+        "name": "Great Northwest Animal Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "156": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 161,
+        "name": "Great Northwest Animal Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "157": {
+    "sameCategory": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ]
+  },
+  "158": {
+    "sameCategory": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ]
+  },
+  "159": {
+    "sameCategory": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ]
+  },
+  "160": {
+    "sameCategory": [],
+    "otherCategories": []
+  },
+  "161": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "162": {
+    "sameCategory": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ]
+  },
+  "163": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "164": {
+    "sameCategory": [],
+    "otherCategories": []
+  },
+  "165": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 187,
+        "name": "Hill Country Animal Hospital"
+      }
+    ]
+  },
+  "166": {
+    "sameCategory": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ]
+  },
+  "167": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "168": {
+    "sameCategory": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ]
+  },
+  "169": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "170": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "171": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "172": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "173": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "174": {
+    "sameCategory": [
+      {
+        "id": 181,
+        "name": "Paul Jolly Center for Pet Adoptions"
+      },
+      {
+        "id": 195,
+        "name": "San Antonio Humane Society"
+      },
+      {
+        "id": 197,
+        "name": "Primarily Primates"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "175": {
+    "sameCategory": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ]
+  },
+  "176": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "177": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "178": {
+    "sameCategory": [],
+    "otherCategories": []
+  },
+  "179": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "180": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "181": {
+    "sameCategory": [
+      {
+        "id": 174,
+        "name": "San Antonio Animal Care Services"
+      },
+      {
+        "id": 195,
+        "name": "San Antonio Humane Society"
+      },
+      {
+        "id": 197,
+        "name": "Primarily Primates"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "182": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "183": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "184": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "185": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "186": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "187": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 165,
+        "name": "Lucky Paws Grooming & Board"
+      }
+    ]
+  },
+  "188": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "189": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "190": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "191": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "192": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "193": {
+    "sameCategory": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ]
+  },
+  "194": {
+    "sameCategory": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ]
+  },
+  "195": {
+    "sameCategory": [
+      {
+        "id": 174,
+        "name": "San Antonio Animal Care Services"
+      },
+      {
+        "id": 181,
+        "name": "Paul Jolly Center for Pet Adoptions"
+      },
+      {
+        "id": 197,
+        "name": "Primarily Primates"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "196": {
+    "sameCategory": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      },
+      {
+        "id": 154,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 155,
+        "name": "Vanguard Veterinary Clinic"
+      },
+      {
+        "id": 156,
+        "name": "MissionVet Specialty & Emergency"
+      }
+    ]
+  },
+  "197": {
+    "sameCategory": [
+      {
+        "id": 174,
+        "name": "San Antonio Animal Care Services"
+      },
+      {
+        "id": 181,
+        "name": "Paul Jolly Center for Pet Adoptions"
+      },
+      {
+        "id": 195,
+        "name": "San Antonio Humane Society"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 151,
+        "name": "The Palms Pet Resort & Spa"
+      },
+      {
+        "id": 152,
+        "name": "Town and Country Veterinary Hospital"
+      },
+      {
+        "id": 153,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "198": {
+    "sameCategory": [],
+    "otherCategories": []
+  }
+}
