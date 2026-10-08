@@ -54,5 +54,57 @@
   {
     "city": "Tucson",
     "state": "AZ"
+  },
+  {
+    "city": "Houston",
+    "state": "TX"
+  },
+  {
+    "city": "San Diego",
+    "state": "CA"
+  },
+  {
+    "city": "San Jose",
+    "state": "CA"
+  },
+  {
+    "city": "Oakland",
+    "state": "CA"
+  },
+  {
+    "city": "Chicago",
+    "state": "IL"
+  },
+  {
+    "city": "Naperville",
+    "state": "IL"
+  },
+  {
+    "city": "Columbus",
+    "state": "OH"
+  },
+  {
+    "city": "Cleveland",
+    "state": "OH"
+  },
+  {
+    "city": "Charlotte",
+    "state": "NC"
+  },
+  {
+    "city": "Greensboro",
+    "state": "NC"
+  },
+  {
+    "city": "Cambridge",
+    "state": "MA"
+  },
+  {
+    "city": "Nashville",
+    "state": "TN"
+  },
+  {
+    "city": "Knoxville",
+    "state": "TN"
   }
 ]
