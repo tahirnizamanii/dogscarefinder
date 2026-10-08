@@ -1,11 +1,12 @@
 name: Auto Publish + SEO Optimize
 
 on:
+  # Daily at 6:00 AM UTC — full content + SEO pipeline
   schedule:
-    # Daily at 6am UTC — full content + SEO pipeline
     - cron: '0 6 * * *'
-    # 1st of every month at 7am UTC — adds review refresh
+    # 1st of every month at 7:00 AM UTC — adds review refresh
     - cron: '0 7 1 * *'
+  # Manual trigger from GitHub Actions tab
   workflow_dispatch:
 
 jobs:
@@ -16,6 +17,9 @@ jobs:
       contents: write
 
     steps:
+      # ═══════════════════════════════════════════════════════════
+      # SETUP
+      # ═══════════════════════════════════════════════════════════
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -74,11 +78,11 @@ jobs:
         run: node scripts/import-listings.mjs --limit=50
 
       # ═══════════════════════════════════════════════════════════
-      # STEP 4 — SEO DOCTOR (auto-optimize the site)
+      # STEP 4 — SEO DOCTOR: PRE-BUILD
+      # Updates MySQL + writes config/pruned-pages.json and
+      # config/related-providers.json that Astro reads at build time
       # ═══════════════════════════════════════════════════════════
-      # Runs AFTER content is added, BEFORE build.
-      # Clears dead URLs, prunes thin pages, builds internal links.
-      - name: Run SEO Doctor
+      - name: SEO Doctor (pre-build)
         timeout-minutes: 12
         continue-on-error: true
         env:
@@ -89,10 +93,10 @@ jobs:
           DB_NAME: ${{ secrets.DB_NAME }}
           DB_SSL: ${{ secrets.DB_SSL }}
           GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
-        run: npm run seo:doctor
+        run: npm run seo:pre
 
       # ═══════════════════════════════════════════════════════════
-      # STEP 5 — Build Astro site (uses configs from step 4)
+      # STEP 5 — Build Astro site
       # ═══════════════════════════════════════════════════════════
       - name: Build Astro Site
         timeout-minutes: 10
@@ -107,7 +111,16 @@ jobs:
         run: npm run build
 
       # ═══════════════════════════════════════════════════════════
-      # STEP 6 — Deploy to Cloudflare Pages
+      # STEP 6 — SEO DOCTOR: POST-BUILD
+      # Writes dist/sitemap.xml and dist/robots.txt
+      # (Must run AFTER build so they aren't wiped)
+      # ═══════════════════════════════════════════════════════════
+      - name: SEO Doctor (post-build)
+        timeout-minutes: 3
+        run: npm run seo:post
+
+      # ═══════════════════════════════════════════════════════════
+      # STEP 7 — Deploy to Cloudflare Pages
       # ═══════════════════════════════════════════════════════════
       - name: Deploy to Cloudflare Pages
         timeout-minutes: 5
@@ -117,7 +130,7 @@ jobs:
         run: npx wrangler pages deploy dist --project-name=dogscarefinder --branch=main --commit-dirty=true
 
       # ═══════════════════════════════════════════════════════════
-      # STEP 7 — Commit results (pool, configs, reports)
+      # STEP 8 — Commit updated pool + configs + reports
       # ═══════════════════════════════════════════════════════════
       - name: Commit Updated Files
         timeout-minutes: 2
@@ -129,7 +142,8 @@ jobs:
           git push || true
 
       # ═══════════════════════════════════════════════════════════
-      # STEP 8 — Monthly only: refresh Google reviews
+      # STEP 9 — MONTHLY ONLY: refresh Google reviews
+      # Only runs when the cron trigger is the 1st-of-month one
       # ═══════════════════════════════════════════════════════════
       - name: Update Google Reviews (Monthly)
         if: github.event.schedule == '0 7 1 * *'

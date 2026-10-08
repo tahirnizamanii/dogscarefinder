@@ -8,7 +8,9 @@
     "preview": "astro preview",
     "seo:doctor": "node .agents/skills/seo-doctor/run.mjs",
     "seo:doctor:dry": "node .agents/skills/seo-doctor/run.mjs --dry",
-    "seo:rank": "npm run seo:doctor && npm run build && npx wrangler pages deploy dist --project-name=dogscarefinder --branch=main"
+    "seo:pre": "node .agents/skills/seo-doctor/run.mjs --pre",
+    "seo:post": "node .agents/skills/seo-doctor/run.mjs --post",
+    "seo:rank": "npm run seo:pre && npm run build && npm run seo:post && npx wrangler pages deploy dist --project-name=dogscarefinder --branch=main --commit-dirty=true"
   },
   "dependencies": {
     "astro": "^4.15.0",

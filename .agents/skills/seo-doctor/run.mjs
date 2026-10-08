@@ -13,8 +13,12 @@ import pruneThinPages from "./fixers/prune-thin-pages.mjs";
 import buildInternalLinks from "./fixers/build-internal-links.mjs";
 import generateSitemap from "./fixers/generate-sitemap.mjs";
 
-// ─── Setup ────────────────────────────────────────────────────
+// ─── Mode detection ───────────────────────────────────────────
 const DRY = process.argv.includes("--dry");
+const PRE_BUILD = process.argv.includes("--pre");
+const POST_BUILD = process.argv.includes("--post");
+const RUN_ALL = !PRE_BUILD && !POST_BUILD;
+
 const CONFIG_DIR = path.resolve("config");
 const REPORTS_DIR = path.resolve("reports");
 
@@ -22,45 +26,53 @@ if (!fs.existsSync(CONFIG_DIR)) fs.mkdirSync(CONFIG_DIR, { recursive: true });
 if (!fs.existsSync(REPORTS_DIR)) fs.mkdirSync(REPORTS_DIR, { recursive: true });
 
 // ─── Banner ───────────────────────────────────────────────────
+const mode = DRY ? "DRY RUN" : PRE_BUILD ? "PRE-BUILD" : POST_BUILD ? "POST-BUILD" : "FULL";
+
 console.log("");
 console.log("===============================================");
 console.log("   SEO DOCTOR - Audit + Fix");
-console.log("   Mode: " + (DRY ? "DRY RUN (no changes)" : "APPLYING FIXES"));
+console.log("   Mode: " + mode);
 console.log("===============================================");
 console.log("");
 
 const startTime = Date.now();
 const results = [];
 
-// ─── DB POOL (auto-reconnects on idle timeout) ────────────────
+// ─── DB POOL (auto-reconnects on idle) ────────────────────────
 let pool;
-try {
-  pool = mysql.createPool({
-    host: process.env.DB_HOST,
-    port: Number(process.env.DB_PORT) || 3306,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : undefined,
-    waitForConnections: true,
-    connectionLimit: 3,
-    queueLimit: 0,
-    enableKeepAlive: true,
-    keepAliveInitialDelay: 10000,
-    idleTimeout: 60000,
-    connectTimeout: 20000,
-  });
+const needsDb = RUN_ALL || PRE_BUILD;
 
-  // Test connection
-  const testConn = await pool.getConnection();
-  await testConn.ping();
-  testConn.release();
+if (needsDb) {
+  try {
+    pool = mysql.createPool({
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT) || 3306,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : undefined,
+      waitForConnections: true,
+      connectionLimit: 3,
+      queueLimit: 0,
+      enableKeepAlive: true,
+      keepAliveInitialDelay: 10000,
+      idleTimeout: 60000,
+      connectTimeout: 20000,
+    });
 
-  console.log("Connected to MySQL (pool mode)");
+    const testConn = await pool.getConnection();
+    await testConn.ping();
+    testConn.release();
+
+    console.log("Connected to MySQL (pool mode)");
+    console.log("");
+  } catch (err) {
+    console.error("DB connection failed: " + err.message);
+    process.exit(1);
+  }
+} else {
+  console.log("Skipping DB connection (post-build mode)");
   console.log("");
-} catch (err) {
-  console.error("DB connection failed: " + err.message);
-  process.exit(1);
 }
 
 // ─── Fixer runner ─────────────────────────────────────────────
@@ -81,21 +93,30 @@ async function runFixer(name, fn, args = {}) {
 }
 
 // ─── Pipeline ─────────────────────────────────────────────────
-await runFixer("dedupe-listings", dedupeListings);
-await runFixer("fill-missing-fields", fillMissingFields);
-await runFixer("validate-websites", validateWebsites);
-await runFixer("enrich-google-places", enrichGooglePlaces);
-await runFixer("sync-google-reviews", syncGoogleReviews);
-await runFixer("prune-thin-pages", pruneThinPages);
-await runFixer("build-internal-links", buildInternalLinks);
-await runFixer("generate-sitemap", generateSitemap, { skipDb: true });
+// PRE-BUILD: fix data + write config/ files Astro reads
+// POST-BUILD: write dist/ files (sitemap, robots)
+// FULL: run both (default when no flag given)
+
+if (RUN_ALL || PRE_BUILD) {
+  await runFixer("dedupe-listings", dedupeListings);
+  await runFixer("fill-missing-fields", fillMissingFields);
+  await runFixer("validate-websites", validateWebsites);
+  await runFixer("enrich-google-places", enrichGooglePlaces);
+  await runFixer("sync-google-reviews", syncGoogleReviews);
+  await runFixer("prune-thin-pages", pruneThinPages);
+  await runFixer("build-internal-links", buildInternalLinks);
+}
+
+if (RUN_ALL || POST_BUILD) {
+  await runFixer("generate-sitemap", generateSitemap, { skipDb: true });
+}
 
 // ─── Report ───────────────────────────────────────────────────
 const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
 const today = new Date().toISOString().split("T")[0];
 
 let report = "# SEO Doctor Report - " + today + "\n\n";
-report += "**Mode:** " + (DRY ? "Dry run" : "Applied") + "\n";
+report += "**Mode:** " + mode + (DRY ? " (dry)" : "") + "\n";
 report += "**Time:** " + totalTime + "s\n\n";
 report += "## Fixer Results\n\n";
 report += "| Fixer | Result | Time |\n|---|---|---|\n";
@@ -126,4 +147,4 @@ if (DRY) {
   console.log("");
 }
 
-await pool.end();
+if (pool) await pool.end();
