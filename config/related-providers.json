@@ -4631,7 +4631,1067 @@
     ]
   },
   "198": {
+    "sameCategory": [
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      },
+      {
+        "id": 215,
+        "name": "Banfield Pet Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "199": {
     "sameCategory": [],
     "otherCategories": []
+  },
+  "200": {
+    "sameCategory": [
+      {
+        "id": 209,
+        "name": "Bark Avenue Market & Bakery"
+      }
+    ],
+    "otherCategories": []
+  },
+  "201": {
+    "sameCategory": [
+      {
+        "id": 219,
+        "name": "PetSmart"
+      }
+    ],
+    "otherCategories": []
+  },
+  "202": {
+    "sameCategory": [
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      },
+      {
+        "id": 210,
+        "name": "Pet Supplies Plus"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ]
+  },
+  "203": {
+    "sameCategory": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      },
+      {
+        "id": 215,
+        "name": "Banfield Pet Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "204": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 218,
+        "name": "Family Pet Clinic of Grapevine"
+      },
+      {
+        "id": 248,
+        "name": "Animal Emergency Hospital of North Texas"
+      }
+    ]
+  },
+  "205": {
+    "sameCategory": [
+      {
+        "id": 211,
+        "name": "Pet Wants Roanoke"
+      }
+    ],
+    "otherCategories": []
+  },
+  "206": {
+    "sameCategory": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      },
+      {
+        "id": 210,
+        "name": "Pet Supplies Plus"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ]
+  },
+  "207": {
+    "sameCategory": [],
+    "otherCategories": []
+  },
+  "208": {
+    "sameCategory": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 210,
+        "name": "Pet Supplies Plus"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ]
+  },
+  "209": {
+    "sameCategory": [
+      {
+        "id": 200,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": []
+  },
+  "210": {
+    "sameCategory": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ]
+  },
+  "211": {
+    "sameCategory": [
+      {
+        "id": 205,
+        "name": "PetSmart"
+      }
+    ],
+    "otherCategories": []
+  },
+  "212": {
+    "sameCategory": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 215,
+        "name": "Banfield Pet Hospital"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "213": {
+    "sameCategory": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ]
+  },
+  "214": {
+    "sameCategory": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ]
+  },
+  "215": {
+    "sameCategory": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "216": {
+    "sameCategory": [
+      {
+        "id": 217,
+        "name": "Family Pet Clinic"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 225,
+        "name": "Pet Supermarket"
+      },
+      {
+        "id": 226,
+        "name": "Natural Grooming"
+      }
+    ]
+  },
+  "217": {
+    "sameCategory": [
+      {
+        "id": 216,
+        "name": "Family Pet Clinic of Richland Hills"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 225,
+        "name": "Pet Supermarket"
+      },
+      {
+        "id": 226,
+        "name": "Natural Grooming"
+      }
+    ]
+  },
+  "218": {
+    "sameCategory": [
+      {
+        "id": 248,
+        "name": "Animal Emergency Hospital of North Texas"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 204,
+        "name": "Petco"
+      }
+    ]
+  },
+  "219": {
+    "sameCategory": [
+      {
+        "id": 201,
+        "name": "Petco"
+      }
+    ],
+    "otherCategories": []
+  },
+  "220": {
+    "sameCategory": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "221": {
+    "sameCategory": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ]
+  },
+  "222": {
+    "sameCategory": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ]
+  },
+  "223": {
+    "sameCategory": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ]
+  },
+  "224": {
+    "sameCategory": [],
+    "otherCategories": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      }
+    ]
+  },
+  "225": {
+    "sameCategory": [
+      {
+        "id": 226,
+        "name": "Natural Grooming"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 216,
+        "name": "Family Pet Clinic of Richland Hills"
+      },
+      {
+        "id": 217,
+        "name": "Family Pet Clinic"
+      }
+    ]
+  },
+  "226": {
+    "sameCategory": [
+      {
+        "id": 225,
+        "name": "Pet Supermarket"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 216,
+        "name": "Family Pet Clinic of Richland Hills"
+      },
+      {
+        "id": 217,
+        "name": "Family Pet Clinic"
+      }
+    ]
+  },
+  "227": {
+    "sameCategory": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "228": {
+    "sameCategory": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ]
+  },
+  "229": {
+    "sameCategory": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "230": {
+    "sameCategory": [],
+    "otherCategories": []
+  },
+  "231": {
+    "sameCategory": [
+      {
+        "id": 232,
+        "name": "Kitten to Cat Hospital"
+      }
+    ],
+    "otherCategories": []
+  },
+  "232": {
+    "sameCategory": [
+      {
+        "id": 231,
+        "name": "Animal Healthcare Clinic"
+      }
+    ],
+    "otherCategories": []
+  },
+  "233": {
+    "sameCategory": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "234": {
+    "sameCategory": [
+      {
+        "id": 241,
+        "name": "Southlake Classic Pet Retreat"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      }
+    ]
+  },
+  "235": {
+    "sameCategory": [],
+    "otherCategories": []
+  },
+  "236": {
+    "sameCategory": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "237": {
+    "sameCategory": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ]
+  },
+  "238": {
+    "sameCategory": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ]
+  },
+  "239": {
+    "sameCategory": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "240": {
+    "sameCategory": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "241": {
+    "sameCategory": [
+      {
+        "id": 234,
+        "name": "Dogtopia"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      }
+    ]
+  },
+  "242": {
+    "sameCategory": [
+      {
+        "id": 243,
+        "name": "Scenthound"
+      }
+    ],
+    "otherCategories": []
+  },
+  "243": {
+    "sameCategory": [
+      {
+        "id": 242,
+        "name": "Autumn's Pampered Paws"
+      }
+    ],
+    "otherCategories": []
+  },
+  "244": {
+    "sameCategory": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ]
+  },
+  "245": {
+    "sameCategory": [],
+    "otherCategories": []
+  },
+  "246": {
+    "sameCategory": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "247": {
+    "sameCategory": [
+      {
+        "id": 198,
+        "name": "Fossil Creek Animal Hospital"
+      },
+      {
+        "id": 203,
+        "name": "Animal Emergency Hospital of Mansfield"
+      },
+      {
+        "id": 212,
+        "name": "Lone Star Veterinary Clinic"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 202,
+        "name": "Waggamuffins Grooming and Doggy Daycare"
+      },
+      {
+        "id": 206,
+        "name": "Petco"
+      },
+      {
+        "id": 208,
+        "name": "PetSmart"
+      }
+    ]
+  },
+  "248": {
+    "sameCategory": [
+      {
+        "id": 218,
+        "name": "Family Pet Clinic of Grapevine"
+      }
+    ],
+    "otherCategories": [
+      {
+        "id": 204,
+        "name": "Petco"
+      }
+    ]
   }
 }

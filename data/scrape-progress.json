@@ -106,5 +106,49 @@
   {
     "city": "Knoxville",
     "state": "TN"
+  },
+  {
+    "city": "New York",
+    "state": "NY"
+  },
+  {
+    "city": "Mesa",
+    "state": "AZ"
+  },
+  {
+    "city": "Allentown",
+    "state": "PA"
+  },
+  {
+    "city": "Cincinnati",
+    "state": "OH"
+  },
+  {
+    "city": "Fort Wayne",
+    "state": "IN"
+  },
+  {
+    "city": "Boston",
+    "state": "MA"
+  },
+  {
+    "city": "Detroit",
+    "state": "MI"
+  },
+  {
+    "city": "Salem",
+    "state": "OR"
+  },
+  {
+    "city": "Las Vegas",
+    "state": "NV"
+  },
+  {
+    "city": "Reno",
+    "state": "NV"
+  },
+  {
+    "city": "Madison",
+    "state": "WI"
   }
 ]

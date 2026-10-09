@@ -133,6 +133,18 @@
   },
   {
     "state": "tx",
+    "city": "fort-worth",
+    "category": "therapy",
+    "count": 1
+  },
+  {
+    "state": "tx",
+    "city": "grapevine",
+    "category": "groomers",
+    "count": 1
+  },
+  {
+    "state": "tx",
     "city": "pflugerville",
     "category": "groomers",
     "count": 1
@@ -152,13 +164,13 @@
   {
     "state": "wa",
     "city": "seattle",
-    "category": "boarding",
+    "category": "trainers",
     "count": 1
   },
   {
     "state": "wa",
     "city": "seattle",
-    "category": "trainers",
+    "category": "boarding",
     "count": 1
   },
   {
@@ -171,6 +183,30 @@
     "state": "tx",
     "city": "dallas",
     "category": "trainers",
+    "count": 2
+  },
+  {
+    "state": "tx",
+    "city": "fort-worth",
+    "category": "boarding",
+    "count": 2
+  },
+  {
+    "state": "tx",
+    "city": "grapevine",
+    "category": "vets",
+    "count": 2
+  },
+  {
+    "state": "tx",
+    "city": "north-richland-hills",
+    "category": "vets",
+    "count": 2
+  },
+  {
+    "state": "tx",
+    "city": "north-richland-hills",
+    "category": "groomers",
     "count": 2
   },
   {
