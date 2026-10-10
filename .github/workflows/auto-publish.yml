@@ -45,6 +45,18 @@ jobs:
         run: node scripts/scrape-osm.mjs
 
       # ═══════════════════════════════════════════════════════════
+      # STEP 1b — Sync live Google Maps listings via SerpApi (free tier)
+      # Budget-aware: 100 free searches/month, no credit card required.
+      # Writes to data/listings-pool.json; import step below upserts to MySQL.
+      # ═══════════════════════════════════════════════════════════
+      - name: Sync Google Maps Listings (SerpApi)
+        timeout-minutes: 15
+        continue-on-error: true
+        env:
+          SERPAPI_API_KEY: ${{ secrets.SERPAPI_API_KEY }}
+        run: node scripts/sync-serpapi-listings.mjs --budget=240 --limit=8
+
+      # ═══════════════════════════════════════════════════════════
       # STEP 2 — Generate new blog posts via AI (Groq)
       # ═══════════════════════════════════════════════════════════
       - name: Generate Blog Posts
@@ -142,7 +154,24 @@ jobs:
           git push || true
 
       # ═══════════════════════════════════════════════════════════
-      # STEP 9 — MONTHLY ONLY: refresh Google reviews
+      # STEP 9b — MONTHLY ONLY: clean dead website URLs
+      # Only runs when the cron trigger is the 1st-of-month one
+      # ═══════════════════════════════════════════════════════════
+      - name: Clean Dead Websites (Monthly)
+        if: github.event.schedule == '0 7 1 * *'
+        timeout-minutes: 30
+        continue-on-error: true
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_SSL: ${{ secrets.DB_SSL }}
+        run: node scripts/clean-dead-websites.mjs --limit=1000
+
+      # ═══════════════════════════════════════════════════════════
+      # STEP 9c — MONTHLY ONLY: refresh Google reviews
       # Only runs when the cron trigger is the 1st-of-month one
       # ═══════════════════════════════════════════════════════════
       - name: Update Google Reviews (Monthly)
